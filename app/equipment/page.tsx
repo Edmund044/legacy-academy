@@ -1,0 +1,108 @@
+"use client"
+import React, { useState } from "react"
+import { PageHeader, StatCard } from "@/components/modules/stat-card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Progress } from "@/components/ui/primitives"
+import { Package, AlertTriangle, History, Plus, Search, MoreVertical } from "lucide-react"
+
+const equipment = [
+  { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
+  { name: "Agility Training Cones", category: "Training Gear", stock: 500, assigned: 450, condition: "Good", cost: "$5.50" },
+  { name: "Portable Goal Post (U10)", category: "Field Equipment", stock: 12, assigned: 12, condition: "Needs Repair", cost: "$850.00" },
+  { name: "Training Bibs (Neon Green)", category: "Training Gear", stock: 200, assigned: 80, condition: "Excellent", cost: "$12.99" },
+  { name: "Pro Stopwatches", category: "Training Gear", stock: 30, assigned: 5, condition: "Fair", cost: "$45.00" },
+]
+
+const conditionConfig: Record<string, string> = {
+  "Excellent": "success",
+  "Good": "info",
+  "Fair": "warning",
+  "Needs Repair": "destructive",
+}
+
+const categories = ["All Equipment", "Balls", "Training Gear", "Field Equipment", "Medical Kits"]
+
+export default function EquipmentPage() {
+  const [activeCategory, setActiveCategory] = useState("All Equipment")
+  const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
+
+  return (
+    <>
+      <PageHeader title="Equipment Inventory" description="Manage and track football academy assets across all campuses.">
+        <Button variant="outline" size="sm"><History className="w-3.5 h-3.5 mr-1.5" />View History</Button>
+        <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New Equipment</Button>
+      </PageHeader>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <StatCard title="Total Assets" value="1,240" change="+5%" changeType="up" icon={<Package className="w-4 h-4" />} />
+        <StatCard title="In-Use Equipment" value="856" change="+2%" changeType="up" icon={<Package className="w-4 h-4" />} />
+        <StatCard title="Damaged / Lost" value="42" change="-10%" changeType="down" icon={<AlertTriangle className="w-4 h-4" />} />
+        <StatCard title="Total Value" value="$28,500" change="+8%" changeType="up" />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex gap-1 flex-wrap">
+              {categories.map(c => (
+                <button key={c} onClick={() => setActiveCategory(c)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeCategory === c ? "bg-brand text-white" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+                  {c}
+                </button>
+              ))}
+            </div>
+            <div className="relative sm:ml-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+              <input className="h-8 pl-8 pr-3 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 w-full sm:w-56" placeholder="Search equipment, SKU..." />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  {["ITEM NAME", "CATEGORY", "TOTAL STOCK", "ASSIGNED", "CONDITION", "REPLACEMENT COST", ""].map(h => (
+                    <th key={h} className="text-left py-2 px-3 text-[10px] font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((e, i) => (
+                  <tr key={i} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
+                    <td className="py-3 px-3 text-sm font-semibold">{e.name}</td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground">{e.category}</td>
+                    <td className="py-3 px-3 text-sm font-semibold">{e.stock}</td>
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2">
+                        <Progress value={(e.assigned / e.stock) * 100} className="w-16 h-1.5" />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{e.assigned}/{e.stock}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-3">
+                      <Badge variant={conditionConfig[e.condition] as any} className="text-[10px]">{e.condition}</Badge>
+                    </td>
+                    <td className="py-3 px-3 text-sm font-medium">{e.cost}</td>
+                    <td className="py-3 px-3">
+                      <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+            <p className="text-xs text-muted-foreground">Showing {filtered.length} of {equipment.length} items</p>
+            <div className="flex gap-1">
+              {[1, 2].map(p => (
+                <button key={p} className={`w-7 h-7 rounded text-xs font-medium ${p === 1 ? "bg-brand text-white" : "hover:bg-muted text-muted-foreground"}`}>{p}</button>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </>
+  )
+}

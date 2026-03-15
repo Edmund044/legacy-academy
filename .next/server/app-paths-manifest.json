@@ -1,0 +1,6 @@
+{
+  "/coach-dashboard/page": "app/coach-dashboard/page.js",
+  "/sessions/page": "app/sessions/page.js",
+  "/equipment/page": "app/equipment/page.js",
+  "/tournaments/page": "app/tournaments/page.js"
+}
