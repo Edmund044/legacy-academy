@@ -112,7 +112,8 @@ export default function EditSessionModal(
     // open={open} onOpenChange={onOpenChange}
     >
               <DialogTrigger asChild>
-        <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"> + Edit Session</Button>
+              
+        <Button size="sm" className=" bg-white text-brand hover:bg-white/90"> + Edit Session</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}

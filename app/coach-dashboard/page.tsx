@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { Calendar, DollarSign,Edit, CheckCircle2, Clock, ChevronRight } from "lucide-react"
 import AddSessionModal from "@/components/custom/modals/addSessionModal"
 import EditSessionModal from "@/components/custom/modals/editSessionModal"
-
+import AttendanceTrackerModal from "@/components/custom/modals/attendanceTrackerModal"
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -64,16 +64,9 @@ export default function CoachDashboardPage() {
                     <p className="text-xs text-muted-foreground">{s.time}</p>
                     <p className="text-[11px] text-muted-foreground">Player Eligibility: <span className="font-medium text-foreground">{s.eligibility}</span></p>
                   </div>
-                  {s.status === "live" ? (
-                    <><Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Check-in</Button>
-                      <EditSessionModal/>
-                    </>
-                  ) : (
-                    <><Button size="sm" variant="outline">Upcoming</Button>
-                      <EditSessionModal/>
-                  
-                  </>
-                  )}
+                  {/* <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Check-in</Button> */}
+                  <AttendanceTrackerModal/>
+                  <EditSessionModal/>
                 </div>
               ))}
             </CardContent>

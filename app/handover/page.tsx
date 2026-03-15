@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, AlertCircle, Package } from "lucide-react"
+import CompleteHandover from "@/components/custom/modals/completeHandover"
+import CheckoutHandover from "@/components/custom/modals/checkoutEquipment"
 
 const sessions = [
   { time: "14:00 PM", team: "U-16 Elite Training", coach: "Coach Marcus Holloway", venue: "Pitch 4", status: "ready" },
@@ -33,7 +35,7 @@ export default function HandoverPage() {
     <>
       <PageHeader title="Equipment Handover & Accountability" description="Track professional gear check-outs, manage returns, and oversee coach liability." />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="lg:col-span-2 space-y-4">
           {/* Tabs */}
           <div className="flex gap-1 border-b border-border pb-3">
@@ -55,11 +57,7 @@ export default function HandoverPage() {
                     <p className="text-sm font-semibold">{s.team}</p>
                     <p className="text-xs text-muted-foreground">{s.coach} · {s.venue}</p>
                   </div>
-                  {s.status === "ready" ? (
-                    <Button size="sm"><Package className="w-3.5 h-3.5 mr-1.5" />Check-out Equipment</Button>
-                  ) : (
-                    <Button size="sm" variant="outline" disabled>Check-out Pending</Button>
-                  )}
+                  <CheckoutHandover/>
                 </div>
               ))}
             </CardContent>
@@ -78,7 +76,7 @@ export default function HandoverPage() {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <Badge variant="warning" className="text-[10px]">{p.status}</Badge>
-                    <Button size="sm" variant="outline" className="text-brand border-brand" onClick={() => setActiveHandover(true)}>Complete Handover</Button>
+                    <CompleteHandover />
                   </div>
                 </div>
               ))}
@@ -86,9 +84,9 @@ export default function HandoverPage() {
           </Card>
         </div>
 
-        <div className="space-y-4">
+        {/* <div className="space-y-4"> */}
           {/* Coach Accountability */}
-          <Card>
+          {/* <Card>
             <CardHeader className="pb-3"><CardTitle className="text-sm">Coach Accountability</CardTitle></CardHeader>
             <CardContent className="space-y-2">
               {liabilities.map((l, i) => (
@@ -102,10 +100,10 @@ export default function HandoverPage() {
               ))}
               <Button variant="outline" size="sm" className="w-full mt-2">View All Liabilities</Button>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Active Handover Panel */}
-          {activeHandover && (
+          {/* {activeHandover && (
             <Card className="border-brand/30">
               <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <CardTitle className="text-sm text-brand">Active Handover</CardTitle>
@@ -143,8 +141,8 @@ export default function HandoverPage() {
                 <Button className="w-full">Confirm Return & Approve Payment</Button>
               </CardContent>
             </Card>
-          )}
-        </div>
+          )} */}
+        {/* </div> */}
       </div>
     </>
   )

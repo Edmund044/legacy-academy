@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/primitives"
-import { Package, AlertTriangle, History, Plus, Search, MoreVertical } from "lucide-react"
+import { Package, AlertTriangle, Edit, Plus, Search, MoreVertical } from "lucide-react"
+import AddEquipmentModal from "@/components/custom/modals/addEquipmentModal"
+import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
 
 const equipment = [
   { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
@@ -31,8 +33,7 @@ export default function EquipmentPage() {
   return (
     <>
       <PageHeader title="Equipment Inventory" description="Manage and track football academy assets across all campuses.">
-        <Button variant="outline" size="sm"><History className="w-3.5 h-3.5 mr-1.5" />View History</Button>
-        <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New Equipment</Button>
+        <AddEquipmentModal/>
       </PageHeader>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -86,7 +87,10 @@ export default function EquipmentPage() {
                     </td>
                     <td className="py-3 px-3 text-sm font-medium">{e.cost}</td>
                     <td className="py-3 px-3">
-                      <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button>
+                      {/* <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button> */}
+                      <button className="p-1 rounded hover:bg-muted text-muted-foreground">
+                        <EditEquipmentModal/>
+                      </button>
                     </td>
                   </tr>
                 ))}
