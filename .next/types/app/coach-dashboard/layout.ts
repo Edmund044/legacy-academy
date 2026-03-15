@@ -1,8 +1,8 @@
-// File: /Users/user/Desktop/Personal Projects/LEGACY ACADEMY/academypro/app/coach-dashboard/layout.tsx
-import * as entry from '../../../../app/coach-dashboard/layout.jsx'
+// File: /Users/user/Desktop/Personal Projects/LEGACY ACADEMY/legacy-academy/app/coach-dashboard/layout.tsx
+import * as entry from '../../../../app/coach-dashboard/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../app/coach-dashboard/layout.jsx')
+type TEntry = typeof import('../../../../app/coach-dashboard/layout.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
