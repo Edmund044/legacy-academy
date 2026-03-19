@@ -8,7 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, Avatar, AvatarFallback, Progr
 import { MapPin, Edit, Download, Phone, TrendingUp } from "lucide-react"
 import AddPlayerModal from "@/components/custom/modals/addPlayerModal"
 import EditPlayerModal from "@/components/custom/modals/editPlayerModal"
-
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const players = [
   { id: 1, name: "Mateo Silva", group: "U-14 ACADEMY", position: "Forward", tag: "Elite Prospect", location: "Lisbon Training Center, Pitch 4",
@@ -37,6 +38,28 @@ const players = [
 export default function PlayersPage() {
   const [selected, setSelected] = useState(players[0])
   const [tab, setTab] = useState("overview")
+  const { auth, tokens } = useAuth();
+
+
+  const fetchPlayers = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `v1/players?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      // setBookings((response.data as any[]) ?? []);
+    } catch (error) {
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {fetchPlayers()},[tokens]);
 
   return (
     <>

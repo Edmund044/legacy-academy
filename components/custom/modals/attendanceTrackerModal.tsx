@@ -9,9 +9,9 @@ import {
   import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-
-import { QrCode, CheckCircle2} from "lucide-react"
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
+import { QrCode, CheckCircle2} from "lucide-react";
 
 const students = [
     { initials: "MJ", name: "Marcus Johnson", id: "#EL-4902", position: "Midfielder", tag: "SPONSORED", billing: "Auto-trigger ON", checked: true },
@@ -49,6 +49,29 @@ const AttendanceTrackerModal: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState<Record<number, boolean>>({ 0: true, 2: true })
     const checkedCount = Object.values(checked).filter(Boolean).length
+    const handleAttendance = async () => {
+      try {
+        await apiClient({
+          endpoint: "v1/sessions/19579024-8543-4f0f-ac90-c1ccbdb85792/enroll",
+          method: "PATCH",
+          headers: {
+            // Authorization: `Bearer ${tokens?.accessToken}`,
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+          },
+          body: {
+            "player_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "billing_method": "string",
+            "player_eligibility": "string"
+          },
+        });
+        // setOpen(false);
+        // onConfirm();
+        // toast.success("Availability confirmed!");
+      } catch (error) {
+        // toast.error("Something went wrong. Please try again later.");
+      }
+    };
     return (
         <div>
                 <Dialog 
@@ -92,7 +115,7 @@ const AttendanceTrackerModal: React.FC = () => {
                     <p className={`text-[11px] font-semibold ${checked[i] ? "text-green-600" : "text-muted-foreground"}`}>{s.billing}</p>
                   </div>
                   <button
-                    onClick={() => setChecked(prev => ({ ...prev, [i]: !prev[i] }))}
+                    // onClick={() => setChecked(prev => ({ ...prev, [i]: !prev[i] }))}
                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${checked[i] ? "border-brand bg-brand" : "border-gray-300 bg-white"}`}
                   >
                     {checked[i] && <CheckCircle2 className="w-4 h-4 text-white" />}

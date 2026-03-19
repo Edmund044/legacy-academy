@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRoundPlus, Edit, Upload } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 // interface AddCoachModalProps {
 //   open: boolean;
@@ -114,9 +116,27 @@ export default function EditPlayerModal(
     }));
   };
 
-//   const handleSubmit = () => {
-//     onSubmit?.(form);
-//   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/players/7677b363-b02c-4634-9614-8c8e25a084bc",
+        method: "PATCH",
+        headers: {
+          // Authorization: `Bearer ${tokens?.accessToken}`,
+          "Authorization": "Bearer ",
+          "Content-Type": "application/json",
+        },
+        body: {
+          "position": "DEFENSIVE MIDFIELDER",
+        },
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
 //   const handleCancel = () => {
 //     onOpenChange(false);
@@ -457,7 +477,7 @@ export default function EditPlayerModal(
               Cancel
             </Button>
             <Button
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Edit Player

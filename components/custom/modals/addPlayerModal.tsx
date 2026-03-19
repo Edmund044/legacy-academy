@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRoundPlus, Upload } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 // interface AddCoachModalProps {
 //   open: boolean;
@@ -114,9 +116,32 @@ export default function AddPlayerModal(
     }));
   };
 
-//   const handleSubmit = () => {
-//     onSubmit?.(form);
-//   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/players",
+        method: "POST",
+        headers: {
+          // Authorization: `Bearer ${tokens?.accessToken}`,
+          "Authorization": "Bearer ",
+          "Content-Type": "application/json",
+        },
+        body: {
+          "first_name": "player2_f",
+          "last_name": "player2_l",
+          "dob": "1996-03-19",
+          "position": "striker",
+          "group_id": "971a583b-97ae-4575-9625-6d6a7d57e8c5",
+          "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5"
+        },
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
 //   const handleCancel = () => {
 //     onOpenChange(false);
@@ -457,7 +482,7 @@ export default function AddPlayerModal(
               Cancel
             </Button>
             <Button
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Add Player

@@ -9,7 +9,8 @@ import {
   import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 import { Package, CheckCircle2} from "lucide-react"
 
@@ -88,6 +89,38 @@ const CompleteHandover: React.FC = () => {
     const [checked, setChecked] = useState<Record<number, boolean>>({ 0: true, 2: true })
     const checkedCount = Object.values(checked).filter(Boolean).length
     const [activeHandover, setActiveHandover] = useState(true)
+
+    const { auth, tokens } = useAuth();
+    const handleHandover = async () => {
+      try {
+        await apiClient({
+          endpoint: "/v1/equipment/handovers/e819027f-d5b4-4009-ad38-f7fc7802f83c/return",
+          method: "POST",
+          headers: {
+            // Authorization: `Bearer ${tokens?.accessToken}`,
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+          },
+          body: {
+            "items": [
+              {
+                "handover_item_id": "98a7504f-a702-443c-aa7c-a488dd1f2ea7",
+                "condition_in": "string",
+                "is_lost": false,
+                "is_damaged": false
+              }
+            ],
+            "damage_notes": "bad use"
+          }
+        });
+        // setOpen(false);
+        // onConfirm();
+        // toast.success("Availability confirmed!");
+      } catch (error) {
+        // toast.error("Something went wrong. Please try again later.");
+      }
+    };
+
     return (
         <div>
                 <Dialog 
@@ -140,7 +173,7 @@ const CompleteHandover: React.FC = () => {
                     <p className="text-[11px] text-muted-foreground">Mark if any equipment is missing or damaged.</p>
                   </div>
                 </div>
-                <Button className="w-full">Confirm Return & Approve Payment</Button>
+                <Button onClick={handleHandover} className="w-full">Confirm Return & Approve Payment</Button>
               </CardContent>
             </Card>
         </div>

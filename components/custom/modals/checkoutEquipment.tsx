@@ -9,8 +9,8 @@ import {
   import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 import { Package, CheckCircle2} from "lucide-react"
 
 const students = [
@@ -88,6 +88,38 @@ const CheckoutHandover: React.FC = () => {
     const [checked, setChecked] = useState<Record<number, boolean>>({ 0: true, 2: true })
     const checkedCount = Object.values(checked).filter(Boolean).length
     const [activeHandover, setActiveHandover] = useState(true)
+
+    const { auth, tokens } = useAuth();
+  
+    const handleCheckout = async () => {
+      try {
+        await apiClient({
+          endpoint: "/v1/equipment/handovers",
+          method: "POST",
+          headers: {
+            // Authorization: `Bearer ${tokens?.accessToken}`,
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+          },
+          body: {
+            "coach_id": "d574f8cc-2ed3-4248-862c-e590d61f15ec",
+            "session_id": "247710be-89b4-48c4-9c84-1081553e432f",
+            "items": [
+              {
+                "equipment_id": "98a7504f-a702-443c-aa7c-a488dd1f2ea7",
+                "qty": 10,
+                "condition_out": "excellent"
+              }
+            ]
+          },
+        });
+        // setOpen(false);
+        // onConfirm();
+        // toast.success("Availability confirmed!");
+      } catch (error) {
+        // toast.error("Something went wrong. Please try again later.");
+      }
+    };
     return (
         <div>
                 <Dialog 
@@ -139,7 +171,7 @@ const CheckoutHandover: React.FC = () => {
                     <p className="text-[11px] text-muted-foreground">Mark if any equipment is missing or damaged.</p>
                   </div>
                 </div>
-                <Button className="w-full">Confirm Return & Approve Payment</Button>
+                <Button  onClick={handleCheckout} className="w-full">Confirm Return & Approve Payment</Button>
               </CardContent>
             </Card>
         </div>

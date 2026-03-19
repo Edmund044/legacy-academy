@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/primitives"
 import { Package, AlertTriangle, Edit, Plus, Search, MoreVertical } from "lucide-react"
 import AddEquipmentModal from "@/components/custom/modals/addEquipmentModal"
 import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const equipment = [
   { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
@@ -29,6 +31,27 @@ const categories = ["All Equipment", "Balls", "Training Gear", "Field Equipment"
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState("All Equipment")
   const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
+  const { auth, tokens } = useAuth();
+
+  const fetchEquipment = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `/v1/equipment/inventory?page=1&per_page=20`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      // setBookings((response.data as any[]) ?? []);
+    } catch (error) {
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+  
+  React.useEffect(() => {fetchEquipment()},[tokens]);
 
   return (
     <>
