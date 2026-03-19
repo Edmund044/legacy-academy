@@ -1,70 +1,40 @@
 {
   "pages": {
+    "/user-management/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/user-management/page.js"
+    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/equipment/page": [
+    "/user-management/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/equipment/page.js"
+      "static/chunks/app/user-management/layout.js"
     ],
-    "/equipment/layout": [
+    "/merchandise/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/equipment/layout.js"
+      "static/chunks/app/merchandise/page.js"
     ],
-    "/coach-dashboard/page": [
+    "/merchandise/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/coach-dashboard/page.js"
+      "static/chunks/app/merchandise/layout.js"
     ],
-    "/coach-dashboard/layout": [
+    "/coaches/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/coach-dashboard/layout.js"
+      "static/chunks/app/coaches/page.js"
     ],
-    "/handover/page": [
+    "/coaches/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover/page.js"
-    ],
-    "/handover/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/handover/layout.js"
-    ],
-    "/handover2/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/handover2/page.js"
-    ],
-    "/handover2/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/handover2/layout.js"
-    ],
-    "/sessions/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/sessions/page.js"
-    ],
-    "/sessions/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/sessions/layout.js"
-    ],
-    "/attendance/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/attendance/page.js"
-    ],
-    "/attendance/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/attendance/layout.js"
+      "static/chunks/app/coaches/layout.js"
     ]
   }
 }

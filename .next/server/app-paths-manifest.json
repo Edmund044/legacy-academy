@@ -1,7 +1,5 @@
 {
-  "/handover/page": "app/handover/page.js",
-  "/handover2/page": "app/handover2/page.js",
-  "/sessions/page": "app/sessions/page.js",
-  "/attendance/page": "app/attendance/page.js",
-  "/coach-dashboard/page": "app/coach-dashboard/page.js"
+  "/coaches/page": "app/coaches/page.js",
+  "/user-management/page": "app/user-management/page.js",
+  "/merchandise/page": "app/merchandise/page.js"
 }

@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRoundPlus, Upload } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 // interface AddCoachModalProps {
 //   open: boolean;
@@ -61,6 +63,7 @@ export default function AddCoachModal(
 //   onSubmit,
 // }: AddCoachModalProps
 ) {
+  const { auth, tokens } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [form, setForm] = useState<CoachFormData>({
@@ -90,13 +93,41 @@ export default function AddCoachModal(
     }));
   };
 
-//   const handleSubmit = () => {
-//     onSubmit?.(form);
-//   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/coaches",
+        method: "POST",
+        headers: {
+          // Authorization: `Bearer ${tokens?.accessToken}`,
+          "Authorization": "Bearer ",
+          "Content-Type": "application/json",
+        },
+        body: {
+          "user_id": "3166643f-dead-4df3-ba9f-b37cd7d341f9",
+          "license": "UEFA",
+          "bio": "DNKLKDNKLKSKNK",
+          "experience_years": 10,
+          "speciality": "Defence",
+          "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5"
+        },
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
-//   const handleCancel = () => {
-//     onOpenChange(false);
-//   };
+
+  // const handleSubmit = () => {
+  //   onSubmit?.(form);
+  // };
+
+  // const handleCancel = () => {
+  //   onOpenChange(false);
+  // };
 
   return (
     <Dialog 
@@ -115,50 +146,6 @@ export default function AddCoachModal(
         </DialogHeader>
 
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
-          {/* Photo Upload */}
-          <div
-            className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 py-6 cursor-pointer hover:bg-gray-100 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png, image/jpeg"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Profile preview"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden">
-                {/* Silhouette SVG */}
-                <svg
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-14 h-14"
-                >
-                  <ellipse cx="32" cy="24" rx="10" ry="11" fill="#a0522d" opacity="0.5" />
-                  <path
-                    d="M12 56c0-11 9-18 20-18s20 7 20 18"
-                    fill="#a0522d"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-sm font-semibold text-gray-700 flex items-center gap-1 justify-center">
-                <Upload className="w-3.5 h-3.5" />
-                Upload Profile Photo
-              </p>
-              <p className="text-xs text-gray-400">PNG or JPG, max 5MB</p>
-            </div>
-          </div>
 
           {/* Full Name + Role */}
           <div className="grid grid-cols-2 gap-4">
@@ -305,7 +292,7 @@ export default function AddCoachModal(
               Cancel
             </Button>
             <Button
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Add Coach
