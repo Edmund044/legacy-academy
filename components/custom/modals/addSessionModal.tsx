@@ -184,14 +184,7 @@ export default function AddSessionModal(
           "Content-Type": "application/json",
         },
         body: {
-          "name": "Attack Buildup",
-          "type": "Group",
-          "coach_id": "d574f8cc-2ed3-4248-862c-e590d61f15ec",
-          "venue_id": "d584f8cc-2ed3-4248-862c-e590d61f15ec",
-          "session_date": "2026-03-30",
-          "start_time": "09:00",
-          "end_time": "11:00",
-          "enrollment_cap": 30
+          ...form
         },
       });
       // setOpen(false);
