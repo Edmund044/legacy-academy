@@ -38,7 +38,7 @@ const players = [
 export default function PlayersPage() {
   const [selected, setSelected] = useState(players[0])
   const [tab, setTab] = useState("overview")
-  const { auth, tokens } = useAuth();
+  const { tokens } = useAuth();
 
 
   const fetchPlayers = async () => {

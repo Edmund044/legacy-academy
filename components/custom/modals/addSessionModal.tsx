@@ -31,6 +31,7 @@ import { setDate } from "date-fns";
 import { format } from "path";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { toast } from "sonner";
 
 // interface AddCoachModalProps {
 //   open: boolean;
@@ -39,7 +40,14 @@ import { useAuth } from "@/context/auth-context";
 // }
 
 interface SessionFormData {
-  session_name: string;
+  name: string;
+  type: string;
+  coach_id: string;
+  venue_id: string;
+  session_date:string;
+  start_time: string;
+  end_time: string;
+  enrollment_cap: number;
   session_objective: string;
   equipment_needed: string[];
   drills: string[];
@@ -60,6 +68,61 @@ const SPECIALIZATIONS = [
   "Youth Development",
 ];
 
+const SESSION_TYPE = [
+  "group",
+  "individual"
+]
+
+const EQUIPMENTS = [
+  { id: "balls", label: "Balls" },
+  { id: "training_gear", label: "Training Gear" },
+  { id: "field_equipment", label: "Field Equipment" },
+  { id: "medical_kits", label: "Medical Kits" },
+  { id: "goalkeeping", label: "Goalkeeping" },
+  { id: "protective", label: "Protective" }
+];
+
+const DRILLS = [
+  { id: "drill-1", label: "Passing Drill" },
+  { id: "drill-2", label: "Shooting Drill" },
+  { id: "drill-3", label: "Defensive Drill" },
+  { id: "drill-4", label: "Tactical Drill" },
+  { id: "drill-5", label: "Fitness Drill" },
+]
+
+const VENUE = [
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f15ec", label: "Main" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f16ec", label: "Other" },
+
+];
+
+const COACHES = [
+  {
+    id: "d574f8cc-2ed3-4248-862c-e590d61f17ec", name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
+    bio: "Former professional focused on data-driven tactical periodization and youth elite development. Leading Elite Division since 2021.",
+    stats: { experience: 12, teams: 8, winRate: 68 },
+    teams: ["Under-19 (Elite Division · 24 players)", "Under-16 (Regional League · 18 players)"],
+    rating: 4.9, skills: [{ name: "Tactics implementation", pct: 95 }, { name: "Youth Development", pct: 88 }, { name: "Video Analysis", pct: 92 }],
+    upcoming: [{ date: "OCT 24", title: "U-19 Tactical Training", time: "15:00–17:30", venue: "Pitch 3" }, { date: "OCT 26", title: "U-16 Match vs FC Lions", time: "10:30", venue: "Main Stadium" }]
+  },
+  {
+    id: "d574f8cc-2ed3-4248-862c-e590d61f19ec", name: "Sarah Jenkins", role: "Speed & Agility Coach", license: "UEFA A Candidate",
+    bio: "Specialising in explosive movement and athletic development for youth players.",
+    stats: { experience: 5, teams: 3, winRate: 74 },
+    teams: ["Under-10 (Weekend Clinic · 30 players)"],
+    rating: 4.8, skills: [{ name: "Speed & Agility", pct: 96 }, { name: "Physical Conditioning", pct: 90 }, { name: "Youth Development", pct: 85 }],
+    upcoming: [{ date: "OCT 25", title: "Beginner Fundamentals", time: "10:00–12:00", venue: "Pitch 1" }]
+  },
+  {
+    id: 3, name: "Marco Rossi", role: "Head of Attacking Development", license: "UEFA Pro",
+    bio: "Elite striker program lead with over 400 sessions delivered across multiple age groups.",
+    stats: { experience: 12, teams: 5, winRate: 72 },
+    teams: ["U14 Elite (Advanced Training · 20 players)", "ALL (Academy Selection · 120 players)"],
+    rating: 4.7, skills: [{ name: "Finishing & Positioning", pct: 98 }, { name: "Tactical Awareness", pct: 87 }, { name: "Player Mentorship", pct: 91 }],
+    upcoming: [{ date: "OCT 24", title: "Elite Striker Camp", time: "09:00–11:30", venue: "Main Pitch" }]
+  },
+]
+
 export default function AddSessionModal(
 //     {
 //   open,
@@ -71,23 +134,30 @@ export default function AddSessionModal(
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [date, setDate] = useState<Date>();
   const [form, setForm] = useState<SessionFormData>({
-    session_name: "",
+    name: "",
+    type: "",
+    coach_id: "",
+    venue_id: "",
+    session_date: "",
+    start_time: "",
+    end_time:"",
+    enrollment_cap: 0,
     session_objective: "",
     equipment_needed: [],
     drills: [],
   });
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
+  // const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+  //   setForm((prev) => ({ ...prev, profilePhoto: file }));
+  //   setPreviewUrl(URL.createObjectURL(file));
+  // };
 
   const handleEquipmentToggle = (teamId: string, checked: boolean) => {
     setForm((prev) => ({
       ...prev,
-      assignedTeams: checked
+      equipment_needed: checked
         ? [...prev.equipment_needed, teamId]
         : prev.equipment_needed.filter((t) => t !== teamId),
     }));
@@ -96,7 +166,7 @@ export default function AddSessionModal(
   const handleDrillsToggle = (teamId: string, checked: boolean) => {
     setForm((prev) => ({
       ...prev,
-      assignedTeams: checked
+      drills: checked
         ? [...prev.drills, teamId]
         : prev.drills.filter((t) => t !== teamId),
     }));
@@ -155,16 +225,16 @@ export default function AddSessionModal(
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
 
           {/* Full Name + Role */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Session Name
               </Label>
               <Input
                 placeholder="e.g. Pep Guardiola"
-                value={form.session_name}
+                value={form.name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, session_name: e.target.value }))
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -173,17 +243,30 @@ export default function AddSessionModal(
               <Label className="text-sm font-medium text-gray-700">
                 Session Objective
               </Label>
-              <Select
+              <Input
+                placeholder="e.g. Pep Guardiola"
                 value={form.session_objective}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, session_objective: e.target.value }))
+                }
+                className="placeholder:text-gray-400"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Session Type
+              </Label>
+              <Select
+                value={form.type}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, session_objective: val }))
+                  setForm((prev) => ({ ...prev, type: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
+                  <SelectValue placeholder="Session Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {SESSION_TYPE.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
@@ -193,27 +276,140 @@ export default function AddSessionModal(
             </div>
           </div>
 
-          {/* Equipment Needed */}
+                    {/* Date & time */}
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session Start Time
+                        </Label>
+                        <Input
+                          type="time"
+                          value={form.start_time}
+                          onChange={(e) =>
+                            setForm((prev) => ({ ...prev, start_time: e.target.value }))
+                          }
+                          className="placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session End Time
+                        </Label>
+                        <Input
+                          type="time"
+                          value={form.end_time}
+                          onChange={(e) =>
+                            setForm((prev) => ({ ...prev, end_time: e.target.value }))
+                          }
+                          className="placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session Date
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-[240px] justify-start text-left">
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {date ? format(date, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={date}
+                              onSelect={setDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+
+                              {/* Coach , venue and enrollment cap */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Coach
+              </Label>
+              <Select
+                value={form.coach_id}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, coach_id: val }))
+                }
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Coach" />
+                </SelectTrigger>
+                <SelectContent>
+                  {COACHES.map((coach) => (
+                    <SelectItem key={coach.id} value={String(coach.id)}>
+                      {coach.name} - {coach.role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Venue 
+              </Label>
+              <Select
+                value={form.venue_id}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, venue_id: val }))
+                }
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Venue" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VENUE.map((venue) => (
+                    <SelectItem key={venue.id} value={venue.label}>
+                      {venue.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Enrollment Cap
+              </Label>
+              <Input
+                placeholder="e.g. 30"
+                type="number"
+                value={form.enrollment_cap}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, enrollment_cap: Number(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"/>
+            </div>
+          </div>
+
+                    {/* Equipment Needed */}
+                    <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium text-gray-700">
               Equipment Needed
             </Label>
-            <div className="flex items-center gap-4">
-              {TEAM_OPTIONS.map((team) => (
-                <div key={team.id} className="flex items-center gap-2">
+            <div className="gap-4">
+              {EQUIPMENTS.map((equipment) => (
+                <div key={equipment.id} className="flex items-center gap-2">
                   <Checkbox
-                    id={team.id}
-                    checked={form.equipment_needed.includes(team.id)}
+                    id={equipment.id}
+                    checked={form.equipment_needed.includes(equipment.id)}
                     onCheckedChange={(checked) =>
-                      handleEquipmentToggle(team.id, !!checked)
+                      handleEquipmentToggle(equipment.id, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={team.id}
+                    htmlFor={equipment.id}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {team.label}
+                    {equipment.label}
                   </label>
                 </div>
               ))}
@@ -224,76 +420,28 @@ export default function AddSessionModal(
             <Label className="text-sm font-medium text-gray-700">
               Drills
             </Label>
-            <div className="flex items-center gap-4">
-              {TEAM_OPTIONS.map((team) => (
-                <div key={team.id} className="flex items-center gap-2">
+            <div className="gap-4">
+              {DRILLS.map((drill) => (
+                <div key={drill.id} className="flex items-center gap-2">
                   <Checkbox
-                    id={team.id}
-                    checked={form.equipment_needed.includes(team.id)}
+                    id={drill.id}
+                    checked={form.drills.includes(drill.id)}
                     onCheckedChange={(checked) =>
-                      handleDrillsToggle(team.id, !!checked)
+                      handleDrillsToggle(drill.id, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={team.id}
+                    htmlFor={drill.id}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {team.label}
+                    {drill.label}
                   </label>
                 </div>
               ))}
             </div>
           </div>
-                    {/* Date & time */}
-                    <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Session Time
-              </Label>
-              <Select
-                value={form.session_objective}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, session_objective: val }))
-                }
-              >
-                <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Session Objective
-              </Label>
-                  <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[240px] justify-start text-left">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : "Pick a date"}
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-            </div>
-          </div>
-
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <Button
               variant="ghost"

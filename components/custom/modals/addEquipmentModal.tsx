@@ -23,6 +23,7 @@ import {
 import { UserRoundPlus, Upload, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { toast } from "sonner";
 
 // interface AddEquipmentModalProps {
 //   open: boolean;
@@ -31,11 +32,12 @@ import { useAuth } from "@/context/auth-context";
 // }
 
 interface EquipmentFormData {
-  itemName: string;
+  name: string;
   category: string;
-  stock: string;
+  sku: string;
+  stock_total: number;
   condition: string;
-  replacement: string;
+  replacement_cost_usd: number;
 }
 
 const TEAM_OPTIONS = [
@@ -53,6 +55,23 @@ const SPECIALIZATIONS = [
   "Youth Development",
 ];
 
+const EQUIPMENT_CATEGORY = [
+  "balls",
+  "training_gear",
+  "field_equipment",
+  "medical_kits",
+  "goalkeeping",
+  "protective"
+]
+
+const CONDITION = [
+  "excellent",
+  "good",
+  "fair",
+  "needs_repair",
+  "condemned"
+]
+
 export default function AddEquipmentModal(
 //     {
 //   open,
@@ -60,31 +79,33 @@ export default function AddEquipmentModal(
 //   onSubmit,
 // }: AddEquipmentModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { tokens } = useAuth();
   const [form, setForm] = useState<EquipmentFormData>({
-    itemName: "",
+    name: "",
     category: "",
-    stock: "",
+    stock_total: 0,
     condition: "",
-    replacement: "",
+    replacement_cost_usd: 0,
+    sku: ""
   });
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
+  // const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+  //   setForm((prev) => ({ ...prev, profilePhoto: file }));
+  //   setPreviewUrl(URL.createObjectURL(file));
+  // };
 
-  const handleTeamToggle = (teamId: string, checked: boolean) => {
-    setForm((prev) => ({
-      ...prev,
-      assignedTeams: checked
-        ? [...prev.assignedTeams, teamId]
-        : prev.assignedTeams.filter((t) => t !== teamId),
-    }));
-  };
+  // const handleTeamToggle = (teamId: string, checked: boolean) => {
+  //   setForm((prev) => ({
+  //     ...prev,
+  //     assignedTeams: checked
+  //       ? [...prev.assignedTeams, teamId]
+  //       : prev.assignedTeams.filter((t) => t !== teamId),
+  //   }));
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -92,25 +113,18 @@ export default function AddEquipmentModal(
         endpoint: "/v1/equipment/inventory",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          "Authorization": `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
-          "name": "Mikasa big balls",
-          "category": "balls",
-          "sku": "ball-001",
-          "stock_total": 20,
-          "condition": "excellent",
-          "replacement_cost_usd": 100,
-          "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5"
+          ...form,
         },
       });
       // setOpen(false);
-      // onConfirm();
-      // toast.success("Availability confirmed!");
+      toast.success("Availability confirmed!");
     } catch (error) {
-      // toast.error("Something went wrong. Please try again later.");
+      alert((error as Error).message);
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -136,16 +150,16 @@ export default function AddEquipmentModal(
 
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
           {/* Full Name + Role */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Item Name
               </Label>
               <Input
                 placeholder="e.g. Ball"
-                value={form.itemName}
+                value={form.name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, itemName: e.target.value }))
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -155,22 +169,35 @@ export default function AddEquipmentModal(
                 Category
               </Label>
               <Select
-                value={form.stock}
+                value={form.category}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, stock: val }))
+                  setForm((prev) => ({ ...prev, category: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {EQUIPMENT_CATEGORY.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                SKU
+              </Label>
+              <Input
+                placeholder="e.g. ball-0001"
+                value={form.sku}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, sku: e.target.value }))
+                }
+                className="placeholder:text-gray-400"
+              />
             </div>
           </div>
 
@@ -184,9 +211,9 @@ export default function AddEquipmentModal(
                 placeholder="e.g. 10"
                 type="number"
                 min={0}
-                value={form.stock}
+                value={form.stock_total}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, stock: e.target.value }))
+                  setForm((prev) => ({ ...prev, stock_total: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -199,9 +226,9 @@ export default function AddEquipmentModal(
                 placeholder="e.g. 10"
                 type="number"
                 min={0}
-                value={form.replacement}
+                value={form.replacement_cost_usd}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, replacement: e.target.value }))
+                  setForm((prev) => ({ ...prev, replacement_cost_usd: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -220,7 +247,7 @@ export default function AddEquipmentModal(
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {CONDITION.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>

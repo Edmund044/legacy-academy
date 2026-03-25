@@ -31,7 +31,7 @@ const categories = ["All Equipment", "Balls", "Training Gear", "Field Equipment"
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState("All Equipment")
   const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
-  const { auth, tokens } = useAuth();
+  const { user, tokens } = useAuth();
 
   const fetchEquipment = async () => {
     try {

@@ -1,1 +1,7 @@
-{}
+{
+  "/equipment/page": "app/equipment/page.js",
+  "/players/page": "app/players/page.js",
+  "/coach-dashboard/page": "app/coach-dashboard/page.js",
+  "/handover/page": "app/handover/page.js",
+  "/sessions/page": "app/sessions/page.js"
+}

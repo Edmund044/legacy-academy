@@ -31,10 +31,10 @@ export interface AuthContextValue {
   /** Non-null when the last auth operation failed */
   error: string | null;
 
-  auth: {
-    user: null;
-    tokens: AuthTokens;
-  };
+  // auth: {
+  //   user: null;
+  //   tokens: AuthTokens;
+  // };
 
 
   // ── Actions ──
