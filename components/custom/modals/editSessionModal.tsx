@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/popover"
 import { setDate } from "date-fns";
 import { format } from "path";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 // interface EditCoachModalProps {
 //   open: boolean;
@@ -99,9 +101,34 @@ export default function EditSessionModal(
         : prev.drills.filter((t) => t !== teamId),
     }));
   };
-//   const handleSubmit = () => {
-//     onSubmit?.(form);
-//   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/sessions/19579024-8543-4f0f-ac90-c1ccbdb85792",
+        method: "PATCH",
+        headers: {
+          // Authorization: `Bearer ${tokens?.accessToken}`,
+          "Authorization": "Bearer ",
+          "Content-Type": "application/json",
+        },
+        body: {
+          "name": "Attack Buildup_UPDATE",
+          "type": "Group",
+          "coach_id": "d574f8cc-2ed3-4248-862c-e590d61f15ec",
+          "venue_id": "d584f8cc-2ed3-4248-862c-e590d61f15ec",
+          "session_date": "2026-03-30",
+          "start_time": "09:00",
+          "end_time": "11:00",
+          "enrollment_cap": 30
+        },
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
 //   const handleCancel = () => {
 //     onOpenChange(false);
@@ -112,7 +139,8 @@ export default function EditSessionModal(
     // open={open} onOpenChange={onOpenChange}
     >
               <DialogTrigger asChild>
-        <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"> + Edit Session</Button>
+              
+        <Button size="sm" className=" bg-white text-brand hover:bg-white/90"> + Edit Session</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
@@ -274,7 +302,7 @@ export default function EditSessionModal(
               Cancel
             </Button>
             <Button
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Edit Session

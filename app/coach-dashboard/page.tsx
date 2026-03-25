@@ -8,7 +8,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { Calendar, DollarSign,Edit, CheckCircle2, Clock, ChevronRight } from "lucide-react"
 import AddSessionModal from "@/components/custom/modals/addSessionModal"
 import EditSessionModal from "@/components/custom/modals/editSessionModal"
-
+import AttendanceTrackerModal from "@/components/custom/modals/attendanceTrackerModal"
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -22,7 +24,31 @@ const activity = [
   { icon: "⏳", title: "Session Completed: Lisa W.", meta: "3 days ago • Payout Pending", color: "text-amber-600" },
 ]
 
+
+
 export default function CoachDashboardPage() {
+  const { auth, tokens } = useAuth();
+
+
+const fetchSessions = async () => {
+  try {
+    const response = await apiClient({
+      endpoint: `v1/sessions?page=1&per_page=100`,
+      method: "GET",
+      headers: {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+      },
+    });
+
+    // setBookings((response.data as any[]) ?? []);
+  } catch (error) {
+    // toast.error("Failed to fetch your submitted requests.");
+  } finally {
+    // setLoading(false);
+  }
+};
+
+React.useEffect(() => {fetchSessions()},[tokens]);
   return (
     <>
       <PageHeader title="Coach Dashboard" description="Your sessions, earnings, and activity at a glance." />
@@ -64,16 +90,9 @@ export default function CoachDashboardPage() {
                     <p className="text-xs text-muted-foreground">{s.time}</p>
                     <p className="text-[11px] text-muted-foreground">Player Eligibility: <span className="font-medium text-foreground">{s.eligibility}</span></p>
                   </div>
-                  {s.status === "live" ? (
-                    <><Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Check-in</Button>
-                      <EditSessionModal/>
-                    </>
-                  ) : (
-                    <><Button size="sm" variant="outline">Upcoming</Button>
-                      <EditSessionModal/>
-                  
-                  </>
-                  )}
+                  {/* <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Check-in</Button> */}
+                  <AttendanceTrackerModal/>
+                  <EditSessionModal/>
                 </div>
               ))}
             </CardContent>

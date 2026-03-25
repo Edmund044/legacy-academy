@@ -1,21 +1,5 @@
 {
   "pages": {
-    "/coaches/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/coaches/page.js"
-    ],
-    "/coaches/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/coaches/layout.js"
-    ],
-    "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
-    ],
     "/players/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -26,25 +10,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/players/layout.js"
     ],
-    "/sessions/page": [
+    "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/sessions/page.js"
-    ],
-    "/sessions/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/sessions/layout.js"
-    ],
-    "/tournaments/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/tournaments/page.js"
-    ],
-    "/tournaments/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/tournaments/layout.js"
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
     "/equipment/page": [
       "static/chunks/webpack.js",
@@ -56,25 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/equipment/layout.js"
     ],
-    "/handover/page": [
+    "/sessions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover/page.js"
+      "static/chunks/app/sessions/page.js"
     ],
-    "/handover/layout": [
+    "/sessions/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover/layout.js"
-    ],
-    "/attendance/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/attendance/page.js"
-    ],
-    "/attendance/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/attendance/layout.js"
+      "static/chunks/app/sessions/layout.js"
     ],
     "/coach-dashboard/page": [
       "static/chunks/webpack.js",
@@ -86,25 +46,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/coach-dashboard/layout.js"
     ],
-    "/merchandise/page": [
+    "/handover/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/merchandise/page.js"
+      "static/chunks/app/handover/page.js"
     ],
-    "/merchandise/layout": [
+    "/handover/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/merchandise/layout.js"
+      "static/chunks/app/handover/layout.js"
     ],
-    "/handover2/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover2/page.js"
-    ],
-    "/handover2/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/handover2/layout.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

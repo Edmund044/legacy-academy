@@ -8,6 +8,8 @@ import { Progress, Avatar, AvatarFallback, Tabs, TabsList, TabsTrigger, TabsCont
 import { Star, Edit, Calendar, Award, Users, MoreVertical, Shield } from "lucide-react"
 import AddCoachModal from "@/components/custom/modals/addCoachModal";
 import EditCoachModal from "@/components/custom/modals/editCoachModal";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 
 const coaches = [
@@ -64,6 +66,29 @@ function CoachCard({ coach, selected, onSelect }: { coach: typeof coaches[0]; se
 export default function CoachesPage() {
   const [selected, setSelected] = useState(coaches[0])
   const [open, setOpen] = useState(false);
+  const { auth, tokens } = useAuth();
+
+
+  const fetchCoaches = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `v1/coaches?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      // setBookings((response.data as any[]) ?? []);
+    } catch (error) {
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {fetchCoaches()},[tokens]);
+
 
   return (
     <>

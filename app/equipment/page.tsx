@@ -5,7 +5,11 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/primitives"
-import { Package, AlertTriangle, History, Plus, Search, MoreVertical } from "lucide-react"
+import { Package, AlertTriangle, Edit, Plus, Search, MoreVertical } from "lucide-react"
+import AddEquipmentModal from "@/components/custom/modals/addEquipmentModal"
+import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const equipment = [
   { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
@@ -27,12 +31,32 @@ const categories = ["All Equipment", "Balls", "Training Gear", "Field Equipment"
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState("All Equipment")
   const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
+  const { user, tokens } = useAuth();
+
+  const fetchEquipment = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `/v1/equipment/inventory?page=1&per_page=20`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      // setBookings((response.data as any[]) ?? []);
+    } catch (error) {
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+  
+  React.useEffect(() => {fetchEquipment()},[tokens]);
 
   return (
     <>
       <PageHeader title="Equipment Inventory" description="Manage and track football academy assets across all campuses.">
-        <Button variant="outline" size="sm"><History className="w-3.5 h-3.5 mr-1.5" />View History</Button>
-        <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New Equipment</Button>
+        <AddEquipmentModal/>
       </PageHeader>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -86,7 +110,10 @@ export default function EquipmentPage() {
                     </td>
                     <td className="py-3 px-3 text-sm font-medium">{e.cost}</td>
                     <td className="py-3 px-3">
-                      <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button>
+                      {/* <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button> */}
+                      <button className="p-1 rounded hover:bg-muted text-muted-foreground">
+                        <EditEquipmentModal/>
+                      </button>
                     </td>
                   </tr>
                 ))}

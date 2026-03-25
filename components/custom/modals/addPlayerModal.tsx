@@ -21,6 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRoundPlus, Upload } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
+import { toast } from "sonner";
 
 // interface AddCoachModalProps {
 //   open: boolean;
@@ -29,19 +32,20 @@ import { UserRoundPlus, Upload } from "lucide-react";
 // }
 
 interface PlayerFormData {
-  profilePhoto: File | null;
-  fullName: string;
+  first_name: string;
+  last_name: string;
+  dob: Date;
   position: string;
   training_center: string;
-  height: string;
-  weight: string;
-  top_speed:  string;
-  bmi: string;
-  goals:  string;
-  assists: string;
+  team: string;
+  height: number;
+  weight: number;
+  top_speed:  number;
+  bmi: number;
+  goals:  number;
+  assists: number;
   pass_accuracy: string;
-  assignedTeam: string;
-  sponsored: string;
+  sponsored: number;
   guardian: string;
 }
 
@@ -82,41 +86,49 @@ export default function AddPlayerModal(
 //   onSubmit,
 // }: AddCoachModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { tokens } = useAuth();
   const [form, setForm] = useState<PlayerFormData>({
-    profilePhoto: null,
-    fullName: "",
+    first_name: "",
+    last_name: "",
+    dob: new Date(),
     position: "",
     training_center: "",
-    height: "",
-    weight: "",
-    top_speed:  "",
-    bmi: "",
-    goals:  "",
-    assists: "",
+    team: "",
+    height: 0,
+    weight: 0,
+    top_speed:  0,
+    bmi: 0,
+    goals:  0,
+    assists: 0,
     pass_accuracy: "",
-    assignedTeam: "",
-    sponsored: "",
+    sponsored: 0,
     guardian: "",
   });
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
 
-  const handleTeamToggle = (teamId: string, checked: boolean) => {
-    setForm((prev) => ({
-      ...prev,
-    }));
-  };
 
-//   const handleSubmit = () => {
-//     onSubmit?.(form);
-//   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/players",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${tokens?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: {
+          ...form,
+        },
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
 
 //   const handleCancel = () => {
 //     onOpenChange(false);
@@ -139,87 +151,49 @@ export default function AddPlayerModal(
         </DialogHeader>
 
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
-          {/* Photo Upload */}
-          <div
-            className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 py-6 cursor-pointer hover:bg-gray-100 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png, image/jpeg"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Profile preview"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden">
-                {/* Silhouette SVG */}
-                <svg
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-14 h-14"
-                >
-                  <ellipse cx="32" cy="24" rx="10" ry="11" fill="#a0522d" opacity="0.5" />
-                  <path
-                    d="M12 56c0-11 9-18 20-18s20 7 20 18"
-                    fill="#a0522d"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-sm font-semibold text-gray-700 flex items-center gap-1 justify-center">
-                <Upload className="w-3.5 h-3.5" />
-                Upload Profile Photo
-              </p>
-              <p className="text-xs text-gray-400">PNG or JPG, max 5MB</p>
-            </div>
-          </div>
 
           {/* Full Name + Role */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Full Name
+                First Name
               </Label>
               <Input
                 placeholder="e.g. Pep Guardiola"
-                value={form.fullName}
+                value={form.first_name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, fullName: e.target.value }))
+                  setForm((prev) => ({ ...prev, first_name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Position
+                Last Name
               </Label>
-              <Select
-                value={form.position}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, position: val }))
+              <Input
+                placeholder="e.g. Pep Guardiola"
+                value={form.last_name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, last_name: e.target.value }))
                 }
-              >
-                <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                className="placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1">
+          <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Date Of Birth
+              </Label>
+              <Input
+                type="date"
+                placeholder="e.g. 01/01/2000"
+                value={form.dob}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, dob: e.target.value }))
+                }
+                className="placeholder:text-gray-400"></Input>
             </div>
           </div>
 
@@ -243,9 +217,9 @@ export default function AddPlayerModal(
                 Team
               </Label>
               <Select
-                value={form.assignedTeam}
+                value={form.team}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, assignedTeam: val }))
+                  setForm((prev) => ({ ...prev, team: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
@@ -356,7 +330,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    goals: e.target.value,
+                    goals: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -449,15 +423,9 @@ export default function AddPlayerModal(
 
                 {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
+
             <Button
-              variant="ghost"
-            //   onClick={handleCancel}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </Button>
-            <Button
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Add Player

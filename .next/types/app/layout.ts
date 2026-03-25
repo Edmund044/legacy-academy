@@ -1,8 +1,8 @@
-// File: /Users/user/Desktop/Personal Projects/LEGACY ACADEMY/academypro/app/layout.tsx
-import * as entry from '../../../app/layout.jsx'
+// File: /Users/user/Desktop/Personal Projects/LEGACY ACADEMY/legacy-academy/app/layout.tsx
+import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../app/layout.jsx')
+type TEntry = typeof import('../../../app/layout.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

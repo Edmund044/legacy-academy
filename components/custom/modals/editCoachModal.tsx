@@ -21,12 +21,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRoundPlus, Edit, Upload } from "lucide-react";
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
-// interface EditCoachModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: CoachFormData) => void;
-// }
+
+interface EditCoachModalProps {
+  // open: boolean;
+  // onOpenChange: (open: boolean) => void;
+  // onSubmit?: (data: CoachFormData) => void;
+  coachingId: string;
+}
 
 interface CoachFormData {
   profilePhoto: File | null;
@@ -59,6 +63,7 @@ export default function EditCoachModal(
 //   open,
 //   onOpenChange,
 //   onSubmit,
+// coachingId: string,
 // }: EditCoachModalProps
 ) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,6 +94,31 @@ export default function EditCoachModal(
         : prev.assignedTeams.filter((t) => t !== teamId),
     }));
   };
+  const handleSubmit = async () => {
+    try {
+      await apiClient({
+        endpoint: "/v1/coaches/0c7621f3-73b7-4f2a-b5dd-fea3b7c9f51a",
+        method: "PATCH",
+        headers: {
+          // Authorization: `Bearer ${tokens?.accessToken}`,
+          "Authorization": "Bearer ",
+          "Content-Type": "application/json",
+        },
+        body: {
+          "license": "UEFA Updated",
+          "bio": "bio updated",
+          "speciality": "striker",
+          "experience_years": 20
+        }
+      });
+      // setOpen(false);
+      // onConfirm();
+      // toast.success("Availability confirmed!");
+    } catch (error) {
+      // toast.error("Something went wrong. Please try again later.");
+    }
+  };
+
 
   // const handleSubmit = () => {
   //   onSubmit?.(form);
@@ -305,7 +335,7 @@ export default function EditCoachModal(
               Cancel
             </Button>
             <Button
-              // onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
               Edit Coach

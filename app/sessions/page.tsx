@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress, Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  Edit} from "lucide-react"
-
+import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const sessions = [
   { id: 1, name: "Elite Striker Camp", type: "Advanced Training", team: "U14", date: "Oct 24, 2023", time: "09:00 AM - 11:30 AM", coach: "Marco Rossi", enrollment: 17, total: 20, revenue: "KES 4,250", status: "active" },
@@ -32,6 +33,29 @@ export default function SessionsPage() {
     const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.coach.toLowerCase().includes(search.toLowerCase())
     return matchesTab && matchesSearch
   })
+
+  const { auth, tokens } = useAuth();
+
+
+  const fetchSessions = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `v1/sessions?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      // setBookings((response.data as any[]) ?? []);
+    } catch (error) {
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {fetchSessions()},[tokens]);
 
   return (
     <>
