@@ -1,8 +1,5 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/players/page": "app/players/page.js",
-  "/equipment/page": "app/equipment/page.js",
-  "/sessions/page": "app/sessions/page.js",
+  "/handover/page": "app/handover/page.js",
   "/coach-dashboard/page": "app/coach-dashboard/page.js",
-  "/handover/page": "app/handover/page.js"
+  "/attendance/page": "app/attendance/page.js"
 }

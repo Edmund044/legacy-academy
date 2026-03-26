@@ -177,7 +177,7 @@ export default function CheckoutHandover() {
             Equipment issuance
           </DialogTitle>
         </DialogHeader>
-        <div className="max-w-2xl mx-auto p-6" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div className="max-w-2xl mx-auto p-6" style={{ maxHeight: '500px', overflowY: 'auto' }}>
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div>
@@ -332,7 +332,7 @@ export default function CheckoutHandover() {
               <button
                 onClick={handleSubmit}
                 disabled={selected.length === 0}
-                className="px-5 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="px-5 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 Issue equipment
               </button>
