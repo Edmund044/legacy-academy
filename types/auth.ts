@@ -48,14 +48,23 @@ export interface AuthContextValue {
 // ─── API response shapes (adapt to match your backend) ───────────────────────
 
 export interface LoginResponse {
-  user: AuthUser;
-  access_token: string;
-  refresh_token: string;
-  expires_in: number; // seconds until access token expires
+  success: boolean;
+  timeStamp: string;
+  data: {
+    user: AuthUser;
+    access_token: string;
+    refresh_token: string;
+    token_type: string; // e.g. "Bearer"
+    expires_in: number; // seconds until access token expires
+  }
 }
 
 export interface RefreshResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
+  success: boolean;
+  timeStamp: string;
+  data: {
+    access_token: string;
+    expires_in: number; 
+    refresh_token: string;
+  }
 }

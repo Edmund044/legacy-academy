@@ -50,8 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       newTokens: AuthTokens,
       authenticatedUser: AuthUser
     ) => {
-      console.log("Persisting new tokens:", newTokens);
-      saveAccessToken(newTokens.accessToken,newTokens.refreshToken,newTokens.expiresAt);
+      saveAccessToken(newTokens.accessToken);
       await saveRefreshToken(newTokens.refreshToken);
 
       setTokens(newTokens);
@@ -120,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser((currentUser) => {
         if (currentUser) {
           // Fire-and-forget persistence (no await in setState)
-          // saveAccessToken(newTokens.accessToken);
+          saveAccessToken(newTokens.accessToken);
           saveRefreshToken(newTokens.refreshToken);
           setTokens(newTokens);
           scheduleRefresh(newTokens);
@@ -133,77 +132,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ── Session rehydration on mount ────────────────────────────────────────────
 
-  // useEffect(() => {
-  //   const rehydrate = async () => {
-  //     try {
-  //       const storedRefresh = await getRefreshToken();
-  //       const storedAccess = getAccessToken();
-
-  //       if (!storedRefresh) return; // No session to restore
-
-  //       // Try to refresh immediately — the stored access token may be stale
-  //       const data = await apiRefresh(storedRefresh);
-
-  //       const newTokens: AuthTokens = {
-  //         accessToken: data.access_token,
-  //         refreshToken: data.refresh_token,
-  //         expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
-  //       };
-
-  //       // TODO: replace with a real /me call if your backend requires it
-  //       // For now we decode the JWT payload to extract user info
-  //       const payload = decodeJwtPayload(newTokens.accessToken);
-  //       if (!payload) throw new Error("Invalid token");
-
-  //       const restoredUser: AuthUser = {
-  //         id: payload.sub ?? "",
-  //         name: payload.name ?? "",
-  //         email: payload.email ?? "",
-  //         role: payload.role ?? "Coach",
-  //         avatarUrl: payload.avatar_url,
-  //       };
-
-  //       await persistTokens(newTokens, restoredUser);
-  //     } catch {
-  //       // Stale / invalid session — start fresh
-  //       await clearAuthState();
-  //     } finally {
-  //       setIsInitialized(true);
-  //     }
-  //   };
-
-  //   rehydrate();
-
-  //   return () => {
-  //     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
-  //   };
-  // }, [clearAuthState, persistTokens]);
   useEffect(() => {
     const rehydrate = async () => {
       try {
-        const storedRefresh =  getRefreshToken();
+        const storedRefresh = await getRefreshToken();
         const storedAccess = getAccessToken();
 
-        console.log("Rehydrating auth state:", { storedRefresh, storedAccess });
-        console.log("Current URL during rehydration:", storedAccess);
-        if (!storedAccess) {
-          router.push("/login"); // Redirect if no session to restore
-          return;
-        }
+        if (!storedRefresh) return; // No session to restore
 
         // Try to refresh immediately — the stored access token may be stale
-        const response = await apiRefresh(storedRefresh);
+        const data = await apiRefresh(storedRefresh);
 
         const newTokens: AuthTokens = {
-          accessToken: response.data.access_token,
-          refreshToken: response.data.refresh_token,
-          expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
         };
 
         // TODO: replace with a real /me call if your backend requires it
         // For now we decode the JWT payload to extract user info
-        console.log("Rehydration successful, new tokens:", newTokens);
-        console.log("Decoded new access token:", decodeJwtPayload(newTokens.accessToken));
         const payload = decodeJwtPayload(newTokens.accessToken);
         if (!payload) throw new Error("Invalid token");
 
@@ -216,11 +163,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
 
         await persistTokens(newTokens, restoredUser);
-      } catch(error) {
+      } catch {
         // Stale / invalid session — start fresh
         await clearAuthState();
-        console.log("Session rehydration failed, redirecting to login",error.message);
-        router.push("/login"); // Redirect to login on error
       } finally {
         setIsInitialized(true);
       }
@@ -231,7 +176,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
     };
-  }, [clearAuthState, persistTokens, router]);
+  }, [clearAuthState, persistTokens]);
+
   // ── Public actions ──────────────────────────────────────────────────────────
 
   const login = useCallback(
@@ -239,15 +185,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await apiLogin(email, password);
-        console.log("Login API response:", response);
+        const data = await apiLogin(email, password);
+
         const newTokens: AuthTokens = {
-          accessToken: response.data.access_token,
-          refreshToken: response.data.refresh_token,
-          expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
         };
-        console.log("Login successful, received tokens:", newTokens);
-        await persistTokens(newTokens, response.data.user);
+
+        await persistTokens(newTokens, data.user);
         router.push("/dashboard");
       } catch (err) {
         const message =

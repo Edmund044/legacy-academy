@@ -25,7 +25,7 @@ export async function apiLogin(
   email: string,
   password: string
 ): Promise<LoginResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
+  const res = await fetch(`${API_BASE}/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -40,7 +40,7 @@ export async function apiLogin(
 export async function apiRefresh(
   refreshToken: string
 ): Promise<RefreshResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refresh_token: refreshToken }),

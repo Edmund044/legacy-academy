@@ -15,15 +15,19 @@ const ACCESS_KEY = "academy_access"; // sessionStorage – tab-scoped, cleared o
 
 // ─── Access token (in-memory / sessionStorage) ────────────────────────────────
 
-export function saveAccessToken(token: string): void {
+export function saveAccessToken(token: string,refresh_token: string,expiry: number): void {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem(ACCESS_KEY, token);
+    console.log("Saving access token:", { token, refresh_token, expiry });
+    localStorage.setItem("accessToken", token || "");
+    localStorage.setItem("refreshToken", refresh_token || "");
+    localStorage.setItem("expiry", expiry || 0);
+
   }
 }
 
 export function getAccessToken(): string | null {
   if (typeof window === "undefined") return null;
-  return sessionStorage.getItem(ACCESS_KEY);
+  return localStorage.getItem("accessToken");
 }
 
 export function clearAccessToken(): void {
@@ -44,11 +48,12 @@ export async function saveRefreshToken(token: string): Promise<void> {
   });
 }
 
-export async function getRefreshToken(): Promise<string | null> {
-  const res = await fetch("/api/auth/session");
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.refresh_token ?? null;
+export  function getRefreshToken(): string {
+  // const res = await fetch("/api/auth/session");
+  // if (!res.ok) return null;
+  // const data = await res.json();
+  // return data.refresh_token ?? null;
+  return localStorage.getItem("refreshToken");
 }
 
 export async function clearRefreshToken(): Promise<void> {

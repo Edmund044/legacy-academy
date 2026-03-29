@@ -1,14 +1,14 @@
 {
   "pages": {
-    "/handover/page": [
+    "/user-management/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover/page.js"
+      "static/chunks/app/user-management/page.js"
     ],
-    "/handover/layout": [
+    "/user-management/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/handover/layout.js"
+      "static/chunks/app/user-management/layout.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -26,55 +26,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/sessions/layout.js"
     ],
-    "/coach-dashboard/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/coach-dashboard/page.js"
+      "static/chunks/app/login/page.js"
     ],
-    "/coach-dashboard/layout": [
+    "/dashboard/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/coach-dashboard/layout.js"
+      "static/chunks/app/dashboard/page.js"
     ],
-    "/players/page": [
+    "/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/players/page.js"
+      "static/chunks/app/dashboard/layout.js"
     ],
-    "/players/layout": [
+    "/coaches/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/players/layout.js"
+      "static/chunks/app/coaches/page.js"
     ],
-    "/equipment/page": [
+    "/coaches/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/equipment/page.js"
-    ],
-    "/equipment/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/equipment/layout.js"
-    ],
-    "/parent-dashboard/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/parent-dashboard/page.js"
-    ],
-    "/parent-dashboard/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/parent-dashboard/layout.js"
-    ],
-    "/user-management/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/user-management/page.js"
-    ],
-    "/user-management/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/user-management/layout.js"
+      "static/chunks/app/coaches/layout.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

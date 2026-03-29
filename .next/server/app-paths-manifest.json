@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/coach-dashboard/page": "app/coach-dashboard/page.js",
-  "/players/page": "app/players/page.js",
-  "/equipment/page": "app/equipment/page.js",
-  "/parent-dashboard/page": "app/parent-dashboard/page.js",
-  "/user-management/page": "app/user-management/page.js"
+  "/login/page": "app/login/page.js",
+  "/coaches/page": "app/coaches/page.js",
+  "/user-management/page": "app/user-management/page.js",
+  "/sessions/page": "app/sessions/page.js",
+  "/dashboard/page": "app/dashboard/page.js"
 }
