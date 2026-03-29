@@ -24,6 +24,7 @@ import { UserRoundPlus, Upload, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
+import { EQUIPMENT_CATEGORY, CONDITION } from "@/constants/constants";
 
 // interface AddEquipmentModalProps {
 //   open: boolean;
@@ -55,22 +56,7 @@ const SPECIALIZATIONS = [
   "Youth Development",
 ];
 
-const EQUIPMENT_CATEGORY = [
-  "balls",
-  "training_gear",
-  "field_equipment",
-  "medical_kits",
-  "goalkeeping",
-  "protective"
-]
 
-const CONDITION = [
-  "excellent",
-  "good",
-  "fair",
-  "needs_repair",
-  "condemned"
-]
 
 export default function AddEquipmentModal(
 //     {

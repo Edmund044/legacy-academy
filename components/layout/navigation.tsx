@@ -13,12 +13,12 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives"
 
 const navGroups = [
-  {
-    label: "Overview",
-    items: [
-      { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    ]
-  },
+  // {
+  //   label: "Overview",
+  //   items: [
+  //     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  //   ]
+  // },
   {
     label: "People",
     items: [
@@ -30,40 +30,48 @@ const navGroups = [
     label: "Operations",
     items: [
       { href: "/sessions", icon: CalendarDays, label: "Sessions" },
-      { href: "/tournaments", icon: Trophy, label: "Tournaments" },
+      // { href: "/tournaments", icon: Trophy, label: "Tournaments" },
       { href: "/equipment", icon: Package, label: "Equipment" },
       { href: "/handover", icon: ArrowLeftRight, label: "Handover" },
-      { href: "/merchandise", icon: ShoppingBag, label: "Merchandise" },
+      { href: "/user-management", icon: Package, label: "User Management" },
+      // { href: "/merchandise", icon: ShoppingBag, label: "Merchandise" },
     ]
   },
+  // {
+  //   label: "Finance & Impact",
+  //   items: [
+  //     { href: "/social-impact", icon: Heart, label: "Social Impact" },
+  //     { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+  //     { href: "/billing", icon: CreditCard, label: "Billing" },
+  //   ]
+  // },
   {
-    label: "Finance & Impact",
+    label: "Parent Portal",
     items: [
-      { href: "/social-impact", icon: Heart, label: "Social Impact" },
-      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
-      { href: "/billing", icon: CreditCard, label: "Billing" },
+      { href: "/parent-dashboard", icon: Dumbbell, label: "Parent Dashboard" },
+      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
     ]
   },
   {
     label: "Coach Portal",
     items: [
       { href: "/coach-dashboard", icon: Dumbbell, label: "Coach Dashboard" },
-      { href: "/attendance", icon: ScanLine, label: "Attendance" },
+      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
     ]
   },
-  {
-    label: "Partnerships",
-    items: [
-      { href: "/contracts", icon: FileText, label: "Contracts" },
-      { href: "/partnerships", icon: Building2, label: "Partnerships" },
-    ]
-  },
-  {
-    label: "Parent",
-    items: [
-      { href: "/bookings", icon: BookOpen, label: "Bookings" },
-    ]
-  },
+  // {
+  //   label: "Partnerships",
+  //   items: [
+  //     { href: "/contracts", icon: FileText, label: "Contracts" },
+  //     { href: "/partnerships", icon: Building2, label: "Partnerships" },
+  //   ]
+  // },
+  // {
+  //   label: "Parent",
+  //   items: [
+  //     { href: "/bookings", icon: BookOpen, label: "Bookings" },
+  //   ]
+  // },
 ]
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
@@ -81,8 +89,8 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
         </div>
         {!collapsed && (
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-sm text-foreground truncate">AcademyPro</p>
-            <p className="text-xs text-muted-foreground truncate">Season 2024/25</p>
+            <p className="font-bold text-sm text-foreground truncate">Legacy Academy</p>
+            {/* <p className="text-xs text-muted-foreground truncate">Season 2024/25</p> */}
           </div>
         )}
         <button

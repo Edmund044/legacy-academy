@@ -15,6 +15,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent,  Progress } from "@/component
 import { Session } from "@/types/sessions";
 import { CoachProfile } from "@/types/coaches";
 import { Loader2 } from "lucide-react";
+import { se } from "date-fns/locale"
+import { set } from "date-fns"
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -30,20 +32,61 @@ const activity = [
 
 
 
-export default function CoachDashboardPage() {
+export default function PlayerDashboardPage() {
   const { auth, tokens } = useAuth();
   const [tab, setTab] = useState("individual")
   const [sessions, setSessions] = useState<Session[]>([])
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
+  const [loadingButton, setLoadingButton] = useState(false);
+  const [enrolledRecordId, setEnrolledRecordId] = useState(null);
 
+  const handlEnroll = async (sessionId) => {
+    try {
+      setLoadingButton(true);
+      const response = await apiClient({
+        endpoint: `v1/sessions/${sessionId}/enroll`,
+        method: "POST",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+        body: {
+          player_id: "8d010b75-4507-45c2-a802-6f3359a4a792",
+          billing_method: "pay_as_you_go",
+          player_eligibility: "none"
+        }
+      });
+
+    } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
+    } finally {
+      setLoadingButton(false);
+    }
+
+  }
+  const toggleEnroll = (recordId: string) => {
+    setEnrolledRecordId((prevId) => (prevId === recordId ? null : recordId));
+    handlEnroll(recordId);
+  };
+
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      return "Good morning";
+    } else if (hour < 18) {
+      return "Good afternoon";
+    } else {
+      return "Good evening";
+    }
+  };
 
 
 
   const fetchSessions = async () => {
     try {
       const response = await apiClient({
-        endpoint: `v1/sessions?coach_id=d574f8cc-2ed3-4248-862c-e590d61f15ec&status=planned&page=1&per_page=100`,
+        endpoint: `v1/sessions?status=planned&page=1&per_page=100`,
         method: "GET",
         headers: {
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
@@ -73,24 +116,24 @@ export default function CoachDashboardPage() {
           ):
           (
             <>
-                  <PageHeader title="Coach Dashboard" description="Your sessions, earnings, and activity at a glance." />
+                  <PageHeader title="Parent Dashboard" description="Your sessions, bills, and activity at a glance." />
 
 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
   <Card className="sm:col-span-1 bg-brand text-white border-0">
     <CardContent className="pt-5">
-      <p className="text-sm font-medium text-white/80">Good morning,</p>
-      <p className="text-xl font-bold mt-0.5">Coach David</p>
-      <p className="text-xs text-white/70 mt-2">You have 4 elite training sessions scheduled for today.</p>
+      <p className="text-sm font-medium text-white/80">{getGreeting()}</p>
+      <p className="text-xl font-bold mt-0.5">David</p>
+      <p className="text-xs text-white/70 mt-2">Your child has {sessions.length} elite training sessions scheduled for today.</p>
       {/* <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"><Calendar className="w-3.5 h-3.5 mr-1.5" />View Schedule</Button> */}
-      <AddSessionModal onSubmit={fetchSessions}/>
+      {/* <AddSessionModal onSubmit={fetchSessions}/> */}
     </CardContent>
   </Card>
   <StatCard title="Sessions This Week" value="24" change="+12%" changeType="up" icon={<Calendar className="w-4 h-4" />} />
-  <StatCard title="Pending Payout" value="KES 12,500" icon={<DollarSign className="w-4 h-4" />} />
+  <StatCard title="Total Spent" value="KES 12,500" icon={<DollarSign className="w-4 h-4" />} />
 </div>
 
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <div className="lg:col-span-2">
+  <div className="lg:col-span-12">
                     {/* Tabs */}
                     <Tabs value={tab} onValueChange={setTab} className="mt-4">
               <TabsList>
@@ -117,9 +160,17 @@ export default function CoachDashboardPage() {
               <p className="text-xs text-muted-foreground">{s.session_date}</p>
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
-            
-            <AttendanceTrackerModal/>
-            <EditSessionModal/>
+
+
+              <Button
+            key={s.id}
+            size="sm"
+            onClick={() => toggleEnroll(s.id)}
+          >
+            {loadingButton && <span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />}
+            {enrolledRecordId === s.id ? "Undo" : "Enroll"}
+          </Button>
+
           </div>
         ))}
       </CardContent>
@@ -146,8 +197,7 @@ export default function CoachDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
             
-            <AttendanceTrackerModal/>
-            <EditSessionModal/>
+            <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Enroll</Button>
           </div>
         ))}
       </CardContent>
@@ -158,7 +208,7 @@ export default function CoachDashboardPage() {
             </Tabs>
             </div>
 
-  <div className="space-y-4">
+  {/* <div className="space-y-4">
     <Card>
       <CardHeader className="pb-3"><CardTitle className="text-sm">Revenue Split</CardTitle></CardHeader>
       <CardContent>
@@ -201,7 +251,7 @@ export default function CoachDashboardPage() {
         ))}
       </CardContent>
     </Card>
-  </div>
+  </div> */}
 </div></>
           )}
 

@@ -36,7 +36,7 @@ interface CoachFormData {
   speciality: string;
   license: string;
   experience_years: string;
-  winRate: string;
+  career_win_rate: string;
   primary_assigned_teams: string[];
   bio: string;
 }
@@ -65,6 +65,7 @@ export default function AddCoachModal(
 ) {
   const { tokens } = useAuth();
   const [open, setOpen] = useState(false);
+  const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [form, setForm] = useState<CoachFormData>({
     full_name: "",
     speciality: "",
@@ -105,14 +106,6 @@ export default function AddCoachModal(
     }
   };
 
-
-  // const handleSubmit = () => {
-  //   onSubmit?.(form);
-  // };
-
-  // const handleCancel = () => {
-  //   onOpenChange(false);
-  // };
 
   return (
     <Dialog 

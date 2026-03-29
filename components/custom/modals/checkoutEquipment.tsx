@@ -14,6 +14,11 @@ import { apiClient } from "@/lib/api-client";
 
 const CONDITIONS = ["excellent", "good", "fair", "needs_repair", "condemned"];
 
+interface CheckoutEquipmentModalProps {
+  coachId: string;
+  sessionId: string;
+}
+
 interface Equipment {
   id: string;
   name: string;
@@ -43,7 +48,7 @@ const MOCK_CATALOG: Equipment[] = [
   { id: "293a4b5c-9abc-4234-0678-223344558899", name: "First Aid Kit", category: "Medical", stock: 5 },
 ];
 
-export default function CheckoutHandover() {
+export default function CheckoutHandover({ sessionId,coachId }: CheckoutEquipmentModalProps) {
   const [catalog, setCatalog] = useState<Equipment[]>(MOCK_CATALOG);
   const [selected, setSelected] = useState<SelectedItem[]>([]);
   const [query, setQuery] = useState("");
@@ -113,8 +118,8 @@ export default function CheckoutHandover() {
 
   async function handleSubmit() {
     const payload = {
-      coach_id: "586bac9d-635e-40d7-9428-e7e9c4af962d",
-      session_id: "8a39ec50-9af2-4813-a045-e17099f916d2",
+      coach_id: coachId,
+      session_id: sessionId,
       items: selected.map(({ equipment_id, qty, condition_out }) => ({
         equipment_id,
         qty,

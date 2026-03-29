@@ -1,5 +1,8 @@
 {
-  "/handover/page": "app/handover/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/coach-dashboard/page": "app/coach-dashboard/page.js",
-  "/attendance/page": "app/attendance/page.js"
+  "/players/page": "app/players/page.js",
+  "/equipment/page": "app/equipment/page.js",
+  "/parent-dashboard/page": "app/parent-dashboard/page.js",
+  "/user-management/page": "app/user-management/page.js"
 }

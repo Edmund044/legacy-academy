@@ -32,12 +32,13 @@ import { format } from "path";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
+import React from "react";
+import { CoachProfile } from "@/types/coaches";
 
-// interface AddCoachModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: CoachFormData) => void;
-// }
+
+interface AddCoachModalProps {
+  onSubmit: () => void;
+}
 
 interface SessionFormData {
   name: string;
@@ -98,7 +99,7 @@ const VENUE = [
 
 const COACHES = [
   {
-    id: "d574f8cc-2ed3-4248-862c-e590d61f17ec", name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
+    id: "d574f8cc-2ed3-4248-862c-e590d61f15ec", name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
     bio: "Former professional focused on data-driven tactical periodization and youth elite development. Leading Elite Division since 2021.",
     stats: { experience: 12, teams: 8, winRate: 68 },
     teams: ["Under-19 (Elite Division · 24 players)", "Under-16 (Regional League · 18 players)"],
@@ -124,21 +125,19 @@ const COACHES = [
 ]
 
 export default function AddSessionModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddCoachModalProps
+    {
+  onSubmit,
+}: AddCoachModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>();
+  const [coaches, setCoaches] = useState<CoachProfile[]>([])
+  const [open, setOpen] = useState(false);
+  const [session_date, setDate] = useState<Date>();
   const [form, setForm] = useState<SessionFormData>({
     name: "",
     type: "",
     coach_id: "",
     venue_id: "",
-    session_date: "",
+    session_date: "2026-03-26",
     start_time: "",
     end_time:"",
     enrollment_cap: 0,
@@ -147,12 +146,7 @@ export default function AddSessionModal(
     drills: [],
   });
 
-  // const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-  //   setForm((prev) => ({ ...prev, profilePhoto: file }));
-  //   setPreviewUrl(URL.createObjectURL(file));
-  // };
+
 
   const handleEquipmentToggle = (teamId: string, checked: boolean) => {
     setForm((prev) => ({
@@ -187,21 +181,36 @@ export default function AddSessionModal(
           ...form
         },
       });
-      // setOpen(false);
-      // onConfirm();
+      setOpen(false);
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
       // toast.error("Something went wrong. Please try again later.");
     }
   };
 
-//   const handleCancel = () => {
-//     onOpenChange(false);
-//   };
+  const fetchCoaches = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `v1/coaches?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setCoaches((response?.data as CoachProfile[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch coaches. Please try again later.");
+    }
+  };
+
+
+  React.useEffect(() => {fetchCoaches()},[]);
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
         <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"> + Add Session</Button>
@@ -305,13 +314,13 @@ export default function AddSessionModal(
                           <PopoverTrigger asChild>
                             <Button variant="outline" className="w-[240px] justify-start text-left">
                               <CalendarIcon className="mr-2 h-4 w-4" />
-                              {date ? format(date, "PPP") : "Pick a date"}
+                              {session_date ? format(session_date, 'PPP') : "Pick a date"}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0">
                             <Calendar
                               mode="single"
-                              selected={date}
+                              selected={session_date}
                               onSelect={setDate}
                               initialFocus
                             />
@@ -336,7 +345,7 @@ export default function AddSessionModal(
                   <SelectValue placeholder="Select Coach" />
                 </SelectTrigger>
                 <SelectContent>
-                  {COACHES.map((coach) => (
+                  {coaches.map((coach) => (
                     <SelectItem key={coach.id} value={String(coach.id)}>
                       {coach.name} - {coach.role}
                     </SelectItem>
@@ -359,7 +368,7 @@ export default function AddSessionModal(
                 </SelectTrigger>
                 <SelectContent>
                   {VENUE.map((venue) => (
-                    <SelectItem key={venue.id} value={venue.label}>
+                    <SelectItem key={venue.id} value={venue.id}>
                       {venue.label}
                     </SelectItem>
                   ))}
@@ -375,7 +384,7 @@ export default function AddSessionModal(
                 type="number"
                 value={form.enrollment_cap}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, enrollment_cap: Number(e.target.value) }))
+                  setForm((prev) => ({ ...prev, enrollment_cap: e.target.value }))
                 }
                 className="placeholder:text-gray-400"/>
             </div>
