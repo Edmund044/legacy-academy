@@ -9,16 +9,17 @@ import {
   Dumbbell, ScanLine, FileText, Building2, Bell, Settings, ChevronLeft,
   Menu, X, Search
 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives"
+import { useAuth } from "@/context/auth-context";
+import { RoleNames } from "@/constants/constants";
 
-const navGroups = [
-  // {
-  //   label: "Overview",
-  //   items: [
-  //     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  //   ]
-  // },
+const naviGroups = [
+  {
+    label: "Overview",
+    items: [
+      { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    ]
+  },
   {
     label: "People",
     items: [
@@ -37,45 +38,171 @@ const navGroups = [
       // { href: "/merchandise", icon: ShoppingBag, label: "Merchandise" },
     ]
   },
-  // {
-  //   label: "Finance & Impact",
-  //   items: [
-  //     { href: "/social-impact", icon: Heart, label: "Social Impact" },
-  //     { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
-  //     { href: "/billing", icon: CreditCard, label: "Billing" },
-  //   ]
-  // },
+  {
+    label: "Finance & Impact",
+    items: [
+      { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+      { href: "/billing", icon: CreditCard, label: "Billing" },
+    ]
+  },
   {
     label: "Parent Portal",
     items: [
-      { href: "/parent-dashboard", icon: Dumbbell, label: "Parent Dashboard" },
-      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
+      { href: "/bookings", icon: BookOpen, label: "Bookings" },
+      { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/tournaments", icon: Trophy, label: "Tournaments" },
+      { href: "/merchandise", icon: ShoppingBag, label: "Merchandise" },
+      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+      { href: "/billing", icon: CreditCard, label: "Billing" },
     ]
   },
   {
     label: "Coach Portal",
     items: [
-      { href: "/coach-dashboard", icon: Dumbbell, label: "Coach Dashboard" },
+      { href: "/coach-dashboard", icon: Dumbbell, label: "Plan Session" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/handover", icon: ScanLine, label: "Equipment Accountability" },
       // { href: "/attendance", icon: ScanLine, label: "Attendance" },
     ]
   },
-  // {
-  //   label: "Partnerships",
-  //   items: [
-  //     { href: "/contracts", icon: FileText, label: "Contracts" },
-  //     { href: "/partnerships", icon: Building2, label: "Partnerships" },
-  //   ]
-  // },
-  // {
-  //   label: "Parent",
-  //   items: [
-  //     { href: "/bookings", icon: BookOpen, label: "Bookings" },
-  //   ]
-  // },
+  {
+    label: "Customare Care Portal",
+    items: [
+      { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+      { href: "/billing", icon: CreditCard, label: "Billing" },
+      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
+    ]
+  },
+  {
+    label: "CSR Portal",
+    items: [
+      { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/partnerships", icon: Building2, label: "Partnerships" },
+      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+      { href: "/billing", icon: CreditCard, label: "Billing" },
+      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
+    ]
+  },
+  {
+    label: "Business Development Portal",
+    items: [
+      { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/partnerships", icon: Building2, label: "Partnerships" },
+      { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
+      { href: "/billing", icon: CreditCard, label: "Billing" },
+      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
+    ]
+  },
+  {
+    label: "Kit & Equipment Manager Portal",
+    items: [
+      { href: "/equipment", icon: Package, label: "Equipment" },
+      { href: "/handover", icon: ArrowLeftRight, label: "Handover" },
+    ]
+  },
+  {
+    label: "Operations Portal",
+    items: [
+      { href: "/sessions", icon: CalendarDays, label: "Sessions" },
+      { href: "/attendance", icon: ScanLine, label: "Attendance" },
+      { href: "/user-management", icon: Package, label: "User Management" },
+    ]
+  },
+  {
+    label: "Technical Director Portal",
+    items: [
+      { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+      { href: "/coaches", icon: Users, label: "Coaches" },
+      { href: "/sessions", icon: CalendarDays, label: "Sessions" },
+      { href: "/attendance", icon: ScanLine, label: "Attendance" },
+      { href: "/user-management", icon: Package, label: "User Management" },
+      { href: "/tournaments", icon: Trophy, label: "Tournaments" },
+      { href: "/equipment", icon: Package, label: "Equipment" },
+      { href: "/handover", icon: ArrowLeftRight, label: "Handover" },
+      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/partnerships", icon: Building2, label: "Partnerships" },
+    ]
+  },
+  {
+    label: "Partnerships",
+    items: [
+      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/partnerships", icon: Building2, label: "Partnerships" },
+    ]
+  },
+  {
+    label: "Parent",
+    items: [
+      { href: "/bookings", icon: BookOpen, label: "Bookings" },
+    ]
+  },
 ]
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const pathname = usePathname()
+  const [navGroups,setNavGroups] = useState([])
+  const { user, tokens } = useAuth();
+
+  React.useEffect(() => {
+    if (!user) return;
+
+    let filteredGroups = naviGroups;
+
+    // Filter groups based on user role
+    if (user.role === RoleNames.COACH) {
+      filteredGroups = naviGroups.filter(group =>
+         group.label === "Coach Portal"
+      );
+    } else if (user.role === RoleNames.PARENT) {
+      filteredGroups = naviGroups.filter(group =>
+        group.label === "Parent Portal"
+      );
+    }
+    else if (user.role === RoleNames.CUSTOMER_CARE) {
+      filteredGroups = naviGroups.filter(group =>
+         group.label === "Customare Care Portal"
+      );
+    }
+    else if (user.role === RoleNames.BUSINESS_DEVELOPMENT) {  
+      filteredGroups = naviGroups.filter(group =>
+        group.label === "Business Development Portal"
+      );
+    }
+    else if(user.role === RoleNames.CSR_LEAD) {
+      filteredGroups = naviGroups.filter(group =>
+         group.label === "CSR Portal"
+      );
+    }
+    else if(user.role === RoleNames.KIT_AND_EQUIPMENT_MANAGER) {
+      filteredGroups = naviGroups.filter(group =>
+       group.label === "Kit & Equipment Manager Portal"
+      );
+    }
+    else if(user.role === RoleNames.OPERATIONS_MANAGER) {
+      filteredGroups = naviGroups.filter(group =>
+        group.label === "Operations Portal"
+      );
+    }
+    else if(user.role === RoleNames.PHYSIOTHERAPIST) {
+      filteredGroups = naviGroups.filter(group =>
+         group.label === "Physiotherapist"
+      );
+    }
+     else if(user.role === RoleNames.TECHNICAL_DIRECTOR) {
+      filteredGroups = naviGroups.filter(group =>
+        group.label === "Technical Director Portal"
+      );
+    }
+
+    setNavGroups(filteredGroups);
+  }, [user]);
 
   return (
     <aside className={cn(

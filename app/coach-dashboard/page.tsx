@@ -31,7 +31,7 @@ const activity = [
 
 
 export default function CoachDashboardPage() {
-  const { auth, tokens } = useAuth();
+  const { user, tokens } = useAuth();
   const [tab, setTab] = useState("individual")
   const [sessions, setSessions] = useState<Session[]>([])
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
@@ -79,7 +79,7 @@ export default function CoachDashboardPage() {
   <Card className="sm:col-span-1 bg-brand text-white border-0">
     <CardContent className="pt-5">
       <p className="text-sm font-medium text-white/80">Good morning,</p>
-      <p className="text-xl font-bold mt-0.5">Coach David</p>
+      <p className="text-xl font-bold mt-0.5">Coach {user?.name}</p>
       <p className="text-xs text-white/70 mt-2">You have 4 elite training sessions scheduled for today.</p>
       {/* <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"><Calendar className="w-3.5 h-3.5 mr-1.5" />View Schedule</Button> */}
       <AddSessionModal onSubmit={fetchSessions}/>

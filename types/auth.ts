@@ -8,12 +8,34 @@ export interface AuthTokens {
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────
-
+// admin = "admin"
+// coach = "coach"
+// parent = "parent"
+// technical_director = "technical_director"
+// customer_care = "customer_care"
+// business_development = "business_development"
+// csr_lead = "csr_lead"
+// kit_and_equipment_manager = "kit_and_equipment_manager"
+// operations_manager = "operations_manager"
+// physiotherapist =  "physiotherapist"
+// player = "player"
+export type UserRoles =
+  | "admin"
+  | "coach"
+  | "parent"
+  | "customer_care"
+  | "business_development"
+  | "csr_lead"
+  | "kit_and_equipment_manager"
+  | "operations_manager"
+  | "physiotherapist"
+  | "player"
+  | "technical_director";
 export interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: "Super Admin" | "Coach" | "Manager" | "Parent";
+  role: UserRoles;
   avatarUrl?: string;
 }
 

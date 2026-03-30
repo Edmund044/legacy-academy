@@ -45,8 +45,7 @@ export default function CoachesPage() {
   const [selected, setSelected] = useState(coaches[0])
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { auth, tokens } = useAuth();
-
+  const { user, tokens } = useAuth();
 
   const fetchCoaches = async () => {
     try {
@@ -83,12 +82,8 @@ export default function CoachesPage() {
           (
             <>
                   <PageHeader title="Coaches" description="Manage your coaching staff">
-        {/* <Button size="sm">+ Add Coach</Button> */}
-        <AddCoachModal
-          open={open}
-          onOpenChange={setOpen}
-          // onSubmit={(data) => console.log(data)}
-        />
+           { user?.role === "admin" && <AddCoachModal/>}
+
       </PageHeader>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             {/* Left: list */}
