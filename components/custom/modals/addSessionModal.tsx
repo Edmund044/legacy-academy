@@ -34,7 +34,7 @@ import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
 import React from "react";
 import { CoachProfile } from "@/types/coaches";
-
+import { Equipment } from "@/types/equipment";
 
 interface AddCoachModalProps {
   onSubmit: () => void;
@@ -132,10 +132,12 @@ export default function AddSessionModal(
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [open, setOpen] = useState(false);
   const [session_date, setDate] = useState<Date>();
+  const { user, tokens } = useAuth();
+  const [equipments  , setEquipments] = useState<Equipment[]>([])
   const [form, setForm] = useState<SessionFormData>({
     name: "",
     type: "",
-    coach_id: "",
+    coach_id: user?.id,
     venue_id: "",
     session_date: "2026-03-26",
     start_time: "",
@@ -145,6 +147,25 @@ export default function AddSessionModal(
     equipment_needed: [],
     drills: [],
   });
+
+
+
+  const fetchEquipment = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `/v1/equipment/inventory?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      setEquipments((response?.data as Equipment[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    }
+  };
 
 
 
@@ -173,8 +194,7 @@ export default function AddSessionModal(
         endpoint: "/v1/sessions",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
@@ -195,7 +215,7 @@ export default function AddSessionModal(
         endpoint: `v1/coaches?page=1&per_page=100`,
         method: "GET",
         headers: {
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+          Authorization: `Bearer ${tokens?.accessToken}`,
         },
       });
 
@@ -206,7 +226,7 @@ export default function AddSessionModal(
   };
 
 
-  React.useEffect(() => {fetchCoaches()},[]);
+  React.useEffect(() => {fetchEquipment(),fetchCoaches()},[]);
 
   return (
     <Dialog 
@@ -397,21 +417,21 @@ export default function AddSessionModal(
               Equipment Needed
             </Label>
             <div className="gap-4">
-              {EQUIPMENTS.map((equipment) => (
-                <div key={equipment.id} className="flex items-center gap-2">
+              {equipments.map((equipment) => (
+                <div key={equipment.name} className="flex items-center gap-2">
                   <Checkbox
-                    id={equipment.id}
-                    checked={form.equipment_needed.includes(equipment.id)}
+                    id={equipment.name}
+                    checked={form.equipment_needed.includes(equipment.name)}
                     onCheckedChange={(checked) =>
-                      handleEquipmentToggle(equipment.id, !!checked)
+                      handleEquipmentToggle(equipment.name, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={equipment.id}
+                    htmlFor={equipment.name}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {equipment.label}
+                    {equipment.name}
                   </label>
                 </div>
               ))}

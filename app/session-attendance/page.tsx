@@ -37,7 +37,16 @@ export default function CoachDashboardPage() {
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
 
-
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) {
+      return "Good morning";
+    } else if (hour < 18) {
+      return "Good afternoon";
+    } else {
+      return "Good evening";
+    }
+  };
 
 
   const fetchSessions = async () => {
@@ -52,12 +61,13 @@ export default function CoachDashboardPage() {
 
       setSessions((response.data as any[]) ?? []);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch sessions. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       setLoading(false);
     }
   };
+
 
   React.useEffect(() => {
     fetchSessions();
@@ -73,16 +83,16 @@ export default function CoachDashboardPage() {
           ):
           (
             <>
-                  <PageHeader title="Coach Dashboard" description="Your sessions, earnings, and activity at a glance." />
+                  <PageHeader title="Session Attenndance" description="Your sessions, earnings, and activity at a glance." />
 
 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
   <Card className="sm:col-span-1 bg-brand text-white border-0">
     <CardContent className="pt-5">
-      <p className="text-sm font-medium text-white/80">Good morning,</p>
+      <p className="text-sm font-medium text-white/80">{getGreeting()}</p>
       <p className="text-xl font-bold mt-0.5">Coach {user?.first_name}</p>
       <p className="text-xs text-white/70 mt-2">You have 4 elite training sessions scheduled for today.</p>
       {/* <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"><Calendar className="w-3.5 h-3.5 mr-1.5" />View Schedule</Button> */}
-      <AddSessionModal onSubmit={fetchSessions}/>
+      {/* <AddSessionModal onSubmit={fetchSessions}/> */}
     </CardContent>
   </Card>
   <StatCard title="Sessions This Week" value="24" change="+12%" changeType="up" icon={<Calendar className="w-4 h-4" />} />
@@ -118,8 +128,7 @@ export default function CoachDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
             
-            {/* <AttendanceTrackerModal/> */}
-            <EditSessionModal/>
+            <AttendanceTrackerModal session_id={s.id}/>
           </div>
         ))}
       </CardContent>
@@ -146,7 +155,7 @@ export default function CoachDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
             
-            {/* <AttendanceTrackerModal/> */}
+            <AttendanceTrackerModal/>
             <EditSessionModal/>
           </div>
         ))}

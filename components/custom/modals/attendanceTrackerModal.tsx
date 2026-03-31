@@ -9,8 +9,14 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Package, CheckCircle2} from "lucide-react";
+import { useAuth } from "@/context/auth-context";
 import { apiClient } from "@/lib/api-client";
+
+
+interface attendaceTrackerProps {
+  session_id: string;
+}
+
 
 interface Player {
   player_id: string;
@@ -19,9 +25,10 @@ interface Player {
   avatar: string; // initials fallback
 }
 
-type CheckInStatus = "pending" | "checked-in" | "absent" | "loading";
+type CheckInStatus = "pending" | "checked-in" | "absent" | "loading" | "attended" | "enrolled";
 
 interface RosterEntry extends Player {
+  enrollment_id: string;
   status: CheckInStatus;
 }
 
@@ -47,19 +54,44 @@ const POSITION_COLORS: Record<string, string> = {
   Forward: "bg-red-50 text-red-600 border-red-200",
 };
 
-export default function StudentCheckIn() {
+export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [query, setQuery] = useState("");
   const [sessionLabel] = useState("Morning Training — 26 Mar 2026");
   const searchRef = useRef<HTMLInputElement>(null);
+  const { user, tokens } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+
+  const fetchSessionsRoster = async () => {
+    try {
+      const response = await apiClient({
+        endpoint: `v1/sessions/${session_id}/roster`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setRoster((response.data as any[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Replace with real fetch:
     // fetch(`/api/sessions/${sessionId}/roster`, { headers: { Authorization: `Bearer ${token}` } })
     //   .then(r => r.json())
     //   .then(data => setRoster(data.map((p: Player) => ({ ...p, status: "pending" }))))
-    setRoster(MOCK_ROSTER.map((p) => ({ ...p, status: "pending" })));
+    fetchSessionsRoster()
+    // setRoster(MOCK_ROSTER.map((p) => ({ ...p, status: "pending" })));
   }, []);
+
+  
 
   async function checkIn(player_id: string) {
     setRoster((prev) =>
@@ -69,11 +101,10 @@ export default function StudentCheckIn() {
     try {
       try {
         await apiClient({
-          endpoint: "v1/sessions/247710be-89b4-48c4-9c84-1081553e432f/checkin",
+          endpoint: `v1/sessions/${session_id}/checkin`,
           method: "POST",
           headers: {
-            // Authorization: `Bearer ${tokens?.accessToken}`,
-            "Authorization": "Bearer ",
+            Authorization: `Bearer ${tokens?.accessToken}`,
             "Content-Type": "application/json",
           },
           body: {
@@ -91,11 +122,11 @@ export default function StudentCheckIn() {
       // await new Promise((r) => setTimeout(r, 500)); // simulate network
 
       setRoster((prev) =>
-        prev.map((p) => (p.player_id === player_id ? { ...p, status: "checked-in" } : p))
+        prev.map((p) => (p.player_id === player_id ? { ...p, status: "attended" } : p))
       );
     } catch {
       setRoster((prev) =>
-        prev.map((p) => (p.player_id === player_id ? { ...p, status: "pending" } : p))
+        prev.map((p) => (p.player_id === player_id ? { ...p, status: "enrolled" } : p))
       );
     }
   }
@@ -129,11 +160,10 @@ export default function StudentCheckIn() {
   async function undoStatus(player_id: string) {
     try {
       await apiClient({
-        endpoint: "v1/sessions/247710be-89b4-48c4-9c84-1081553e432f/checkin",
+        endpoint: `v1/sessions/${session_id}/checkin`,
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
@@ -148,12 +178,12 @@ export default function StudentCheckIn() {
       // toast.error("Something went wrong. Please try again later.");
     }
     setRoster((prev) =>
-      prev.map((p) => (p.player_id === player_id ? { ...p, status: "pending" } : p))
+      prev.map((p) => (p.player_id === player_id ? { ...p, status: "enrolled" } : p))
     );
   }
 
   async function checkInAll() {
-    const pending = roster.filter((p) => p.status === "pending");
+    const pending = roster.filter((p) => p.status === "enrolled");
     for (const p of pending) {
       await checkIn(p.player_id);
     }
@@ -166,9 +196,9 @@ export default function StudentCheckIn() {
 
   const counts = {
     total: roster.length,
-    checkedIn: roster.filter((p) => p.status === "checked-in").length,
+    checkedIn: roster.filter((p) => p.status === "attended").length,
     absent: roster.filter((p) => p.status === "absent").length,
-    pending: roster.filter((p) => p.status === "pending" || p.status === "loading").length,
+    pending: roster.filter((p) => p.status === "enrolled" || p.status === "loading").length,
   };
 
   const attendancePercent =
@@ -260,7 +290,7 @@ export default function StudentCheckIn() {
           <p className="text-sm text-gray-400 text-center py-8">No players found</p>
         )}
         {filtered.map((player) => {
-          const isCheckedIn = player.status === "checked-in";
+          const isCheckedIn = player.status === "attended";
           const isAbsent = player.status === "absent";
           const isLoading = player.status === "loading";
 

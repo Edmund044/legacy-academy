@@ -10,7 +10,7 @@ import AddEquipmentModal from "@/components/custom/modals/addEquipmentModal"
 import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { InventoryItem } from "@/types/equipment";
+import { Equipment } from "@/types/equipment";
 import { convertToUpperCase, convertFirstLetterToUpperCase } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -26,7 +26,7 @@ const categories = ["All Equipment", "balls", "training_gear", "field_equipment"
 
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState("All Equipment")
-  const [equipment  , setEquipment] = useState<InventoryItem>([])
+  const [equipment  , setEquipment] = useState<Equipment[]>([])
   const [loading, setLoading] = useState(true);
   const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
   const { user, tokens } = useAuth();
@@ -55,7 +55,7 @@ export default function EquipmentPage() {
   return (
     <>
       <PageHeader title="Equipment Inventory" description="Manage and track football academy assets across all campuses.">
-        <AddEquipmentModal/>
+        <AddEquipmentModal fetchEquipment={fetchEquipment}/>
       </PageHeader>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

@@ -82,7 +82,7 @@ export default function CoachesPage() {
           (
             <>
                   <PageHeader title="Coaches" description="Manage your coaching staff">
-           { user?.role === "admin" && <AddCoachModal/>}
+           { user?.role === "technical_director" && <AddCoachModal/>}
 
       </PageHeader>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

@@ -33,7 +33,8 @@ export type UserRoles =
   | "technical_director";
 export interface AuthUser {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   role: UserRoles;
   avatarUrl?: string;

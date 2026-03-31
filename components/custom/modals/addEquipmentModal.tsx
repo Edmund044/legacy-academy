@@ -26,11 +26,9 @@ import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
 import { EQUIPMENT_CATEGORY, CONDITION } from "@/constants/constants";
 
-// interface AddEquipmentModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: EquipmentFormData) => void;
-// }
+interface AddEquipmentModalProps {
+  fetchEquipment: () => void;
+}
 
 interface EquipmentFormData {
   name: string;
@@ -59,15 +57,14 @@ const SPECIALIZATIONS = [
 
 
 export default function AddEquipmentModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddEquipmentModalProps
+    {
+      fetchEquipment
+}: AddEquipmentModalProps
 ) {
   // const fileInputRef = useRef<HTMLInputElement>(null);
   // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { tokens } = useAuth();
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<EquipmentFormData>({
     name: "",
     category: "",
@@ -106,7 +103,8 @@ export default function AddEquipmentModal(
           ...form,
         },
       });
-      // setOpen(false);
+      setOpen(false);
+      fetchEquipment();
       toast.success("Availability confirmed!");
     } catch (error) {
       alert((error as Error).message);
@@ -120,7 +118,7 @@ export default function AddEquipmentModal(
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
               <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New Equipment</Button>

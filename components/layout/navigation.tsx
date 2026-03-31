@@ -64,11 +64,11 @@ const naviGroups = [
       { href: "/coach-dashboard", icon: Dumbbell, label: "Plan Session" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/handover", icon: ScanLine, label: "Equipment Accountability" },
-      // { href: "/attendance", icon: ScanLine, label: "Attendance" },
+      { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
     ]
   },
   {
-    label: "Customare Care Portal",
+    label: "Customer Care Portal",
     items: [
       { href: "/players", icon: UserCircle, label: "Players" },
       { href: "/sponsorship", icon: Gift, label: "Sponsorship" },
@@ -167,7 +167,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
     }
     else if (user.role === RoleNames.CUSTOMER_CARE) {
       filteredGroups = naviGroups.filter(group =>
-         group.label === "Customare Care Portal"
+         group.label === "Customer Care Portal"
       );
     }
     else if (user.role === RoleNames.BUSINESS_DEVELOPMENT) {  

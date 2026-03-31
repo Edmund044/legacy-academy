@@ -33,7 +33,7 @@ const activity = [
 
 
 export default function PlayerDashboardPage() {
-  const { auth, tokens } = useAuth();
+  const { user, tokens } = useAuth();
   const [tab, setTab] = useState("individual")
   const [sessions, setSessions] = useState<Session[]>([])
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
@@ -51,7 +51,7 @@ export default function PlayerDashboardPage() {
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
         },
         body: {
-          player_id: "8d010b75-4507-45c2-a802-6f3359a4a792",
+          player_id: "42161760-c079-4dd0-a9f3-6725fda23f37",
           billing_method: "pay_as_you_go",
           player_eligibility: "none"
         }
@@ -122,7 +122,7 @@ export default function PlayerDashboardPage() {
   <Card className="sm:col-span-1 bg-brand text-white border-0">
     <CardContent className="pt-5">
       <p className="text-sm font-medium text-white/80">{getGreeting()}</p>
-      <p className="text-xl font-bold mt-0.5">David</p>
+      <p className="text-xl font-bold mt-0.5">{user?.first_name}</p>
       <p className="text-xs text-white/70 mt-2">Your child has {sessions.length} elite training sessions scheduled for today.</p>
       {/* <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"><Calendar className="w-3.5 h-3.5 mr-1.5" />View Schedule</Button> */}
       {/* <AddSessionModal onSubmit={fetchSessions}/> */}

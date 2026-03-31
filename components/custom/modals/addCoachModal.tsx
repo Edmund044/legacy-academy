@@ -65,7 +65,6 @@ export default function AddCoachModal(
 ) {
   const { tokens } = useAuth();
   const [open, setOpen] = useState(false);
-  const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [form, setForm] = useState<CoachFormData>({
     full_name: "",
     speciality: "",
