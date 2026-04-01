@@ -134,7 +134,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
   async function markAbsent(player_id: string) {
     try {
       await apiClient({
-        endpoint: "v1/sessions/247710be-89b4-48c4-9c84-1081553e432f/checkin",
+        endpoint: `v1/sessions/${session_id}/checkin`,
         method: "POST",
         headers: {
           // Authorization: `Bearer ${tokens?.accessToken}`,
@@ -342,7 +342,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
 
               {/* Actions */}
               <div className="flex items-center gap-2 shrink-0">
-                {isCheckedIn || isAbsent ? (
+                {isCheckedIn || isAbsent  ? (
                   <button
                     onClick={() => undoStatus(player.player_id)}
                     className="text-xs px-2.5 py-1 border border-gray-200 rounded-lg text-gray-400 hover:text-gray-600 hover:border-gray-300 transition bg-white"

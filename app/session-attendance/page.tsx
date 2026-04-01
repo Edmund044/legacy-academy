@@ -90,12 +90,12 @@ export default function CoachDashboardPage() {
     <CardContent className="pt-5">
       <p className="text-sm font-medium text-white/80">{getGreeting()}</p>
       <p className="text-xl font-bold mt-0.5">Coach {user?.first_name}</p>
-      <p className="text-xs text-white/70 mt-2">You have 4 elite training sessions scheduled for today.</p>
+      <p className="text-xs text-white/70 mt-2">You have {sessions.length} elite training sessions scheduled for today.</p>
       {/* <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"><Calendar className="w-3.5 h-3.5 mr-1.5" />View Schedule</Button> */}
       {/* <AddSessionModal onSubmit={fetchSessions}/> */}
     </CardContent>
   </Card>
-  <StatCard title="Sessions This Week" value="24" change="+12%" changeType="up" icon={<Calendar className="w-4 h-4" />} />
+  <StatCard title="Sessions This Week" value={sessions.length} change="+12%" changeType="up" icon={<Calendar className="w-4 h-4" />} />
   <StatCard title="Pending Payout" value="KES 12,500" icon={<DollarSign className="w-4 h-4" />} />
 </div>
 
@@ -126,9 +126,11 @@ export default function CoachDashboardPage() {
               <p className="text-xs text-muted-foreground">{s.start_time} - {s.end_time}</p>
               <p className="text-xs text-muted-foreground">{s.session_date}</p>
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
+              <p className="text-[11px] text-muted-foreground">Enrollments:  <Badge className="bg-green-600">{s.enrollments.length }</Badge></p>
             </div>
-            
-            <AttendanceTrackerModal session_id={s.id}/>
+            {
+              s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+            }
           </div>
         ))}
       </CardContent>
@@ -153,10 +155,11 @@ export default function CoachDashboardPage() {
               <p className="text-xs text-muted-foreground">{s.start_time} - {s.end_time}</p>
               <p className="text-xs text-muted-foreground">{s.session_date}</p>
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
+              <p className="text-[11px] text-muted-foreground">Enrollments:  <Badge className="bg-green-600">{s.enrollments.length > 0 }</Badge></p>
             </div>
-            
-            <AttendanceTrackerModal/>
-            <EditSessionModal/>
+            {
+              s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+            }
           </div>
         ))}
       </CardContent>

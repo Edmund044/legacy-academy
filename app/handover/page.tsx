@@ -37,7 +37,7 @@ export default function HandoverPage() {
   const [activeHandover, setActiveHandover] = useState(true)
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<Session[]>([])
-  const { auth, tokens } = useAuth();
+  const { tokens } = useAuth();
   const [tab, setTab] = useState("upcoming")
 
   const handleSubmit = async () => {
@@ -46,8 +46,7 @@ export default function HandoverPage() {
         endpoint: "/v1/equipment/inventory",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
@@ -130,8 +129,10 @@ export default function HandoverPage() {
               <div className="flex-1">
                 <p className="text-sm font-semibold">{s.name}</p>
                 <p className="text-xs text-muted-foreground">{s.coach}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{s.type}</p>
+                <p className="text-xs text-muted-foreground">{s.equipments_needed}</p>
               </div>
-              <CheckoutHandover coachId={s.coach_id} sessionId={s.id}/>
+              <CheckoutHandover coachId={s.coach_id} sessionId={s.id} equipments={s.equipments_needed}/>
             </div>
           ))}
         </CardContent>
@@ -151,7 +152,7 @@ export default function HandoverPage() {
                 <p className="text-sm font-semibold">{s.name}</p>
                 <p className="text-xs text-muted-foreground">{s.coach}</p>
               </div>
-              <CheckoutHandover/>
+              <CheckoutHandover coachId={s.coach_id} sessionId={s.id} equipments={s.equipment_needed}/>
             </div>
           ))}
         </CardContent>
@@ -179,7 +180,7 @@ export default function HandoverPage() {
               </div>
               <div className="flex flex-col items-end gap-2">
                 <Badge variant="warning" className="text-[10px]">{p.status}</Badge>
-                <CompleteHandover />
+                <CompleteHandover session_id={p.id}/>
               </div>
             </div>
           ))}

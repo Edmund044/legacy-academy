@@ -11,8 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Package, CheckCircle2} from "lucide-react";
 import { apiClient } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
 
 const CONDITIONS = ["excellent", "good", "fair", "needs_repair", "condemned"];
+
+interface CompleteHandoverProps {
+  session_id: string;
+}
 
 interface HandoverItem {
   handover_item_id: string;
@@ -33,11 +38,12 @@ const MOCK_ACTIVE_ITEMS = [
   // { handover_item_id: "e5f60718-5678-4ef0-c234-eeff00114455", name: "Agility Ladder", condition_out: "Good" },
 ];
 
-export default function EquipmentHandover() {
+export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
   const [items, setItems] = useState<HandoverItem[]>([]);
   const [damageNotes, setDamageNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, tokens } = useAuth();
 
   useEffect(() => {
     // Replace with your actual fetch
@@ -98,11 +104,11 @@ export default function EquipmentHandover() {
       // });
       // if (!res.ok) throw new Error("Handover failed");
         await apiClient({
-          endpoint: "/v1/equipment/handovers/e819027f-d5b4-4009-ad38-f7fc7802f83c/return",
+          // endpoint: `/v1/equipment/handovers/${session_id}/return`,
+          endpoint: `/v1/equipment/handovers/e819027f-d5b4-4009-ad38-f7fc7802f83c/return`,
           method: "POST",
           headers: {
-            // Authorization: `Bearer ${tokens?.accessToken}`,
-            "Authorization": "Bearer ",
+            Authorization: `Bearer ${tokens?.accessToken}`,
             "Content-Type": "application/json",
           },
           body: {
@@ -110,7 +116,6 @@ export default function EquipmentHandover() {
           }
         });
 
-      await new Promise((r) => setTimeout(r, 600)); // simulate network
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 2500);
     } finally {

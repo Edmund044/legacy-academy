@@ -11,12 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Package, CheckCircle2} from "lucide-react";
 import { apiClient } from "@/lib/api-client";
+import { equipment } from "@/data/data";
 
 const CONDITIONS = ["excellent", "good", "fair", "needs_repair", "condemned"];
 
 interface CheckoutEquipmentModalProps {
   coachId: string;
   sessionId: string;
+  equipments: string;
 }
 
 interface Equipment {
@@ -48,7 +50,7 @@ const MOCK_CATALOG: Equipment[] = [
   { id: "293a4b5c-9abc-4234-0678-223344558899", name: "First Aid Kit", category: "Medical", stock: 5 },
 ];
 
-export default function CheckoutHandover({ sessionId,coachId }: CheckoutEquipmentModalProps) {
+export default function CheckoutHandover({ sessionId,coachId, equipments }: CheckoutEquipmentModalProps) {
   const [catalog, setCatalog] = useState<Equipment[]>(MOCK_CATALOG);
   const [selected, setSelected] = useState<SelectedItem[]>([]);
   const [query, setQuery] = useState("");
@@ -131,8 +133,7 @@ export default function CheckoutHandover({ sessionId,coachId }: CheckoutEquipmen
         endpoint: "/v1/equipment/handovers",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: payload
@@ -187,6 +188,7 @@ export default function CheckoutHandover({ sessionId,coachId }: CheckoutEquipmen
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-base font-medium text-gray-900">Equipment issuance</h2>
+             <p>{equipments}</p>
               <p className="text-sm text-gray-500 mt-0.5">Search and select equipment to check out</p>
             </div>
             <span className="text-xs font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-600">
