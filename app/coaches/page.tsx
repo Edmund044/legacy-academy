@@ -14,9 +14,9 @@ import { CoachProfile } from "@/types/coaches";
 import { coaches } from "@/data/data"
 import { convertToUpperCase } from "@/lib/utils"
 import { Loader2 } from "lucide-react";
+import { ApiResponse } from "@/types/api-response";
 
-
-function CoachCard({ coach, selected, onSelect }: { coach: CoachProfile[0]; selected: boolean; onSelect: () => void }) {
+function CoachCard({ coach, selected, onSelect }: { coach: CoachProfile; selected: boolean; onSelect: () => void }) {
   return (
     <div
       onClick={onSelect}
@@ -42,14 +42,14 @@ function CoachCard({ coach, selected, onSelect }: { coach: CoachProfile[0]; sele
 
 export default function CoachesPage() {
   const [coaches2, setCoaches] = useState<CoachProfile[]>([])
-  const [selected, setSelected] = useState(coaches[0])
+  const [selected, setSelected] = useState<CoachProfile>()
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, tokens } = useAuth();
 
   const fetchCoaches = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<CoachProfile[]>>({
         endpoint: `v1/coaches?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -57,7 +57,7 @@ export default function CoachesPage() {
         },
       });
 
-      setCoaches((response?.data as CoachProfile[]) ?? []);
+      setCoaches((response.data as CoachProfile[]) ?? []);
       setSelected((response.data as CoachProfile[])[0] ?? []);
     } catch (error) {
       alert("Failed to fetch equipment inventory. Please try again later.");
@@ -93,7 +93,7 @@ export default function CoachesPage() {
                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </div>
               {coaches2.map(c => (
-                <CoachCard key={c.id} coach={c} selected={selected.id === c.id} onSelect={() => setSelected(c)} />
+                <CoachCard key={c.id} coach={c} selected={selected?.id === c.id} onSelect={() => setSelected(c)} />
               ))}
             </div>
     
@@ -104,15 +104,15 @@ export default function CoachesPage() {
                 <CardContent className="pt-5">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Avatar className="h-20 w-20 border-4 border-white shadow-lg">
-                      <AvatarFallback className="text-xl">{selected.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                      <AvatarFallback className="text-xl">{selected?.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
-                          <h2 className="text-xl font-bold">{selected.name}</h2>
+                          <h2 className="text-xl font-bold">{selected?.name}</h2>
                           <div className="flex flex-wrap gap-1.5 mt-1">
-                            <Badge variant="brand">{selected.role}</Badge>
-                            <Badge variant="outline">{selected.license}</Badge>
+                            <Badge variant="brand">{selected?.role}</Badge>
+                            <Badge variant="outline">{selected?.license}</Badge>
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -124,14 +124,14 @@ export default function CoachesPage() {
                           {/* <Button size="sm" variant="outline"><MoreVertical className="w-3.5 h-3.5" /></Button> */}
                         </div>
                       </div>
-                      <p className="mt-2 text-sm text-muted-foreground">{selected.bio}</p>
+                      <p className="mt-2 text-sm text-muted-foreground">{selected?.bio}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3 mt-4">
                     {[
-                      { label: "YEARS EXPERIENCE", value: selected.stats.experience },
-                      { label: "TEAMS MANAGED", value: selected.stats.teams },
-                      { label: "CAREER WIN RATE", value: `${selected.stats.win_rate}%` },
+                      { label: "YEARS EXPERIENCE", value: selected?.stats.experience },
+                      { label: "TEAMS MANAGED", value: selected?.stats.teams },
+                      { label: "CAREER WIN RATE", value: `${selected?.stats.win_rate}%` },
                     ].map(s => (
                       <div key={s.label} className="text-center p-3 bg-muted/50 rounded-lg">
                         <p className="text-2xl font-bold text-brand">{s.value}</p>
@@ -147,7 +147,7 @@ export default function CoachesPage() {
                 <Card>
                   <CardHeader className="pb-3"><CardTitle className="text-sm flex items-center gap-2"><Shield className="w-4 h-4 text-brand" />Assigned Teams</CardTitle></CardHeader>
                   <CardContent className="space-y-2">
-                    {selected.teams.map((t, i) => (
+                    {selected?.teams.map((t, i) => (
                       <div key={i} className="flex items-center gap-2 p-2.5 bg-muted/40 rounded-lg">
                         <div className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
                         <p className="text-xs font-medium">{convertToUpperCase(t)}</p>

@@ -5,15 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives"
-import { Calendar, DollarSign,Edit, CheckCircle2, Clock, ChevronRight } from "lucide-react"
-import AddSessionModal from "@/components/custom/modals/addSessionModal"
-import EditSessionModal from "@/components/custom/modals/editSessionModal"
+import { Calendar, DollarSign } from "lucide-react"
 import AttendanceTrackerModal from "@/components/custom/modals/attendanceTrackerModal"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent,  Progress } from "@/components/ui/primitives"
 import { Session } from "@/types/sessions";
-import { CoachProfile } from "@/types/coaches";
+import { ApiResponse } from "@/types/api-response";
 import { Loader2 } from "lucide-react";
 
 const sessions = [
@@ -34,7 +32,6 @@ export default function CoachDashboardPage() {
   const { user, tokens } = useAuth();
   const [tab, setTab] = useState("individual")
   const [sessions, setSessions] = useState<Session[]>([])
-  const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
 
   const getGreeting = () => {
@@ -51,7 +48,7 @@ export default function CoachDashboardPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions?status=planned&page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -59,7 +56,7 @@ export default function CoachDashboardPage() {
         },
       });
 
-      setSessions((response.data as any[]) ?? []);
+      setSessions((response.data as Session[]) ?? []);
     } catch (error) {
       alert("Failed to fetch sessions. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");

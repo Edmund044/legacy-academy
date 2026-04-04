@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { Session } from "@/types/sessions";
 import { useAuth } from "@/context/auth-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent,  Progress } from "@/components/ui/primitives"
+import { ApiResponse } from "@/types/api-response";
 
 const sessions = [
   { time: "14:00 PM", team: "U-16 Elite Training", coach: "Coach Marcus Holloway", venue: "Pitch 4", status: "ready" },
@@ -72,7 +73,7 @@ export default function HandoverPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions?status=planned&page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -82,7 +83,7 @@ export default function HandoverPage() {
 
       setSessions((response.data as any[]) ?? []);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch sessions. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       setLoading(false);
@@ -130,9 +131,9 @@ export default function HandoverPage() {
                 <p className="text-sm font-semibold">{s.name}</p>
                 <p className="text-xs text-muted-foreground">{s.coach}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{s.type}</p>
-                <p className="text-xs text-muted-foreground">{s.equipments_needed}</p>
+                <p className="text-xs text-muted-foreground">{s.equipment_needed}</p>
               </div>
-              <CheckoutHandover coachId={s.coach_id} sessionId={s.id} equipments={s.equipments_needed}/>
+              <CheckoutHandover coachId={s.coach_id} sessionId={s.id} equipments={s.equipment_needed}/>
             </div>
           ))}
         </CardContent>

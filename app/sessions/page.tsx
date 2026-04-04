@@ -9,7 +9,7 @@ import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  E
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { Session } from "@/types/sessions";
-import sessions from "@/data/data";
+import { ApiResponse } from "@/types/api-response";
 
 
 const statusConfig: Record<string, { label: string; variant: any }> = {
@@ -35,7 +35,7 @@ export default function SessionsPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -43,7 +43,7 @@ export default function SessionsPage() {
         },
       });
 
-      setSessions((response.data as any[]) ?? []);
+      setSessions((response.data as Session[]) ?? []);
     } catch (error) {
       alert("Failed to fetch equipment inventory. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");

@@ -12,6 +12,7 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
 import { PlayerProfile } from "@/types/players";
+import { ApiResponse } from "@/types/api-response";
 
 const players2 = [
   {
@@ -72,7 +73,7 @@ const players2 = [
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerProfile[]>([])
-  const [selected, setSelected] = useState(players2[0])
+  const [selected, setSelected] = useState<PlayerProfile>()
   const [tab, setTab] = useState("overview")
   const { tokens } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -80,7 +81,7 @@ export default function PlayersPage() {
 
   const fetchPlayers = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<PlayerProfile[]>>({
         endpoint: `v1/players?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -88,7 +89,7 @@ export default function PlayersPage() {
         },
       });
 
-      setPlayers((response?.data as PlayerProfile[]) ?? []);
+      setPlayers((response.data as PlayerProfile[]) ?? []);
       setSelected((response.data as PlayerProfile[])[0] ?? []);
     } catch (error) {
       alert("Failed to fetch equipment inventory. Please try again later.");
@@ -121,7 +122,7 @@ export default function PlayersPage() {
               <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
               {players.map(p => (
                 <div key={p.id} onClick={() => setSelected(p)}
-                  className={`cursor-pointer p-3 rounded-xl border transition-all ${selected.id === p.id ? "border-brand bg-brand/5" : "border-border bg-white hover:border-brand/30"}`}>
+                  className={`cursor-pointer p-3 rounded-xl border transition-all ${selected?.id === p.id ? "border-brand bg-brand/5" : "border-border bg-white hover:border-brand/30"}`}>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10"><AvatarFallback>{(p.first_name[0])}</AvatarFallback></Avatar>
                     <div className="min-w-0">
@@ -141,18 +142,18 @@ export default function PlayersPage() {
                 <CardContent className="pt-5">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Avatar className="h-16 w-16 border-2 border-white shadow">
-                      <AvatarFallback className="text-lg">{(selected.first_name[0])}</AvatarFallback>
+                      <AvatarFallback className="text-lg">{(selected?.first_name[0])}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
-                          <h2 className="text-xl font-bold">{(selected.first_name + " " + selected.last_name)}</h2>
+                          <h2 className="text-xl font-bold">{(selected?.first_name + " " + selected?.last_name)}</h2>
                           <div className="flex flex-wrap gap-1.5 mt-1">
                             <Badge variant="secondary" className="text-[10px]">{selected?.group_name?.name || 'Under 11' }</Badge>
-                            <Badge variant="outline" className="text-[10px]">{selected.position}</Badge>
-                            <Badge variant="brand" className="text-[10px]">{selected.sponsored == 1 ? "Sponsored" : "Paid" }</Badge>
+                            <Badge variant="outline" className="text-[10px]">{selected?.position}</Badge>
+                            <Badge variant="brand" className="text-[10px]">{selected?.sponsored == 1 ? "Sponsored" : "Paid" }</Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1.5"><MapPin className="w-3 h-3" />{selected.training_center}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1.5"><MapPin className="w-3 h-3" />{selected?.training_center}</p>
                         </div>
                         <div className="flex gap-2">
                           <EditPlayerModal></EditPlayerModal>
@@ -178,9 +179,9 @@ export default function PlayersPage() {
                           <h3 className="text-sm font-semibold mb-3">Performance Overview</h3>
                           <div className="grid grid-cols-3 gap-2 mb-4">
                             {[
-                              { label: "Goals", value: selected.stats.goals, note: selected.stats.goals },
-                              { label: "Assists", value: selected.stats.assists, note: selected.stats.assists },
-                              { label: "Pass Accuracy", value: `${selected.stats.pass_accuracy}%`, note: selected.stats.pass_accuracy },
+                              { label: "Goals", value: selected?.stats.goals, note: selected?.stats.goals },
+                              { label: "Assists", value: selected?.stats.assists, note: selected?.stats.assists },
+                              { label: "Pass Accuracy", value: `${selected?.stats.pass_accuracy}%`, note: selected?.stats.pass_accuracy },
                             ].map(s => (
                               <div key={s.label} className="text-center p-3 bg-muted/40 rounded-lg">
                                 <p className="text-xl font-bold text-brand">{s.value}</p>
@@ -212,7 +213,7 @@ export default function PlayersPage() {
                           <div>
                             <h3 className="text-sm font-semibold mb-2">Physical Attributes</h3>
                             <div className="space-y-2">
-                              {Object.entries(selected.physical).map(([k, v]) => (
+                              {selected && selected.physical && Object.entries(selected.physical).map(([k, v]) => (
                                 <div key={k} className="flex justify-between py-1.5 px-3 bg-muted/40 rounded-lg">
                                   <span className="text-xs text-muted-foreground capitalize">{k.replace(/([A-Z])/g, " $1")}</span>
                                   <span className="text-xs font-semibold">{v}</span>
@@ -232,10 +233,10 @@ export default function PlayersPage() {
                             <div className="flex items-center justify-between p-3 bg-muted/40 rounded-lg">
                               <div className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8">
-                                  <AvatarFallback className="text-xs">{selected.guardian ? selected.guardian.charAt(0) : '?'}</AvatarFallback>
+                                  <AvatarFallback className="text-xs">{selected?.guardian ? selected.guardian.charAt(0) : '?'}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <p className="text-xs font-semibold">{selected.guardian}</p>
+                                  <p className="text-xs font-semibold">{selected?.guardian}</p>
                                   {/* <p className="text-[11px] text-muted-foreground">{selected.guardian.relation}</p> */}
                                 </div>
                               </div>

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { apiClient } from "@/lib/api-client";
-
+import { ApiResponse } from "@/types/api-response";
 
 interface attendaceTrackerProps {
   session_id: string;
@@ -65,7 +65,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
 
   const fetchSessionsRoster = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<RosterEntry[]>>({
         endpoint: `v1/sessions/${session_id}/roster`,
         method: "GET",
         headers: {

@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,21 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload, CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { setDate } from "date-fns";
-import { format } from "path";
+import { UserRoundPlus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { toast } from "sonner";
 import React from "react";
 import { CoachProfile } from "@/types/coaches";
 import { Equipment } from "@/types/equipment";
+import { ApiResponse } from "@/types/api-response";
 
 interface AddCoachModalProps {
   onSubmit: () => void;
@@ -43,9 +34,9 @@ interface AddCoachModalProps {
 interface SessionFormData {
   name: string;
   type: string;
-  coach_id: string;
+  coach_id: string | null;
   venue_id: string;
-  session_date:string;
+  session_date: Date;
   start_time: string;
   end_time: string;
   enrollment_cap: number;
@@ -131,15 +122,14 @@ export default function AddSessionModal(
 ) {
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [open, setOpen] = useState(false);
-  const [session_date, setDate] = useState<Date>();
   const { user, tokens } = useAuth();
   const [equipments  , setEquipments] = useState<Equipment[]>([])
   const [form, setForm] = useState<SessionFormData>({
     name: "",
     type: "",
-    coach_id: user?.id,
+    coach_id: user?.id ?? null,
     venue_id: "",
-    session_date: "2026-03-26",
+    session_date: new Date(),
     start_time: "",
     end_time:"",
     enrollment_cap: 0,
@@ -152,7 +142,7 @@ export default function AddSessionModal(
 
   const fetchEquipment = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Equipment[]>>({
         endpoint: `/v1/equipment/inventory?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -211,7 +201,7 @@ export default function AddSessionModal(
 
   const fetchCoaches = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<CoachProfile[]>>({
         endpoint: `v1/coaches?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -330,7 +320,15 @@ export default function AddSessionModal(
                         <Label className="text-sm font-medium text-gray-700">
                           Session Date
                         </Label>
-                        <Popover>
+                        <Input
+                type="date"
+                placeholder="e.g. 01/01/2000"
+                value={form.session_date.toISOString().split('T')[0]}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, session_date: new Date(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"></Input>
+                        {/* <Popover>
                           <PopoverTrigger asChild>
                             <Button variant="outline" className="w-[240px] justify-start text-left">
                               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -345,7 +343,7 @@ export default function AddSessionModal(
                               initialFocus
                             />
                           </PopoverContent>
-                        </Popover>
+                        </Popover> */}
                       </div>
                     </div>
 
@@ -356,7 +354,7 @@ export default function AddSessionModal(
                 Coach
               </Label>
               <Select
-                value={form.coach_id}
+                value={form.coach_id ?? undefined}
                 onValueChange={(val) =>
                   setForm((prev) => ({ ...prev, coach_id: val }))
                 }
@@ -404,7 +402,7 @@ export default function AddSessionModal(
                 type="number"
                 value={form.enrollment_cap}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, enrollment_cap: e.target.value }))
+                  setForm((prev) => ({ ...prev, enrollment_cap: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"/>
             </div>

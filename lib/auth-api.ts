@@ -38,7 +38,7 @@ export async function apiLogin(
  * Exchanges a refresh token for a new token pair.
  */
 export async function apiRefresh(
-  refreshToken: string
+  refreshToken: string | null
 ): Promise<RefreshResponse> {
   const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
     method: "POST",

@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -42,7 +40,7 @@ interface PlayerFormData {
   goals:  number;
   assists: number;
   pass_accuracy: string;
-  sponsored: number;
+  sponsored: string;
   guardian: string;
   group_id: string;
 }
@@ -97,7 +95,7 @@ export default function AddPlayerModal(
     goals:  0,
     assists: 0,
     pass_accuracy: "",
-    sponsored: 0,
+    sponsored: "",
     guardian: "",
     group_id: "",
   });
@@ -184,9 +182,9 @@ export default function AddPlayerModal(
               <Input
                 type="date"
                 placeholder="e.g. 01/01/2000"
-                value={form.dob}
+                value={form.dob.toISOString().split('T')[0]}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, dob: e.target.value }))
+                  setForm((prev) => ({ ...prev, dob: new Date(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"></Input>
             </div>
@@ -267,7 +265,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    height: e.target.value,
+                    height: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -285,7 +283,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    weight: e.target.value,
+                    weight: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -307,7 +305,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    top_speed: e.target.value,
+                    top_speed: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -325,7 +323,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    bmi: e.target.value,
+                    bmi: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -347,7 +345,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    goals: e.target.value,
+                    goals: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -365,7 +363,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    assists: e.target.value,
+                    assists: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -402,11 +400,11 @@ export default function AddPlayerModal(
                     <div key={option.id} className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id={option.id}
+                      id={option.label}
                       name="sponsored"
-                      checked={form.sponsored === option.id}
+                      checked={form.sponsored === option.label}
                       onChange={() =>
-                      setForm((prev) => ({ ...prev, sponsored: option.id }))
+                      setForm((prev) => ({ ...prev, sponsored: option.label }))
                       }
                       className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
                     />

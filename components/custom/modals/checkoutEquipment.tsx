@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Package, CheckCircle2} from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { equipment } from "@/data/data";
+import { useAuth } from "@/context/auth-context";
 
 const CONDITIONS = ["excellent", "good", "fair", "needs_repair", "condemned"];
 
@@ -51,12 +52,13 @@ const MOCK_CATALOG: Equipment[] = [
 ];
 
 export default function CheckoutHandover({ sessionId,coachId, equipments }: CheckoutEquipmentModalProps) {
-  const [catalog, setCatalog] = useState<Equipment[]>(MOCK_CATALOG);
+  const [catalog] = useState<Equipment[]>(MOCK_CATALOG);
   const [selected, setSelected] = useState<SelectedItem[]>([]);
   const [query, setQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const { tokens } = useAuth();
 
   // Swap this for your real API call
   // useEffect(() => {

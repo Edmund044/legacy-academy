@@ -50,7 +50,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       newTokens: AuthTokens,
       authenticatedUser: AuthUser
     ) => {
-      console.log("Persisting new tokens:", newTokens);
       saveAccessToken(newTokens.accessToken,newTokens.refreshToken,newTokens.expiresAt);
       await saveRefreshToken(newTokens.refreshToken);
 
@@ -108,12 +107,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const silentRefresh = useCallback(
     async (refreshToken: string) => {
-      const data = await apiRefresh(refreshToken);
+      const response = await apiRefresh(refreshToken);
 
       const newTokens: AuthTokens = {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-        expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
+        expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
       };
 
       // We need the current user — read it from state via a ref pattern
@@ -184,8 +183,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const storedRefresh =  getRefreshToken();
         const storedAccess = getAccessToken();
 
-        console.log("Rehydrating auth state:", { storedRefresh, storedAccess });
-        console.log("Current URL during rehydration:", storedAccess);
         if (!storedAccess) {
           router.push("/login"); // Redirect if no session to restore
           return;
@@ -202,14 +199,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // TODO: replace with a real /me call if your backend requires it
         // For now we decode the JWT payload to extract user info
-        console.log("Rehydration successful, new tokens:", newTokens);
-        console.log("Decoded new access token:", decodeJwtPayload(newTokens.accessToken));
         const payload = decodeJwtPayload(newTokens.accessToken);
         if (!payload) throw new Error("Invalid token");
 
         const restoredUser: AuthUser = {
           id: payload.sub ?? "",
-          name: payload.name ?? "",
+          first_name: payload.first_name ?? "",
+          last_name: payload.last_name ?? "",
           email: payload.email ?? "",
           role: payload.role ?? "Coach",
           avatarUrl: payload.avatar_url,
@@ -219,7 +215,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch(error) {
         // Stale / invalid session — start fresh
         await clearAuthState();
-        console.log("Session rehydration failed, redirecting to login",error.message);
         router.push("/login"); // Redirect to login on error
       } finally {
         setIsInitialized(true);

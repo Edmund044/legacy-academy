@@ -5,18 +5,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives"
-import { Calendar, DollarSign,Edit, CheckCircle2, Clock, ChevronRight } from "lucide-react"
-import AddSessionModal from "@/components/custom/modals/addSessionModal"
-import EditSessionModal from "@/components/custom/modals/editSessionModal"
-import AttendanceTrackerModal from "@/components/custom/modals/attendanceTrackerModal"
+import { Calendar, DollarSign } from "lucide-react"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { Tabs, TabsList, TabsTrigger, TabsContent,  Progress } from "@/components/ui/primitives"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/primitives"
 import { Session } from "@/types/sessions";
 import { CoachProfile } from "@/types/coaches";
 import { Loader2 } from "lucide-react";
-import { se } from "date-fns/locale"
-import { set } from "date-fns"
+import { ApiResponse } from "@/types/api-response";
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -39,12 +35,12 @@ export default function PlayerDashboardPage() {
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
   const [loadingButton, setLoadingButton] = useState(false);
-  const [enrolledRecordId, setEnrolledRecordId] = useState(null);
+  const [enrolledRecordId, setEnrolledRecordId] = useState<string | null>(null);
 
-  const handlEnroll = async (sessionId) => {
+  const handlEnroll = async (sessionId:string) => {
     try {
       setLoadingButton(true);
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions/${sessionId}/enroll`,
         method: "POST",
         headers: {
@@ -85,7 +81,7 @@ export default function PlayerDashboardPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions?status=planned&page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -93,7 +89,7 @@ export default function PlayerDashboardPage() {
         },
       });
 
-      setSessions((response.data as any[]) ?? []);
+      setSessions((response.data as Session[]) ?? []);
     } catch (error) {
       alert("Failed to fetch equipment inventory. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");

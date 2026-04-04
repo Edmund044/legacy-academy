@@ -2,6 +2,7 @@ export interface Equipment {
     id: string;
     name: string;
     category: string;
+    sku: string;
     stock_total: number;
     stock_assigned: number;
     utilization_pct: number;

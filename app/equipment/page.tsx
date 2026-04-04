@@ -11,8 +11,9 @@ import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { Equipment } from "@/types/equipment";
-import { convertToUpperCase, convertFirstLetterToUpperCase } from "@/lib/utils";
+import { convertToUpperCase } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { ApiResponse } from "@/types/api-response";
 
 
 const conditionConfig: Record<string, string> = {
@@ -33,7 +34,7 @@ export default function EquipmentPage() {
 
   const fetchEquipment = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Equipment[]>>({
         endpoint: `/v1/equipment/inventory?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -41,7 +42,7 @@ export default function EquipmentPage() {
         },
       });
   
-      setEquipment((response.data as any[]) ?? []);
+      setEquipment((response.data as Equipment[]) ?? []);
     } catch (error) {
       alert("Failed to fetch equipment inventory. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");

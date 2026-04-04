@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload, Plus } from "lucide-react";
+import { UserRoundPlus, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
@@ -197,7 +195,7 @@ export default function AddEquipmentModal(
                 min={0}
                 value={form.stock_total}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, stock_total: e.target.value }))
+                  setForm((prev) => ({ ...prev, stock_total: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -212,7 +210,7 @@ export default function AddEquipmentModal(
                 min={0}
                 value={form.replacement_cost_usd}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, replacement_cost_usd: e.target.value }))
+                  setForm((prev) => ({ ...prev, replacement_cost_usd: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />

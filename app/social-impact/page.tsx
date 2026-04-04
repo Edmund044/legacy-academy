@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/primitives"
-import { Heart, BookOpen, Package, Bus, AlertTriangle, MapPin, Download, Plus } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts"
+import { Heart, BookOpen, Package, Bus, AlertTriangle, Download, Plus } from "lucide-react"
 
 const players = [
   { name: "Kevin Omondi", settlement: "Mathare Valley", status: "FULLY SPONSORED", needs: "Transport, Boots", spend: "KES 14,200" },

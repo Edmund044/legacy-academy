@@ -17,10 +17,9 @@ const ACCESS_KEY = "academy_access"; // sessionStorage – tab-scoped, cleared o
 
 export function saveAccessToken(token: string,refresh_token: string,expiry: number): void {
   if (typeof window !== "undefined") {
-    console.log("Saving access token:", { token, refresh_token, expiry });
     localStorage.setItem("accessToken", token || "");
     localStorage.setItem("refreshToken", refresh_token || "");
-    localStorage.setItem("expiry", expiry || 0);
+    localStorage.setItem("expiry", String(expiry) || "0");
 
   }
 }
@@ -48,7 +47,7 @@ export async function saveRefreshToken(token: string): Promise<void> {
   });
 }
 
-export  function getRefreshToken(): string {
+export  function getRefreshToken(): string | null {
   // const res = await fetch("/api/auth/session");
   // if (!res.ok) return null;
   // const data = await res.json();

@@ -22,9 +22,8 @@ import {
 } from "@/components/ui/select";
 import { UserRoundPlus, Edit, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
-import { useAuth } from "@/context/auth-context";
 import { EQUIPMENT_CATEGORY,  CONDITION } from "@/constants/constants";
-
+import { Equipment } from "@/types/equipment";
 
 interface EquipmentFormData {
   name: string;
@@ -40,15 +39,18 @@ interface EquipmentData {
   category: string;
   sku: string;
   stock_total: number;
-  condition: string;
-  replacement_cost_usd: number;
+  stock_assigned: number;
+  utilization_pct: number;
+  assigned: number;
+  condition: "Excellent" | "Good" | "Fair" | "Poor"; // optional: restrict values
+  replacement_cost_usd: number; 
 }
 
 
 interface EditEquipmentModalProps {
   // open: boolean;
   // onOpenChange: (open: boolean) => void;
-  equipment: EquipmentData;
+  equipment: Equipment;
   onSubmit: () => void;
 }
 
@@ -76,7 +78,7 @@ export default function EditEquipmentModal(
     category: equipment?.category || "",
     stock_total: equipment?.stock_total || 0,
     condition: equipment?.condition || "",
-    replacement_cost_usd: equipment?.replacement_cost_usd || 0,
+    replacement_cost_usd: Number(equipment?.replacement_cost_usd) || 0,
     sku: equipment?.sku || ""
   });
 
@@ -172,7 +174,7 @@ export default function EditEquipmentModal(
                 min={0}
                 value={form.stock_total}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, stock_total: e.target.value }))
+                  setForm((prev) => ({ ...prev, stock_total: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -187,7 +189,7 @@ export default function EditEquipmentModal(
                 min={0}
                 value={form.replacement_cost_usd}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, replacement_cost_usd: e.target.value }))
+                  setForm((prev) => ({ ...prev, replacement_cost_usd: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
