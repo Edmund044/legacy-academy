@@ -32,12 +32,12 @@ export interface NavGroup {
 // ✅ NAV CONFIG (NOW FULLY TYPED)
 //
 const naviGroups: NavGroup[] = [
-  {
-    label: "Overview",
-    items: [
-      { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    ]
-  },
+  // {
+  //   label: "Overview",
+  //   items: [
+  //     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  //   ]
+  // },
   // {
   //   label: "People",
   //   items: [
