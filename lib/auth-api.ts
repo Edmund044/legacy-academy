@@ -3,7 +3,7 @@ import type {
   RefreshResponse,
 } from "@/types/auth";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://legacy-academy-backend-271490766088.europe-west1.run.app";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
