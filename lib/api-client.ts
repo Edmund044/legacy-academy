@@ -23,7 +23,7 @@ class ApiError extends Error {
 
 export const apiClient = async <T>(opts: FetchOptions): Promise<T> => {
 	const {
-		baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
+		baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://legacy-academy-backend-271490766088.europe-west1.run.app",
 		endpoint,
 		queryParams,
 		body,
