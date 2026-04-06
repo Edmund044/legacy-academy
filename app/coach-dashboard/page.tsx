@@ -5,12 +5,12 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives"
-import { Calendar, DollarSign,Edit, CheckCircle2, Clock, ChevronRight } from "lucide-react"
+import { Calendar, DollarSign } from "lucide-react"
 import AddSessionModal from "@/components/custom/modals/addSessionModal"
 import EditSessionModal from "@/components/custom/modals/editSessionModal"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { Tabs, TabsList, TabsTrigger, TabsContent,  Progress } from "@/components/ui/primitives"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/primitives"
 import { Session } from "@/types/sessions";
 import { Loader2 } from "lucide-react";
 import { ApiResponse } from "@/types/api-response";

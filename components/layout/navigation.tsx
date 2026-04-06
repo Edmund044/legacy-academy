@@ -38,22 +38,22 @@ const naviGroups: NavGroup[] = [
       { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     ]
   },
-  {
-    label: "People",
-    items: [
-      { href: "/coaches", icon: Users, label: "Coaches" },
-      { href: "/players", icon: UserCircle, label: "Players" },
-    ]
-  },
-  {
-    label: "Operations",
-    items: [
-      { href: "/sessions", icon: CalendarDays, label: "Sessions" },
-      { href: "/equipment", icon: Package, label: "Equipment" },
-      { href: "/handover", icon: ArrowLeftRight, label: "Handover" },
-      { href: "/user-management", icon: Package, label: "User Management" },
-    ]
-  },
+  // {
+  //   label: "People",
+  //   items: [
+  //     { href: "/coaches", icon: Users, label: "Coaches" },
+  //     { href: "/players", icon: UserCircle, label: "Players" },
+  //   ]
+  // },
+  // {
+  //   label: "Operations",
+  //   items: [
+  //     { href: "/sessions", icon: CalendarDays, label: "Sessions" },
+  //     { href: "/equipment", icon: Package, label: "Equipment" },
+  //     { href: "/handover", icon: ArrowLeftRight, label: "Handover" },
+  //     { href: "/user-management", icon: Package, label: "User Management" },
+  //   ]
+  // },
 
   // ✅ ROLE-BASED GROUPS
   {
