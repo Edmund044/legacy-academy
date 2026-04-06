@@ -117,7 +117,6 @@ const naviGroups: NavGroup[] = [
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/players", icon: UserCircle, label: "Players" },
       { href: "/social-impact", icon: Heart, label: "Social Impact" },
-      { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/contracts", icon: FileText, label: "Contracts" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/handover", icon: Dumbbell, label: "Handover" },
