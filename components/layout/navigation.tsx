@@ -62,6 +62,11 @@ const naviGroups: NavGroup[] = [
     items: [
       { href: "/bookings", icon: BookOpen, label: "Bookings" },
       { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
+      { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/billing", icon: Dumbbell, label: "Billing" },
+
     ]
   },
   {
@@ -69,7 +74,18 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.COACH],
     items: [
       { href: "/coach-dashboard", icon: Dumbbell, label: "Plan Session" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/handover", icon: Dumbbell, label: "Handover" },
       { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
+    ]
+  },
+  {
+    label: "Kits & Equipment Portal",
+    roles: [RoleNames.COACH],
+    items: [
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/equipment", icon: Dumbbell, label: "Equipment" },
+      { href: "/handover", icon: Dumbbell, label: "Handover" },
     ]
   },
   {
@@ -77,6 +93,8 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.CUSTOMER_CARE],
     items: [
       { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/billing", icon: CreditCard, label: "Billing" },
     ]
   },
@@ -85,6 +103,7 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.CSR_LEAD],
     items: [
       { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/contracts", icon: FileText, label: "Contracts" },
     ]
   },
@@ -94,7 +113,15 @@ const naviGroups: NavGroup[] = [
     items: [
       { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
       { href: "/coaches", icon: Users, label: "Coaches" },
-      { href: "/sessions", icon: CalendarDays, label: "Sessions" },
+      { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
+      { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
+      { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
+      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      { href: "/handover", icon: Dumbbell, label: "Handover" },
+      { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
     ]
   }
 ]
