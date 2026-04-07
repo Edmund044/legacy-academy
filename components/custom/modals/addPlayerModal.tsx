@@ -400,11 +400,11 @@ export default function AddPlayerModal(
                     <div key={option.id} className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id={option.label}
+                      id={option.id}
                       name="sponsored"
                       checked={form.sponsored === option.label}
                       onChange={() =>
-                      setForm((prev) => ({ ...prev, sponsored: option.label }))
+                      setForm((prev) => ({ ...prev, sponsored: option.id }))
                       }
                       className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
                     />
