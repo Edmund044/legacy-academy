@@ -14,66 +14,229 @@ import { Loader2 } from "lucide-react";
 import { PlayerProfile } from "@/types/players";
 import { ApiResponse } from "@/types/api-response";
 
+
 const players2 = [
   {
-    "id": "b7671cd6-406b-4eec-b232-53c9c8e7a6f0",
-    "first_name": "Player1_f",
-    "last_name": "Player1_l",
-    "dob": "1998-03-17",
-    "position": "defender",
-    "status": "active",
-    "group_id": "971a583b-97ae-4575-9625-6d6a7d57e8c5",
-    "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5",
-    "group_name": {
-      "id": "971a583b-97ae-4575-9625-6d6a7d57e8c5",
-      "age_group": "17-19",
-      "coach_id": "d574f8cc-2ed3-4248-862c-e590d61f15ec",
-      "name": "Under-19",
-      "division": "6",
-      "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5",
-      "created_at": "2026-03-17T09:33:38.889461+00:00"
+    id: "player-001",
+    first_name: "Brian",
+    last_name: "Otieno",
+    dob: "2010-06-15",
+    position: "forward",
+    status: "active",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
     },
-    "guardian": null,
-    "sponsored": 0,
-    "training_center": null,
-    "stats": {
-      "goals": null,
-      "assists": null,
-      "pass_accuracy": null
+
+    guardian: "James Otieno",
+    sponsored: 1,
+    training_center: "Nairobi West",
+
+    stats: {
+      goals: 12,
+      assists: 5,
+      pass_accuracy: 78,
     },
-    "physical": {
-      "height": null,
-      "weight": null,
-      "bmi": null
+
+    physical: {
+      height: 150,
+      weight: 45,
+      bmi: 20,
     },
-    "created_at": "2026-03-17T09:48:36.195018+00:00"
+
+    created_at: "2025-03-01T09:00:00Z",
   },
-  // { id: 1, name: "Mateo Silva", group: "U-14 ACADEMY", position: "Forward", tag: "Elite Prospect", location: "Lisbon Training Center, Pitch 4",
-  //   stats: { goals: 18, goalsTrend: "+4 from last month", assists: 7, assistsAvg: "Season avg: 0.4", passAccuracy: 84, passNote: "Top 5% in Academy" },
-  //   physical: { height: "172 cm", weight: "64 kg", topSpeed: "31.4 km/h", bmi: "21.6" },
-  //   injury: "Fully Fit",
-  //   guardian: { name: "Elena Silva", relation: "Mother" },
-  //   timeline: [
-  //     { date: "OCT 12, 2023", title: "Coaching Note: Finishing Drills", note: "Mateo showed exceptional focus. Improved weak foot striking significantly." },
-  //     { date: "SEP 28, 2023", title: "U-14 Tournament MVP", note: "Led the team to victory in the Regional Cup. Scored 5 goals in 3 matches." },
-  //     { date: "AUG 15, 2023", title: "Physical Assessment", note: "Sprint speed increased by 0.3s over 40m. Vertical leap improved by 2cm." },
-  //   ]
-  // },
-  // { id: 2, name: "Kevin Omondi", group: "U-12 ACADEMY", position: "Midfielder", tag: "Sponsored",
-  //   location: "Mathare Valley Training Ground",
-  //   stats: { goals: 8, goalsTrend: "+2 from last month", assists: 12, assistsAvg: "Season avg: 0.6", passAccuracy: 79, passNote: "Top 15% in Academy" },
-  //   physical: { height: "163 cm", weight: "55 kg", topSpeed: "28.8 km/h", bmi: "20.7" },
-  //   injury: "Fully Fit",
-  //   guardian: { name: "James Omondi", relation: "Father" },
-  //   timeline: [
-  //     { date: "NOV 1, 2023", title: "Monthly Review", note: "Excellent positioning and work rate. Needs to improve shooting accuracy." },
-  //   ]
-  // },
+
+  {
+    id: "player-002",
+    first_name: "Kevin",
+    last_name: "Mwangi",
+    dob: "2008-03-22",
+    position: "midfielder",
+    status: "active",
+
+    group_id: "grp-002",
+    campus_id: "campus-02",
+
+    group_name: {
+      id: "grp-002",
+      age_group: "U16",
+      coach_id: "coach-002",
+      name: "Rising Stars",
+      division: "West League",
+      campus_id: "campus-02",
+      created_at: "2025-02-15T10:00:00Z",
+    },
+
+    guardian: "Mary Mwangi",
+    sponsored: 0,
+    training_center: "Karen",
+
+    stats: {
+      goals: 4,
+      assists: 11,
+      pass_accuracy: 85,
+    },
+
+    physical: {
+      height: 168,
+      weight: 60,
+      bmi: 21.3,
+    },
+
+    created_at: "2025-03-05T11:20:00Z",
+  },
+
+  {
+    id: "player-003",
+    first_name: "Samuel",
+    last_name: "Kiptoo",
+    dob: "2009-11-02",
+    position: "goalkeeper",
+    status: "inactive",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: null,
+    sponsored: 1,
+    training_center: null,
+
+    stats: {
+      goals: 0,
+      assists: 0,
+      pass_accuracy: null,
+    },
+
+    physical: {
+      height: 155,
+      weight: 50,
+      bmi: null,
+    },
+
+    created_at: "2025-03-10T14:45:00Z",
+  },
+
+  {
+    id: "player-004",
+    first_name: "Daniel",
+    last_name: "Ochieng",
+    dob: "2011-08-19",
+    position: "defender",
+    status: "active",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: "Peter Ochieng",
+    sponsored: 0,
+    training_center: "Langata",
+
+    stats: {
+      goals: 1,
+      assists: 2,
+      pass_accuracy: 72,
+    },
+
+    physical: {
+      height: null,
+      weight: null,
+      bmi: null,
+    },
+
+    created_at: "2025-03-12T16:00:00Z",
+  },
 ]
+
+// const players2 = [
+//   {
+//     "id": "b7671cd6-406b-4eec-b232-53c9c8e7a6f0",
+//     "first_name": "Player1_f",
+//     "last_name": "Player1_l",
+//     "dob": "1998-03-17",
+//     "position": "defender",
+//     "status": "active",
+//     "group_id": "971a583b-97ae-4575-9625-6d6a7d57e8c5",
+//     "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5",
+//     "group_name": {
+//       "id": "971a583b-97ae-4575-9625-6d6a7d57e8c5",
+//       "age_group": "17-19",
+//       "coach_id": "d574f8cc-2ed3-4248-862c-e590d61f15ec",
+//       "name": "Under-19",
+//       "division": "6",
+//       "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5",
+//       "created_at": "2026-03-17T09:33:38.889461+00:00"
+//     },
+//     "guardian": null,
+//     "sponsored": 0,
+//     "training_center": null,
+//     "stats": {
+//       "goals": null,
+//       "assists": null,
+//       "pass_accuracy": null
+//     },
+//     "physical": {
+//       "height": null,
+//       "weight": null,
+//       "bmi": null
+//     },
+//     "created_at": "2026-03-17T09:48:36.195018+00:00"
+//   },
+//   // { id: 1, name: "Mateo Silva", group: "U-14 ACADEMY", position: "Forward", tag: "Elite Prospect", location: "Lisbon Training Center, Pitch 4",
+//   //   stats: { goals: 18, goalsTrend: "+4 from last month", assists: 7, assistsAvg: "Season avg: 0.4", passAccuracy: 84, passNote: "Top 5% in Academy" },
+//   //   physical: { height: "172 cm", weight: "64 kg", topSpeed: "31.4 km/h", bmi: "21.6" },
+//   //   injury: "Fully Fit",
+//   //   guardian: { name: "Elena Silva", relation: "Mother" },
+//   //   timeline: [
+//   //     { date: "OCT 12, 2023", title: "Coaching Note: Finishing Drills", note: "Mateo showed exceptional focus. Improved weak foot striking significantly." },
+//   //     { date: "SEP 28, 2023", title: "U-14 Tournament MVP", note: "Led the team to victory in the Regional Cup. Scored 5 goals in 3 matches." },
+//   //     { date: "AUG 15, 2023", title: "Physical Assessment", note: "Sprint speed increased by 0.3s over 40m. Vertical leap improved by 2cm." },
+//   //   ]
+//   // },
+//   // { id: 2, name: "Kevin Omondi", group: "U-12 ACADEMY", position: "Midfielder", tag: "Sponsored",
+//   //   location: "Mathare Valley Training Ground",
+//   //   stats: { goals: 8, goalsTrend: "+2 from last month", assists: 12, assistsAvg: "Season avg: 0.6", passAccuracy: 79, passNote: "Top 15% in Academy" },
+//   //   physical: { height: "163 cm", weight: "55 kg", topSpeed: "28.8 km/h", bmi: "20.7" },
+//   //   injury: "Fully Fit",
+//   //   guardian: { name: "James Omondi", relation: "Father" },
+//   //   timeline: [
+//   //     { date: "NOV 1, 2023", title: "Monthly Review", note: "Excellent positioning and work rate. Needs to improve shooting accuracy." },
+//   //   ]
+//   // },
+// ]
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerProfile[]>([])
-  const [selected, setSelected] = useState<PlayerProfile>()
+  const [selected, setSelected] = useState<PlayerProfile>(players2[0])
   const [tab, setTab] = useState("overview")
   const { tokens } = useAuth();
   const [loading, setLoading] = useState(true);

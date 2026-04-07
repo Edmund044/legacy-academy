@@ -33,8 +33,8 @@ export interface PlayerProfile {
   first_name: string;
   last_name: string;
   dob: string;
-  position: PlayerPosition;
-  status: PlayerStatus;
+  position: string;
+  status: string;
 
   group_id: string;
   campus_id: string;

@@ -42,7 +42,7 @@ function CoachCard({ coach, selected, onSelect }: { coach: CoachProfile; selecte
 
 export default function CoachesPage() {
   const [coaches2, setCoaches] = useState<CoachProfile[]>([])
-  const [selected, setSelected] = useState<CoachProfile>()
+  const [selected, setSelected] = useState<CoachProfile>(coaches[0])
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, tokens } = useAuth();

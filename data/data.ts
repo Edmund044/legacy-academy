@@ -1,29 +1,81 @@
 export const coaches = [
-    {
-      id: 1, name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
-      bio: "Former professional focused on data-driven tactical periodization and youth elite development. Leading Elite Division since 2021.",
-      stats: { experience: 12, teams: 8, winRate: 68 },
-      teams: ["Under-19 (Elite Division · 24 players)", "Under-16 (Regional League · 18 players)"],
-      rating: 4.9, skills: [{ name: "Tactics implementation", pct: 95 }, { name: "Youth Development", pct: 88 }, { name: "Video Analysis", pct: 92 }],
-      upcoming: [{ date: "OCT 24", title: "U-19 Tactical Training", time: "15:00–17:30", venue: "Pitch 3" }, { date: "OCT 26", title: "U-16 Match vs FC Lions", time: "10:30", venue: "Main Stadium" }]
+  {
+    id: 1,
+    name: "John Kamau",
+    role: "Head Coach",
+    license: "UEFA Pro",
+    bio: "Experienced head coach with a strong track record in youth development and competitive football.",
+    stats: {
+      experience: 12,
+      teams: 5,
+      win_rate: 68,
     },
-    {
-      id: 2, name: "Sarah Jenkins", role: "Speed & Agility Coach", license: "UEFA A Candidate",
-      bio: "Specialising in explosive movement and athletic development for youth players.",
-      stats: { experience: 5, teams: 3, winRate: 74 },
-      teams: ["Under-10 (Weekend Clinic · 30 players)"],
-      rating: 4.8, skills: [{ name: "Speed & Agility", pct: 96 }, { name: "Physical Conditioning", pct: 90 }, { name: "Youth Development", pct: 85 }],
-      upcoming: [{ date: "OCT 25", title: "Beginner Fundamentals", time: "10:00–12:00", venue: "Pitch 1" }]
+    teams: ["U18 Lions", "Nairobi FC"],
+    rating: 4.7,
+    skills: [
+      { name: "Tactics", pct: 90 },
+      { name: "Leadership", pct: 88 },
+      { name: "Player Development", pct: 85 },
+    ],
+  },
+  {
+    id: 2,
+    name: "David Otieno",
+    role: "Assistant Coach",
+    license: "CAF A",
+    bio: "Specializes in defensive organization and match analysis.",
+    stats: {
+      experience: 8,
+      teams: 3,
+      win_rate: 61,
     },
-    {
-      id: 3, name: "Marco Rossi", role: "Head of Attacking Development", license: "UEFA Pro",
-      bio: "Elite striker program lead with over 400 sessions delivered across multiple age groups.",
-      stats: { experience: 12, teams: 5, winRate: 72 },
-      teams: ["U14 Elite (Advanced Training · 20 players)", "ALL (Academy Selection · 120 players)"],
-      rating: 4.7, skills: [{ name: "Finishing & Positioning", pct: 98 }, { name: "Tactical Awareness", pct: 87 }, { name: "Player Mentorship", pct: 91 }],
-      upcoming: [{ date: "OCT 24", title: "Elite Striker Camp", time: "09:00–11:30", venue: "Main Pitch" }]
+    teams: ["City Stars", "U21 Squad"],
+    rating: 4.3,
+    skills: [
+      { name: "Defense", pct: 87 },
+      { name: "Analysis", pct: 82 },
+      { name: "Communication", pct: 80 },
+    ],
+  },
+  {
+    id: 3,
+    name: "Brian Mwangi",
+    role: "Fitness Coach",
+    license: "FIFA Fitness Trainer",
+    bio: "Focuses on player conditioning, injury prevention, and recovery.",
+    stats: {
+      experience: 6,
+      teams: 4,
+      win_rate: 70,
     },
-  ]
+    teams: ["Elite Academy", "Senior Team"],
+    rating: 4.6,
+    skills: [
+      { name: "Endurance Training", pct: 92 },
+      { name: "Rehabilitation", pct: 85 },
+      { name: "Nutrition", pct: 78 },
+    ],
+  },
+  {
+    id: 4,
+    name: "Samuel Kiptoo",
+    role: "Goalkeeping Coach",
+    license: "CAF B",
+    bio: "Former professional goalkeeper turned elite goalkeeping coach.",
+    stats: {
+      experience: 10,
+      teams: 6,
+      win_rate: 65,
+    },
+    teams: ["National Youth Team", "Rift Valley FC"],
+    rating: 4.5,
+    skills: [
+      { name: "Shot Stopping", pct: 91 },
+      { name: "Positioning", pct: 89 },
+      { name: "Reflex Training", pct: 88 },
+    ],
+  },
+]
 
 export const equipment = [
   { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
