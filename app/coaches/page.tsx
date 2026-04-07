@@ -24,7 +24,7 @@ function CoachCard({ coach, selected, onSelect }: { coach: CoachProfile; selecte
     >
       <div className="flex items-start gap-3">
         <Avatar className="h-12 w-12 border-2 border-white shadow">
-          <AvatarFallback className="text-sm">{coach.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+          <AvatarFallback className="text-sm">{coach?.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm truncate">{coach.name}</p>

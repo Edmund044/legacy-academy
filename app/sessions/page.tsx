@@ -119,7 +119,7 @@ export default function SessionsPage() {
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
+                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s?.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
                         <span className="text-xs">{s.coach}</span>
                       </div>
                     </td>
