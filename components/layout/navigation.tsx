@@ -112,6 +112,7 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.TECHNICAL_DIRECTOR],
     items: [
       { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+      { href: "/price-configurations", icon: CalendarDays, label: "Price Configurations" },
       { href: "/coaches", icon: Users, label: "Coaches" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
