@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,118 +18,238 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Edit, Upload } from "lucide-react";
+import { UserRoundPlus, Upload } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { Guardian } from "@/types/guardians";
+import { toast } from "sonner";
 
-interface AddGuardianModalProps {
-  guardian: Guardian;
-  onSubmit: () => void;
+interface AddCoachModalProps {
+  guardian: any;
+  onSubmit:() => void;
 }
 
 interface GuardianFormData {
-  profilePhoto: File | null;
-  fullName: string;
-  position: string;
-  training_center: string;
-  height: string;
-  weight: string;
-  top_speed:  string;
-  bmi: string;
-  goals:  string;
-  assists: string;
-  pass_accuracy: string;
-  assignedTeam: string;
-  sponsored: string;
-  guardian: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  whatsapp_phone: string;
+  player_id: string;
+  relationship_type: string;
+  is_primary: boolean;
 }
 
-const TEAM_OPTIONS = [
-  "Under-7",
-  "Under-9",
-  "Under-11",
-  "Under-13",
-  "Under-15",
-  "Under-17",
-  "Under-19",
-  "Under-21",
-];
+const players2 = [
+  {
+    id: "player-001",
+    first_name: "Brian",
+    last_name: "Otieno",
+    dob: "2010-06-15",
+    position: "forward",
+    status: "active",
 
-const SPONSORSHIP_OPTIONS = [
-  { id: "1", label: "Full" },
-  { id: "2", label: "Partial" },
-  { id: "3", label: "None" },
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: "James Otieno",
+    sponsored: 1,
+    training_center: "Nairobi West",
+
+    stats: {
+      goals: 12,
+      assists: 5,
+      pass_accuracy: 78,
+    },
+
+    physical: {
+      height: 150,
+      weight: 45,
+      bmi: 20,
+    },
+
+    created_at: "2025-03-01T09:00:00Z",
+  },
+
+  {
+    id: "player-002",
+    first_name: "Kevin",
+    last_name: "Mwangi",
+    dob: "2008-03-22",
+    position: "midfielder",
+    status: "active",
+
+    group_id: "grp-002",
+    campus_id: "campus-02",
+
+    group_name: {
+      id: "grp-002",
+      age_group: "U16",
+      coach_id: "coach-002",
+      name: "Rising Stars",
+      division: "West League",
+      campus_id: "campus-02",
+      created_at: "2025-02-15T10:00:00Z",
+    },
+
+    guardian: "Mary Mwangi",
+    sponsored: 0,
+    training_center: "Karen",
+
+    stats: {
+      goals: 4,
+      assists: 11,
+      pass_accuracy: 85,
+    },
+
+    physical: {
+      height: 168,
+      weight: 60,
+      bmi: 21.3,
+    },
+
+    created_at: "2025-03-05T11:20:00Z",
+  },
+
+  {
+    id: "player-003",
+    first_name: "Samuel",
+    last_name: "Kiptoo",
+    dob: "2009-11-02",
+    position: "goalkeeper",
+    status: "inactive",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: null,
+    sponsored: 1,
+    training_center: null,
+
+    stats: {
+      goals: 0,
+      assists: 0,
+      pass_accuracy: null,
+    },
+
+    physical: {
+      height: 155,
+      weight: 50,
+      bmi: null,
+    },
+
+    created_at: "2025-03-10T14:45:00Z",
+  },
+
+  {
+    id: "player-004",
+    first_name: "Daniel",
+    last_name: "Ochieng",
+    dob: "2011-08-19",
+    position: "defender",
+    status: "active",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: "Peter Ochieng",
+    sponsored: 0,
+    training_center: "Langata",
+
+    stats: {
+      goals: 1,
+      assists: 2,
+      pass_accuracy: 72,
+    },
+
+    physical: {
+      height: null,
+      weight: null,
+      bmi: null,
+    },
+
+    created_at: "2025-03-12T16:00:00Z",
+  },
 ]
 
-const SPECIALIZATIONS = [
-  "Striker",
-  "Attacking Midfielder",
-  "Goalkeeper",
-  "Defensive Midfielder",
-  "Left Back",
-  "Right Back",
-  "Center Back",
-  "Left Winger",
-  "Right Winger",
+const RELATIONSHIP_TYPE = [
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f15ec", label: "Father" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f16ec", label: "Mother" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f17ec", label: "Guardian" },
+
 ];
 
+const IS_PRIMARY_OPTIONS = [
+  { id: "1", label: true },
+  { id: "2", label: false },
+]
 
-export default function EditGuardianModal(
+
+
+
+export default function AddGuardianModal(
     {
-    guardian,
+      guardian,
   onSubmit,
-}: AddGuardianModalProps
+}: AddCoachModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { tokens } = useAuth();
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<GuardianFormData>({
-    profilePhoto: null,
-    fullName: "",
-    position: "",
-    training_center: "",
-    height: "",
-    weight: "",
-    top_speed:  "",
-    bmi: "",
-    goals:  "",
-    assists: "",
-    pass_accuracy: "",
-    assignedTeam: "",
-    sponsored: "",
-    guardian: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    whatsapp_phone: "",
+    player_id: "",
+    relationship_type: "",
+    is_primary: false,
   });
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
 
-  const handleTeamToggle = (teamId: string, checked: boolean) => {
-    setForm((prev) => ({
-      ...prev,
-    }));
-  };
 
   const handleSubmit = async () => {
     try {
       await apiClient({
-        endpoint: "/v1/players/7677b363-b02c-4634-9614-8c8e25a084bc",
-        method: "PATCH",
+        endpoint: "/v1/guardians",
+        method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
-          "position": "DEFENSIVE MIDFIELDER",
+          ...form,
         },
       });
-      onSubmit()
-      // setOpen(false);
-      // onConfirm();
+      setOpen(false);
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
       // toast.error("Something went wrong. Please try again later.");
@@ -144,298 +262,142 @@ export default function EditGuardianModal(
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
-              <Button size="sm" variant="outline"><Edit className="w-3.5 h-3.5 mr-1.5" /></Button>
+        <Button size="sm"> + Add Guardian</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
             <UserRoundPlus className="w-5 h-5 text-red-600" />
-            Edit Guardian
+            Add New Guardian
           </DialogTitle>
         </DialogHeader>
 
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
-          {/* Photo Upload */}
-          <div
-            className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 py-6 cursor-pointer hover:bg-gray-100 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png, image/jpeg"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Profile preview"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden">
-                {/* Silhouette SVG */}
-                <svg
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-14 h-14"
-                >
-                  <ellipse cx="32" cy="24" rx="10" ry="11" fill="#a0522d" opacity="0.5" />
-                  <path
-                    d="M12 56c0-11 9-18 20-18s20 7 20 18"
-                    fill="#a0522d"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-sm font-semibold text-gray-700 flex items-center gap-1 justify-center">
-                <Upload className="w-3.5 h-3.5" />
-                Upload Profile Photo
-              </p>
-              <p className="text-xs text-gray-400">PNG or JPG, max 5MB</p>
-            </div>
-          </div>
 
           {/* Full Name + Role */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Full Name
+                First Name
               </Label>
               <Input
                 placeholder="e.g. Pep Guardiola"
-                value={form.fullName}
+                value={form.first_name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, fullName: e.target.value }))
+                  setForm((prev) => ({ ...prev, first_name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Position
+                Last Name
               </Label>
-              <Select
-                value={form.position}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, position: val }))
+              <Input
+                placeholder="e.g. Pep Guardiola"
+                value={form.last_name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, last_name: e.target.value }))
                 }
-              >
-                <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                className="placeholder:text-gray-400"
+              />
             </div>
           </div>
-
-          {/* License + Years */}
+          {/* Email + Phone */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Training Center
+                Email
               </Label>
               <Input
-                placeholder="e.g. Main Academy Facility"
-                value={form.training_center}
+                placeholder="e.g. user@gmail.com"
+                value={form.email}
+                type="email"
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, training_center: e.target.value }))
+                  setForm((prev) => ({ ...prev, email: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Team
-              </Label>
-              <Select
-                value={form.assignedTeam}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, assignedTeam: val }))
-                }
-              >
-                <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {TEAM_OPTIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Height & Weight */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Height
+                Whatssap Phone Number
               </Label>
               <Input
-                placeholder="e.g. 183"
-                type="number"
-                min={0}
-                value={form.height}
+                placeholder="e.g. +254700000000"
+                value={form.whatsapp_phone}
                 onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    height: e.target.value,
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Weight
-              </Label>
-              <Input
-                placeholder="e.g. 80"
-                type="number"
-                min={0}
-                value={form.weight}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    weight: e.target.value,
-                  }))
+                  setForm((prev) => ({ ...prev, whatsapp_phone: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
             </div>
           </div>
 
-          {/* Top Speed & BMI */} 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Top Speed
-              </Label>
-              <Input
-                placeholder="e.g. 31"
-                type="number"
-                min={0}
-                value={form.top_speed}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    top_speed: e.target.value,
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                BMI
-              </Label>
-              <Input
-                placeholder="e.g. 20"
-                type="number"
-                min={0}
-                value={form.bmi}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    bmi: e.target.value,
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/** Goals & Assists*/}
+          {/* Player + Relationship  */}
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Goals
+                Player
               </Label>
-              <Input
-                placeholder="e.g. 10"
-                type="number"
-                min={0}
-                value={form.goals}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    goals: e.target.value,
-                  }))
+              <Select
+                value={form.player_id ?? undefined}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, player_id: val }))
                 }
-                className="placeholder:text-gray-400"
-              />
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Player" />
+                </SelectTrigger>
+                <SelectContent>
+                  {players2.map((player) => (
+                    <SelectItem key={player.id} value={String(player.id)}>
+                      {player.first_name} {player.last_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Assists
+                Relationship 
               </Label>
-              <Input
-                placeholder="e.g. 5"
-                type="number"
-                min={0}
-                value={form.assists}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    assists: e.target.value,
-                  }))
+              <Select
+                value={form.relationship_type}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, relationship_type: val }))
                 }
-                className="placeholder:text-gray-400"
-              />
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select relationship" />
+                </SelectTrigger>
+                <SelectContent>
+                  {RELATIONSHIP_TYPE.map((relationship) => (
+                    <SelectItem key={relationship.id} value={relationship.id}>
+                      {relationship.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Pass Accuracy
-              </Label>
-              <Input
-                placeholder="e.g. 21"
-                type="number"
-                min={0}
-                value={form.pass_accuracy}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    pass_accuracy: e.target.value,
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/* Sponsored & Guardian */} 
-                <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
                   <Label className="text-sm font-medium text-gray-700">
-                  Sponsored
+                  Is Primary Guardian?
                   </Label>
                   <div className="flex items-center gap-4">
-                  {SPONSORSHIP_OPTIONS.map((option) => (
+                  {IS_PRIMARY_OPTIONS.map((option) => (
                     <div key={option.id} className="flex items-center gap-2">
                     <input
                       type="radio"
                       id={option.id}
-                      name="sponsored"
-                      checked={form.sponsored === option.id}
+                      name="is_primary"
+                      checked={form.is_primary === option.label}
                       onChange={() =>
-                      setForm((prev) => ({ ...prev, sponsored: option.id }))
+                      setForm((prev) => ({ ...prev, is_primary: option.label }))
                       }
                       className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
                     />
@@ -443,44 +405,25 @@ export default function EditGuardianModal(
                       htmlFor={option.id}
                       className="text-sm text-gray-700 cursor-pointer select-none"
                     >
-                      {option.label}
+                      {option.label? "Yes" : "No"}
                     </label>
                     </div>
                   ))}
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-gray-700">
-                  Guardian
-                  </Label>
-                  <Input
-                  placeholder="e.g. 20"
-                  value={form.guardian}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                    ...prev,
-                    guardian: e.target.value,
-                    }))
-                  }
-                  className="placeholder:text-gray-400"
-                  />
-                </div>
-                </div>
+          </div>
+
+
+
 
                 {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button
-              variant="ghost"
-            //   onClick={handleCancel}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </Button>
+
             <Button
               onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
-              Edit Guardian
+              Add Guardian
             </Button>
           </div>
         </div>

@@ -5,6 +5,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CreditCard, Download, MessageSquare, CheckCircle2 } from "lucide-react"
+import { useAuth } from "@/context/auth-context";
+import dynamic from "next/dynamic";
+import { v4 as uuidv4 } from "uuid";
+
+const PaystackButton = dynamic(
+  () => import("react-paystack").then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
 
 const sessions = [
   { date: "Oct 24, 2023", player: "Mateo Silva", type: "Technical Drill", charge: "KES 800", status: "PENDING" },
@@ -20,6 +28,24 @@ const invoices = [
 ]
 
 export default function BillingPage() {
+  const { tokens,user } = useAuth();
+  const config = {
+    reference: uuidv4(),
+    email: user?.email || "Cliffobure@gmail.com",
+    // amount: Math.round(total * 100),
+    amount: 100,
+    publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
+    currency: "KES",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "User ID",
+          variable_name: "user_id",
+          value: user?.id || "unknown_user_id",
+        },
+      ],
+    },
+  };
   return (
     <>
       <PageHeader title="Subscription & Billing" description="Manage memberships, training fees, and scholarship credits for your family.">
@@ -52,7 +78,13 @@ export default function BillingPage() {
           </div>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
             <p className="text-xs text-muted-foreground">Next renewal date: Jan 15, 2025</p>
-            <Button variant="ghost" size="sm" className="text-brand">Renew Membership</Button>
+            <PaystackButton
+                {...config}
+                text="Renew Membership"
+                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
+                onSuccess={() => console.log("Payment was a success")}
+                onClose={() => console.log("Payment was cancelled")}
+              />
           </div>
         </CardContent>
       </Card>

@@ -11,13 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { UserRoundPlus, Upload } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
@@ -30,49 +23,188 @@ interface AddCoachModalProps {
 interface GuardianFormData {
   first_name: string;
   last_name: string;
-  dob: Date;
-  position: string;
-  training_center: string;
-  height: number;
-  weight: number;
-  top_speed:  number;
-  bmi: number;
-  goals:  number;
-  assists: number;
-  pass_accuracy: string;
-  sponsored: string;
-  guardian: string;
-  group_id: string;
+  email: string;
+  whatsapp_phone: string;
+  player_id: string;
+  relationship_type: string;
+  is_primary: boolean;
 }
 
-const TEAM_OPTIONS = [
-  { id: "971a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-7" },
-  { id: "972a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-9" },
-  { id: "973a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-11" },
-  { id: "974a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-13" },
-  { id: "975a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-15" },
-  { id: "971a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-17" },
-  { id: "978a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-19" },
-  { id: "976a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-21" },
-];
+const players2 = [
+  {
+    id: "player-001",
+    first_name: "Brian",
+    last_name: "Otieno",
+    dob: "2010-06-15",
+    position: "forward",
+    status: "active",
 
-const SPONSORSHIP_OPTIONS = [
-  { id: "1", label: "Full" },
-  { id: "2", label: "Partial" },
-  { id: "3", label: "None" },
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: "James Otieno",
+    sponsored: 1,
+    training_center: "Nairobi West",
+
+    stats: {
+      goals: 12,
+      assists: 5,
+      pass_accuracy: 78,
+    },
+
+    physical: {
+      height: 150,
+      weight: 45,
+      bmi: 20,
+    },
+
+    created_at: "2025-03-01T09:00:00Z",
+  },
+
+  {
+    id: "player-002",
+    first_name: "Kevin",
+    last_name: "Mwangi",
+    dob: "2008-03-22",
+    position: "midfielder",
+    status: "active",
+
+    group_id: "grp-002",
+    campus_id: "campus-02",
+
+    group_name: {
+      id: "grp-002",
+      age_group: "U16",
+      coach_id: "coach-002",
+      name: "Rising Stars",
+      division: "West League",
+      campus_id: "campus-02",
+      created_at: "2025-02-15T10:00:00Z",
+    },
+
+    guardian: "Mary Mwangi",
+    sponsored: 0,
+    training_center: "Karen",
+
+    stats: {
+      goals: 4,
+      assists: 11,
+      pass_accuracy: 85,
+    },
+
+    physical: {
+      height: 168,
+      weight: 60,
+      bmi: 21.3,
+    },
+
+    created_at: "2025-03-05T11:20:00Z",
+  },
+
+  {
+    id: "player-003",
+    first_name: "Samuel",
+    last_name: "Kiptoo",
+    dob: "2009-11-02",
+    position: "goalkeeper",
+    status: "inactive",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: null,
+    sponsored: 1,
+    training_center: null,
+
+    stats: {
+      goals: 0,
+      assists: 0,
+      pass_accuracy: null,
+    },
+
+    physical: {
+      height: 155,
+      weight: 50,
+      bmi: null,
+    },
+
+    created_at: "2025-03-10T14:45:00Z",
+  },
+
+  {
+    id: "player-004",
+    first_name: "Daniel",
+    last_name: "Ochieng",
+    dob: "2011-08-19",
+    position: "defender",
+    status: "active",
+
+    group_id: "grp-001",
+    campus_id: "campus-01",
+
+    group_name: {
+      id: "grp-001",
+      age_group: "U12",
+      coach_id: "coach-001",
+      name: "Junior Lions",
+      division: "East League",
+      campus_id: "campus-01",
+      created_at: "2025-01-10T08:30:00Z",
+    },
+
+    guardian: "Peter Ochieng",
+    sponsored: 0,
+    training_center: "Langata",
+
+    stats: {
+      goals: 1,
+      assists: 2,
+      pass_accuracy: 72,
+    },
+
+    physical: {
+      height: null,
+      weight: null,
+      bmi: null,
+    },
+
+    created_at: "2025-03-12T16:00:00Z",
+  },
 ]
 
-const POSITIONS = [
-  "Striker",
-  "Attacking Midfielder",
-  "Goalkeeper",
-  "Defensive Midfielder",
-  "Left Back",
-  "Right Back",
-  "Center Back",
-  "Left Winger",
-  "Right Winger",
+const RELATIONSHIP_TYPE = [
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f15ec", label: "Father" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f16ec", label: "Mother" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f17ec", label: "Guardian" },
+
 ];
+
+const IS_PRIMARY_OPTIONS = [
+  { id: "1", label: true },
+  { id: "2", label: false },
+]
+
+
 
 
 export default function AddGuardianModal(
@@ -85,19 +217,8 @@ export default function AddGuardianModal(
   const [form, setForm] = useState<GuardianFormData>({
     first_name: "",
     last_name: "",
-    dob: new Date(),
-    position: "",
-    training_center: "",
-    height: 0,
-    weight: 0,
-    top_speed:  0,
-    bmi: 0,
-    goals:  0,
-    assists: 0,
-    pass_accuracy: "",
-    sponsored: "",
-    guardian: "",
-    group_id: "",
+    email: "",
+    whatsapp_phone: "",
   });
 
 
@@ -174,237 +295,97 @@ export default function AddGuardianModal(
               />
             </div>
           </div>
-          <div className="grid grid-cols-2">
-          <div className="space-y-1.5">
+          {/* Email + Phone */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Date Of Birth
+                Email
               </Label>
               <Input
-                type="date"
-                placeholder="e.g. 01/01/2000"
-                value={form.dob.toISOString().split('T')[0]}
+                placeholder="e.g. user@gmail.com"
+                value={form.email}
+                type="email"
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, dob: new Date(e.target.value) }))
+                  setForm((prev) => ({ ...prev, email: e.target.value }))
                 }
-                className="placeholder:text-gray-400"></Input>
+                className="placeholder:text-gray-400"
+              />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Position
+                Whatssap Phone Number
+              </Label>
+              <Input
+                placeholder="e.g. +254700000000"
+                value={form.whatsapp_phone}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, whatsapp_phone: e.target.value }))
+                }
+                className="placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+
+          {/* Player + Relationship  */}
+          {/* <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Player
               </Label>
               <Select
-                value={form.position}
+                value={form.player_id ?? undefined}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, position: val }))
+                  setForm((prev) => ({ ...prev, player_id: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
+                  <SelectValue placeholder="Select Player" />
                 </SelectTrigger>
                 <SelectContent>
-                  {POSITIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
+                  {players2.map((player) => (
+                    <SelectItem key={player.id} value={String(player.id)}>
+                      {player.first_name} {player.last_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          </div>
-
-          {/* License + Years */}
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Training Center
-              </Label>
-              <Input
-                placeholder="e.g. Main Academy Facility"
-                value={form.training_center}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, training_center: e.target.value }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Team
+                Relationship 
               </Label>
               <Select
-                value={form.group_id}
+                value={form.relationship_type}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, group_id: val }))
+                  setForm((prev) => ({ ...prev, relationship_type: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
+                  <SelectValue placeholder="Select relationship" />
                 </SelectTrigger>
                 <SelectContent>
-                  {TEAM_OPTIONS.map((s) => (
-                    <SelectItem key={s.id} value={String(s.id)}>
-                      {s.label}
+                  {RELATIONSHIP_TYPE.map((relationship) => (
+                    <SelectItem key={relationship.id} value={relationship.id}>
+                      {relationship.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          </div>
-
-          {/* Height & Weight */}
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Height
-              </Label>
-              <Input
-                placeholder="e.g. 183"
-                type="number"
-                min={0}
-                value={form.height}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    height: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Weight
-              </Label>
-              <Input
-                placeholder="e.g. 80"
-                type="number"
-                min={0}
-                value={form.weight}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    weight: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/* Top Speed & BMI */} 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Top Speed
-              </Label>
-              <Input
-                placeholder="e.g. 31"
-                type="number"
-                min={0}
-                value={form.top_speed}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    top_speed: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                BMI
-              </Label>
-              <Input
-                placeholder="e.g. 20"
-                type="number"
-                min={0}
-                value={form.bmi}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    bmi: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/** Goals & Assists*/}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Goals
-              </Label>
-              <Input
-                placeholder="e.g. 10"
-                type="number"
-                min={0}
-                value={form.goals}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    goals: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Assists
-              </Label>
-              <Input
-                placeholder="e.g. 5"
-                type="number"
-                min={0}
-                value={form.assists}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    assists: Number(e.target.value),
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Pass Accuracy
-              </Label>
-              <Input
-                placeholder="e.g. 21"
-                type="number"
-                min={0}
-                value={form.pass_accuracy}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    pass_accuracy: e.target.value,
-                  }))
-                }
-                className="placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/* Sponsored & Guardian */} 
-                <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
                   <Label className="text-sm font-medium text-gray-700">
-                  Sponsored
+                  Is Primary Guardian?
                   </Label>
                   <div className="flex items-center gap-4">
-                  {SPONSORSHIP_OPTIONS.map((option) => (
+                  {IS_PRIMARY_OPTIONS.map((option) => (
                     <div key={option.id} className="flex items-center gap-2">
                     <input
                       type="radio"
                       id={option.id}
-                      name="sponsored"
-                      checked={form.sponsored === option.label}
+                      name="is_primary"
+                      checked={form.is_primary === option.label}
                       onChange={() =>
-                      setForm((prev) => ({ ...prev, sponsored: option.id }))
+                      setForm((prev) => ({ ...prev, is_primary: option.label }))
                       }
                       className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
                     />
@@ -412,29 +393,16 @@ export default function AddGuardianModal(
                       htmlFor={option.id}
                       className="text-sm text-gray-700 cursor-pointer select-none"
                     >
-                      {option.label}
+                      {option.label? "Yes" : "No"}
                     </label>
                     </div>
                   ))}
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-gray-700">
-                  Guardian
-                  </Label>
-                  <Input
-                  placeholder="e.g. 20"
-                  value={form.guardian}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                    ...prev,
-                    guardian: e.target.value,
-                    }))
-                  }
-                  className="placeholder:text-gray-400"
-                  />
-                </div>
-                </div>
+          </div> */}
+
+
+
 
                 {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">

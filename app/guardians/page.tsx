@@ -4,7 +4,6 @@ import { PageHeader, StatCard } from "@/components/modules/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress, Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  Edit} from "lucide-react"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
@@ -12,31 +11,19 @@ import { Guardian } from "@/types/guardians";
 import { ApiResponse } from "@/types/api-response";
 import AddGuardianModal from "@/components/custom/modals/addGuardianModal"
 import EditGuardianModal from "@/components/custom/modals/editGuardianModal"
-import { PaystackButton } from "react-paystack";
-import { v4 as uuidv4 } from "uuid";
+import dynamic from "next/dynamic";
+
+const PaystackButton = dynamic(
+  () => import("react-paystack").then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
+
 
 export default function GuardiansPage() {
   const [guardians, setGuardians] = useState<Guardian[]>([])
   const [search, setSearch] = useState("")
 
   const { tokens,user } = useAuth();
-  const config = {
-    reference: uuidv4(),
-    email: user?.email || "Cliffobure@gmail.com",
-    // amount: Math.round(total * 100),
-    amount: 100,
-    publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
-    currency: "KES",
-    metadata: {
-      custom_fields: [
-        {
-          display_name: "User ID",
-          variable_name: "user_id",
-        },
-      ],
-    },
-  };
-
   const fetchGuardians = async () => {
     try {
       const response = await apiClient<ApiResponse<Guardian[]>>({
@@ -61,13 +48,7 @@ export default function GuardiansPage() {
   return (
     <>
       <PageHeader title="Guardians" description="Detailed overview of training guardians.">
-      <PaystackButton
-                {...config}
-                text="Pay with Paystack"
-                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
-                onSuccess={fetchGuardians}
-                onClose={() => console.log("Payment was cancelled")}
-              />
+
       {<AddGuardianModal onSubmit={fetchGuardians} />}
       </PageHeader>
 

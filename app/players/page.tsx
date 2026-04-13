@@ -319,7 +319,7 @@ export default function PlayersPage() {
                           <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1.5"><MapPin className="w-3 h-3" />{selected?.training_center}</p>
                         </div>
                         <div className="flex gap-2">
-                          <EditPlayerModal></EditPlayerModal>
+                          <EditPlayerModal player={selected} onSubmit={fetchPlayers}></EditPlayerModal>
                           {/* <Button size="sm"><Download className="w-3.5 h-3.5 mr-1.5" />Export Report</Button> */}
                         </div>
                       </div>
