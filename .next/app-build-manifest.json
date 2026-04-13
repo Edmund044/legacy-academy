@@ -1,9 +1,14 @@
 {
   "pages": {
-    "/login/page": [
+    "/players/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/players/page.js"
+    ],
+    "/players/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/players/layout.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -11,25 +16,15 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/dashboard/page": [
+    "/guardians/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/page.js"
+      "static/chunks/app/guardians/page.js"
     ],
-    "/dashboard/layout": [
+    "/guardians/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/layout.js"
-    ],
-    "/price-configurations/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/price-configurations/page.js"
-    ],
-    "/price-configurations/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/price-configurations/layout.js"
+      "static/chunks/app/guardians/layout.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

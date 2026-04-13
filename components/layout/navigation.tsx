@@ -93,6 +93,7 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.CUSTOMER_CARE],
     items: [
       { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/guardians", icon: UserCircle, label: "Guardian" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/billing", icon: CreditCard, label: "Billing" },
