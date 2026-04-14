@@ -21,7 +21,8 @@ import {
 import { UserRoundPlus, Upload } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { toast } from "sonner";
+import { Guardian } from "@/types/guardians";
+import { ApiResponse } from "@/types/api-response";
 
 interface AddCoachModalProps {
   onSubmit:() => void;
@@ -41,6 +42,7 @@ interface PlayerFormData {
   assists: number;
   pass_accuracy: string;
   sponsored: string;
+  guardian_id: string;
   guardian: string;
   group_id: string;
 }
@@ -96,10 +98,42 @@ export default function AddPlayerModal(
     assists: 0,
     pass_accuracy: "",
     sponsored: "",
+    guardian_id: "",
     guardian: "",
     group_id: "",
   });
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
+const searchGuardians = async (value: string) => {
+  setQuery(value);
+
+  if (!value) {
+    setResults([]);
+    return;
+  }
+
+
+  try {
+    const response = await apiClient<ApiResponse<Guardian[]>>({
+      endpoint: `v1/guardians?psearch=${value}`,
+      method: "GET",
+      headers: {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+      },
+    });
+
+    setResults((response.data as Guardian[]) ?? []);
+    setShowDropdown(true);
+  } catch (error) {
+    alert("Failed to fetch equipment inventory. Please try again later.");
+    // toast.error("Failed to fetch your submitted requests.");
+  } finally {
+    // setLoading(false);
+  }
+
+};
 
 
   const handleSubmit = async () => {
@@ -134,7 +168,7 @@ export default function AddPlayerModal(
               <DialogTrigger asChild>
         <Button size="sm"> + Add Player</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-[540px]  p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
@@ -402,7 +436,7 @@ export default function AddPlayerModal(
                       type="radio"
                       id={option.id}
                       name="sponsored"
-                      checked={form.sponsored === option.label}
+                      checked={form.sponsored === option.id}
                       onChange={() =>
                       setForm((prev) => ({ ...prev, sponsored: option.id }))
                       }
@@ -418,7 +452,40 @@ export default function AddPlayerModal(
                   ))}
                   </div>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 relative">
+  <Label className="text-sm font-medium text-gray-700">
+    Guardian
+  </Label>
+
+  <Input
+    placeholder="Search guardian..."
+    value={form.guardian}
+    onChange={(e) => searchGuardians(e.target.value)}
+  />
+
+  {showDropdown && results.length > 0 && (
+    <div className="absolute z-10 bg-white border rounded w-full mt-1 max-h-40 overflow-y-auto">
+      {results.map((g) => (
+        <div
+          key={g.id}
+          className="p-2 hover:bg-gray-100 cursor-pointer"
+          onClick={() => {
+            setForm((prev) => ({
+              ...prev,
+              guardian_id: g.id,
+              guardian: g.first_name + " " + g.last_name,
+            }));
+
+            setShowDropdown(false);
+          }}
+        >
+          {g.first_name} {g.last_name} -  <span className="text-xs text-gray-500">{g.relationship_type}</span>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+                {/* <div className="space-y-1.5">
                   <Label className="text-sm font-medium text-gray-700">
                   Guardian
                   </Label>
@@ -433,7 +500,7 @@ export default function AddPlayerModal(
                   }
                   className="placeholder:text-gray-400"
                   />
-                </div>
+                </div> */}
                 </div>
 
                 {/* Actions */}

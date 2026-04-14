@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"app/billing/page.tsx -> react-paystack":{"id":90210,"files":["static/chunks/210.b0a092a7bdc8c183.js"]},"app/guardians/page.tsx -> react-paystack":{"id":90210,"files":["static/chunks/210.b0a092a7bdc8c183.js"]}}';
+self.__REACT_LOADABLE_MANIFEST="{\"app/guardians/page.tsx -> react-paystack\":{\"id\":\"app/guardians/page.tsx -> react-paystack\",\"files\":[\"static/chunks/_app-pages-browser_node_modules_react-paystack_dist_index_es_js.js\"]}}"
