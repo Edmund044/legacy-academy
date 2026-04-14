@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -25,11 +23,9 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
 
-// interface AddCoachModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: CoachFormData) => void;
-// }
+interface AddCoachModalProps {
+  onSubmit:() => void;
+}
 
 interface PlayerFormData {
   first_name: string;
@@ -37,7 +33,6 @@ interface PlayerFormData {
   dob: Date;
   position: string;
   training_center: string;
-  team: string;
   height: number;
   weight: number;
   top_speed:  number;
@@ -45,19 +40,20 @@ interface PlayerFormData {
   goals:  number;
   assists: number;
   pass_accuracy: string;
-  sponsored: number;
+  sponsored: string;
   guardian: string;
+  group_id: string;
 }
 
 const TEAM_OPTIONS = [
-  "Under-7",
-  "Under-9",
-  "Under-11",
-  "Under-13",
-  "Under-15",
-  "Under-17",
-  "Under-19",
-  "Under-21",
+  { id: "971a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-7" },
+  { id: "972a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-9" },
+  { id: "973a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-11" },
+  { id: "974a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-13" },
+  { id: "975a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-15" },
+  { id: "971a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-17" },
+  { id: "978a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-19" },
+  { id: "976a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-21" },
 ];
 
 const SPONSORSHIP_OPTIONS = [
@@ -66,7 +62,7 @@ const SPONSORSHIP_OPTIONS = [
   { id: "3", label: "None" },
 ]
 
-const SPECIALIZATIONS = [
+const POSITIONS = [
   "Striker",
   "Attacking Midfielder",
   "Goalkeeper",
@@ -80,22 +76,18 @@ const SPECIALIZATIONS = [
 
 
 export default function AddPlayerModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddCoachModalProps
+    {
+  onSubmit,
+}: AddCoachModalProps
 ) {
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { tokens } = useAuth();
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<PlayerFormData>({
     first_name: "",
     last_name: "",
     dob: new Date(),
     position: "",
     training_center: "",
-    team: "",
     height: 0,
     weight: 0,
     top_speed:  0,
@@ -103,8 +95,9 @@ export default function AddPlayerModal(
     goals:  0,
     assists: 0,
     pass_accuracy: "",
-    sponsored: 0,
+    sponsored: "",
     guardian: "",
+    group_id: "",
   });
 
 
@@ -122,8 +115,8 @@ export default function AddPlayerModal(
           ...form,
         },
       });
-      // setOpen(false);
-      // onConfirm();
+      setOpen(false);
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
       // toast.error("Something went wrong. Please try again later.");
@@ -136,7 +129,7 @@ export default function AddPlayerModal(
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
         <Button size="sm"> + Add Player</Button>
@@ -181,7 +174,7 @@ export default function AddPlayerModal(
               />
             </div>
           </div>
-          <div className="grid grid-cols-1">
+          <div className="grid grid-cols-2">
           <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Date Of Birth
@@ -189,11 +182,33 @@ export default function AddPlayerModal(
               <Input
                 type="date"
                 placeholder="e.g. 01/01/2000"
-                value={form.dob}
+                value={form.dob.toISOString().split('T')[0]}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, dob: e.target.value }))
+                  setForm((prev) => ({ ...prev, dob: new Date(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"></Input>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Position
+              </Label>
+              <Select
+                value={form.position}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, position: val }))
+                }
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Specialization" />
+                </SelectTrigger>
+                <SelectContent>
+                  {POSITIONS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -217,9 +232,9 @@ export default function AddPlayerModal(
                 Team
               </Label>
               <Select
-                value={form.team}
+                value={form.group_id}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, team: val }))
+                  setForm((prev) => ({ ...prev, group_id: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
@@ -227,8 +242,8 @@ export default function AddPlayerModal(
                 </SelectTrigger>
                 <SelectContent>
                   {TEAM_OPTIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
+                    <SelectItem key={s.id} value={String(s.id)}>
+                      {s.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -250,7 +265,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    height: e.target.value,
+                    height: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -268,7 +283,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    weight: e.target.value,
+                    weight: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -290,7 +305,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    top_speed: e.target.value,
+                    top_speed: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -308,7 +323,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    bmi: e.target.value,
+                    bmi: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -348,7 +363,7 @@ export default function AddPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    assists: e.target.value,
+                    assists: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -387,7 +402,7 @@ export default function AddPlayerModal(
                       type="radio"
                       id={option.id}
                       name="sponsored"
-                      checked={form.sponsored === option.id}
+                      checked={form.sponsored === option.label}
                       onChange={() =>
                       setForm((prev) => ({ ...prev, sponsored: option.id }))
                       }

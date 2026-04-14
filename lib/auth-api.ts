@@ -3,8 +3,8 @@ import type {
   RefreshResponse,
 } from "@/types/auth";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-
+//const API_BASE = "https://legacy-academy-backend-271490766088.europe-west1.run.app";
+const API_BASE = "http://localhost:8000";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function handleResponse<T>(res: Response): Promise<T> {
@@ -25,7 +25,7 @@ export async function apiLogin(
   email: string,
   password: string
 ): Promise<LoginResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
+  const res = await fetch(`${API_BASE}/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -38,9 +38,9 @@ export async function apiLogin(
  * Exchanges a refresh token for a new token pair.
  */
 export async function apiRefresh(
-  refreshToken: string
+  refreshToken: string | null
 ): Promise<RefreshResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refresh_token: refreshToken }),

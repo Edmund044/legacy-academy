@@ -36,7 +36,7 @@ interface CoachFormData {
   speciality: string;
   license: string;
   experience_years: string;
-  winRate: string;
+  career_win_rate: string;
   primary_assigned_teams: string[];
   bio: string;
 }
@@ -105,14 +105,6 @@ export default function AddCoachModal(
     }
   };
 
-
-  // const handleSubmit = () => {
-  //   onSubmit?.(form);
-  // };
-
-  // const handleCancel = () => {
-  //   onOpenChange(false);
-  // };
 
   return (
     <Dialog 

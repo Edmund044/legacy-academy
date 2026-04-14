@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       newTokens: AuthTokens,
       authenticatedUser: AuthUser
     ) => {
-      saveAccessToken(newTokens.accessToken);
+      saveAccessToken(newTokens.accessToken,newTokens.refreshToken,newTokens.expiresAt);
       await saveRefreshToken(newTokens.refreshToken);
 
       setTokens(newTokens);
@@ -107,19 +107,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const silentRefresh = useCallback(
     async (refreshToken: string) => {
-      const data = await apiRefresh(refreshToken);
+      const response = await apiRefresh(refreshToken);
 
       const newTokens: AuthTokens = {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-        expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
+        expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
       };
 
       // We need the current user — read it from state via a ref pattern
       setUser((currentUser) => {
         if (currentUser) {
           // Fire-and-forget persistence (no await in setState)
-          saveAccessToken(newTokens.accessToken);
+          // saveAccessToken(newTokens.accessToken);
           saveRefreshToken(newTokens.refreshToken);
           setTokens(newTokens);
           scheduleRefresh(newTokens);
@@ -132,21 +132,69 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ── Session rehydration on mount ────────────────────────────────────────────
 
+  // useEffect(() => {
+  //   const rehydrate = async () => {
+  //     try {
+  //       const storedRefresh = await getRefreshToken();
+  //       const storedAccess = getAccessToken();
+
+  //       if (!storedRefresh) return; // No session to restore
+
+  //       // Try to refresh immediately — the stored access token may be stale
+  //       const data = await apiRefresh(storedRefresh);
+
+  //       const newTokens: AuthTokens = {
+  //         accessToken: data.access_token,
+  //         refreshToken: data.refresh_token,
+  //         expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
+  //       };
+
+  //       // TODO: replace with a real /me call if your backend requires it
+  //       // For now we decode the JWT payload to extract user info
+  //       const payload = decodeJwtPayload(newTokens.accessToken);
+  //       if (!payload) throw new Error("Invalid token");
+
+  //       const restoredUser: AuthUser = {
+  //         id: payload.sub ?? "",
+  //         name: payload.name ?? "",
+  //         email: payload.email ?? "",
+  //         role: payload.role ?? "Coach",
+  //         avatarUrl: payload.avatar_url,
+  //       };
+
+  //       await persistTokens(newTokens, restoredUser);
+  //     } catch {
+  //       // Stale / invalid session — start fresh
+  //       await clearAuthState();
+  //     } finally {
+  //       setIsInitialized(true);
+  //     }
+  //   };
+
+  //   rehydrate();
+
+  //   return () => {
+  //     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+  //   };
+  // }, [clearAuthState, persistTokens]);
   useEffect(() => {
     const rehydrate = async () => {
       try {
-        const storedRefresh = await getRefreshToken();
+        const storedRefresh =  getRefreshToken();
         const storedAccess = getAccessToken();
 
-        if (!storedRefresh) return; // No session to restore
+        if (!storedAccess) {
+          router.push("/login"); // Redirect if no session to restore
+          return;
+        }
 
         // Try to refresh immediately — the stored access token may be stale
-        const data = await apiRefresh(storedRefresh);
+        const response = await apiRefresh(storedRefresh);
 
         const newTokens: AuthTokens = {
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-          expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
+          accessToken: response.data.access_token,
+          refreshToken: response.data.refresh_token,
+          expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
         };
 
         // TODO: replace with a real /me call if your backend requires it
@@ -156,16 +204,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const restoredUser: AuthUser = {
           id: payload.sub ?? "",
-          name: payload.name ?? "",
+          first_name: payload.first_name ?? "",
+          last_name: payload.last_name ?? "",
           email: payload.email ?? "",
           role: payload.role ?? "Coach",
           avatarUrl: payload.avatar_url,
         };
 
         await persistTokens(newTokens, restoredUser);
-      } catch {
+      } catch(error) {
         // Stale / invalid session — start fresh
         await clearAuthState();
+        router.push("/login"); // Redirect to login on error
       } finally {
         setIsInitialized(true);
       }
@@ -176,8 +226,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
     };
-  }, [clearAuthState, persistTokens]);
-
+  }, [clearAuthState, persistTokens, router]);
   // ── Public actions ──────────────────────────────────────────────────────────
 
   const login = useCallback(
@@ -185,15 +234,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await apiLogin(email, password);
-
+        const response = await apiLogin(email, password);
+        console.log("Login API response:", response);
         const newTokens: AuthTokens = {
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-          expiresAt: Math.floor(Date.now() / 1000) + data.expires_in,
+          accessToken: response.data.access_token,
+          refreshToken: response.data.refresh_token,
+          expiresAt: Math.floor(Date.now() / 1000) + response.data.expires_in,
         };
-
-        await persistTokens(newTokens, data.user);
+        console.log("Login successful, received tokens:", newTokens);
+        await persistTokens(newTokens, response.data.user);
         router.push("/dashboard");
       } catch (err) {
         const message =

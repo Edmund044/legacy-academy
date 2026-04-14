@@ -8,12 +8,35 @@ export interface AuthTokens {
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────
-
+// admin = "admin"
+// coach = "coach"
+// parent = "parent"
+// technical_director = "technical_director"
+// customer_care = "customer_care"
+// business_development = "business_development"
+// csr_lead = "csr_lead"
+// kit_and_equipment_manager = "kit_and_equipment_manager"
+// operations_manager = "operations_manager"
+// physiotherapist =  "physiotherapist"
+// player = "player"
+export type UserRoles =
+  | "admin"
+  | "coach"
+  | "parent"
+  | "customer_care"
+  | "business_development"
+  | "csr_lead"
+  | "kit_and_equipment_manager"
+  | "operations_manager"
+  | "physiotherapist"
+  | "player"
+  | "technical_director";
 export interface AuthUser {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  role: "Super Admin" | "Coach" | "Manager" | "Parent";
+  role: UserRoles;
   avatarUrl?: string;
 }
 
@@ -48,14 +71,23 @@ export interface AuthContextValue {
 // ─── API response shapes (adapt to match your backend) ───────────────────────
 
 export interface LoginResponse {
-  user: AuthUser;
-  access_token: string;
-  refresh_token: string;
-  expires_in: number; // seconds until access token expires
+  success: boolean;
+  timeStamp: string;
+  data: {
+    user: AuthUser;
+    access_token: string;
+    refresh_token: string;
+    token_type: string; // e.g. "Bearer"
+    expires_in: number; // seconds until access token expires
+  }
 }
 
 export interface RefreshResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
+  success: boolean;
+  timeStamp: string;
+  data: {
+    access_token: string;
+    expires_in: number; 
+    refresh_token: string;
+  }
 }

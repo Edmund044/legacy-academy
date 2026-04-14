@@ -23,39 +23,39 @@ import {
 import { UserRoundPlus, Edit, Upload } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { pl } from "date-fns/locale";
 
-// interface AddCoachModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: CoachFormData) => void;
-// }
+interface EditPlayerModalProps {
+  player: any,
+  onSubmit: () => void;
+}
 
 interface PlayerFormData {
-  profilePhoto: File | null;
-  fullName: string;
+  first_name: string;
+  last_name: string;
+  dob: Date;
   position: string;
   training_center: string;
-  height: string;
-  weight: string;
-  top_speed:  string;
-  bmi: string;
-  goals:  string;
-  assists: string;
+  height: number;
+  weight: number;
+  top_speed:  number;
+  bmi: number;
+  goals:  number;
+  assists: number;
   pass_accuracy: string;
-  assignedTeam: string;
   sponsored: string;
   guardian: string;
+  group_id: string;
 }
 
 const TEAM_OPTIONS = [
-  "Under-7",
-  "Under-9",
-  "Under-11",
-  "Under-13",
-  "Under-15",
-  "Under-17",
-  "Under-19",
-  "Under-21",
+  { id: "971a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-7" },
+  { id: "972a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-9" },
+  { id: "973a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-11" },
+  { id: "974a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-13" },
+  { id: "975a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-15" },
+  { id: "978a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-19" },
+  { id: "976a583b-97ae-4575-9625-6d6a7d57e8c5", label: "Under-21" },
 ];
 
 const SPONSORSHIP_OPTIONS = [
@@ -64,7 +64,7 @@ const SPONSORSHIP_OPTIONS = [
   { id: "3", label: "None" },
 ]
 
-const SPECIALIZATIONS = [
+const POSITIONS = [
   "Striker",
   "Attacking Midfielder",
   "Goalkeeper",
@@ -77,61 +77,50 @@ const SPECIALIZATIONS = [
 ];
 
 
+
+
 export default function EditPlayerModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddCoachModalProps
+    {
+  player,
+  onSubmit,
+}: EditPlayerModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { tokens } = useAuth();
   const [form, setForm] = useState<PlayerFormData>({
-    profilePhoto: null,
-    fullName: "",
-    position: "",
-    training_center: "",
-    height: "",
-    weight: "",
-    top_speed:  "",
-    bmi: "",
-    goals:  "",
-    assists: "",
-    pass_accuracy: "",
-    assignedTeam: "",
-    sponsored: "",
-    guardian: "",
+    first_name: player.first_name || "",
+    last_name: player.last_name || "",
+    dob: player.dob ? new Date(player.dob) : new Date(),
+    position: player.position || "",
+    training_center: player.training_center,
+    height: player.physical.height || 0,
+    weight: player.physical.weight || 0,
+    top_speed:  player.stats.top_speed || 0,
+    bmi: player.physical.bmi,
+    goals:  player.stats.goals || 0,
+    assists: player.stats.assists || 0,
+    pass_accuracy: player.stats.pass_accuracy || "",
+    sponsored: player.sponsored  == 1 ? "Sponsored" : "Paid",
+    guardian: player.guardian || "",
+    group_id: player.group_id || "",
   });
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
 
-  const handleTeamToggle = (teamId: string, checked: boolean) => {
-    setForm((prev) => ({
-      ...prev,
-    }));
-  };
 
   const handleSubmit = async () => {
     try {
       await apiClient({
-        endpoint: "/v1/players/7677b363-b02c-4634-9614-8c8e25a084bc",
+        endpoint: `/v1/players/${player.id}`,
         method: "PATCH",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          "Authorization": `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
-          "position": "DEFENSIVE MIDFIELDER",
+          ...form
         },
       });
       // setOpen(false);
-      // onConfirm();
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
       // toast.error("Something went wrong. Please try again later.");
@@ -143,81 +132,64 @@ export default function EditPlayerModal(
 //   };
 
   return (
-    <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    <Dialog
     >
               <DialogTrigger asChild>
-              <Button size="sm" variant="outline"><Edit className="w-3.5 h-3.5 mr-1.5" />Edit Profile</Button>
+              <Button size="sm" variant="outline"><Edit className="w-3.5 h-3.5 mr-1.5" />Edit Player</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
             <UserRoundPlus className="w-5 h-5 text-red-600" />
-            Edit Player
+            Edit New Player
           </DialogTitle>
         </DialogHeader>
 
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
-          {/* Photo Upload */}
-          <div
-            className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 py-6 cursor-pointer hover:bg-gray-100 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png, image/jpeg"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="Profile preview"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden">
-                {/* Silhouette SVG */}
-                <svg
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-14 h-14"
-                >
-                  <ellipse cx="32" cy="24" rx="10" ry="11" fill="#a0522d" opacity="0.5" />
-                  <path
-                    d="M12 56c0-11 9-18 20-18s20 7 20 18"
-                    fill="#a0522d"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-sm font-semibold text-gray-700 flex items-center gap-1 justify-center">
-                <Upload className="w-3.5 h-3.5" />
-                Upload Profile Photo
-              </p>
-              <p className="text-xs text-gray-400">PNG or JPG, max 5MB</p>
-            </div>
-          </div>
 
           {/* Full Name + Role */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
-                Full Name
+                First Name
               </Label>
               <Input
                 placeholder="e.g. Pep Guardiola"
-                value={form.fullName}
+                value={form.first_name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, fullName: e.target.value }))
+                  setForm((prev) => ({ ...prev, first_name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Last Name
+              </Label>
+              <Input
+                placeholder="e.g. Pep Guardiola"
+                value={form.last_name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, last_name: e.target.value }))
+                }
+                className="placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+          <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Date Of Birth
+              </Label>
+              <Input
+                type="date"
+                placeholder="e.g. 01/01/2000"
+                value={form.dob.toISOString().split('T')[0]}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, dob: new Date(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"></Input>
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
@@ -233,7 +205,7 @@ export default function EditPlayerModal(
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {POSITIONS.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
@@ -263,9 +235,9 @@ export default function EditPlayerModal(
                 Team
               </Label>
               <Select
-                value={form.assignedTeam}
+                value={form.group_id}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, assignedTeam: val }))
+                  setForm((prev) => ({ ...prev, group_id: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
@@ -273,8 +245,8 @@ export default function EditPlayerModal(
                 </SelectTrigger>
                 <SelectContent>
                   {TEAM_OPTIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
+                    <SelectItem key={s.id} value={String(s.id)}>
+                      {s.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -296,7 +268,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    height: e.target.value,
+                    height: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -314,7 +286,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    weight: e.target.value,
+                    weight: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -336,7 +308,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    top_speed: e.target.value,
+                    top_speed: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -354,7 +326,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    bmi: e.target.value,
+                    bmi: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -376,7 +348,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    goals: e.target.value,
+                    goals: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -394,7 +366,7 @@ export default function EditPlayerModal(
                 onChange={(e) =>
                   setForm((prev) => ({
                     ...prev,
-                    assists: e.target.value,
+                    assists: Number(e.target.value),
                   }))
                 }
                 className="placeholder:text-gray-400"
@@ -469,18 +441,12 @@ export default function EditPlayerModal(
 
                 {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button
-              variant="ghost"
-            //   onClick={handleCancel}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </Button>
+
             <Button
               onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
-              Edit Player
+              Add Player
             </Button>
           </div>
         </div>

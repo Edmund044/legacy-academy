@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"app/billing/page.tsx -> react-paystack":{"id":90210,"files":["static/chunks/210.b0a092a7bdc8c183.js"]},"app/guardians/page.tsx -> react-paystack":{"id":90210,"files":["static/chunks/210.b0a092a7bdc8c183.js"]}}';

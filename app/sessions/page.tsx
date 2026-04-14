@@ -8,14 +8,9 @@ import { Progress, Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  Edit} from "lucide-react"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { Session } from "@/types/sessions";
+import { ApiResponse } from "@/types/api-response";
 
-const sessions = [
-  { id: 1, name: "Elite Striker Camp", type: "Advanced Training", team: "U14", date: "Oct 24, 2023", time: "09:00 AM - 11:30 AM", coach: "Marco Rossi", enrollment: 17, total: 20, revenue: "KES 4,250", status: "active" },
-  { id: 2, name: "Beginner Fundamentals", type: "Weekend Clinic", team: "U10", date: "Oct 25, 2023", time: "10:00 AM - 12:00 PM", coach: "Sarah Jenkins", enrollment: 30, total: 30, revenue: "KES 3,000", status: "upcoming" },
-  { id: 3, name: "Goalkeeper Masterclass", type: "Specialized Training", team: "PRO", date: "Oct 26, 2023", time: "03:00 PM - 05:00 PM", coach: "David Miller", enrollment: 4, total: 10, revenue: "KES 1,600", status: "upcoming" },
-  { id: 4, name: "Summer Open Tryouts", type: "Academy Selection", team: "ALL", date: "Oct 20, 2023", time: "08:00 AM - 04:00 PM", coach: "Marco Rossi", enrollment: 120, total: 120, revenue: "KES 12,000", status: "completed" },
-  { id: 5, name: "U16 Technical Excellence", type: "Technical Training", team: "U16", date: "Oct 24, 2023", time: "04:00 PM - 05:30 PM", coach: "Julian Nagelsmann", enrollment: 18, total: 22, revenue: "KES 3,600", status: "active" },
-]
 
 const statusConfig: Record<string, { label: string; variant: any }> = {
   active: { label: "ACTIVE", variant: "success" },
@@ -25,6 +20,7 @@ const statusConfig: Record<string, { label: string; variant: any }> = {
 }
 
 export default function SessionsPage() {
+  const [sessions, setSessions] = useState<Session[]>([])
   const [activeTab, setActiveTab] = useState("all")
   const [search, setSearch] = useState("")
 
@@ -34,12 +30,12 @@ export default function SessionsPage() {
     return matchesTab && matchesSearch
   })
 
-  const { auth, tokens } = useAuth();
+  const { tokens } = useAuth();
 
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient({
+      const response = await apiClient<ApiResponse<Session[]>>({
         endpoint: `v1/sessions?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -47,8 +43,9 @@ export default function SessionsPage() {
         },
       });
 
-      // setBookings((response.data as any[]) ?? []);
+      setSessions((response.data as Session[]) ?? []);
     } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       // setLoading(false);
@@ -109,7 +106,7 @@ export default function SessionsPage() {
                   <tr key={s.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold bg-brand/10 text-brand px-1.5 py-0.5 rounded w-8 text-center flex-shrink-0">{s.team}</span>
+                        <span className="text-[10px] font-bold bg-brand/10 text-brand px-1.5 py-0.5 rounded w-8 text-center flex-shrink-0">LM</span>
                         <div>
                           <p className="text-sm font-semibold">{s.name}</p>
                           <p className="text-[11px] text-muted-foreground">{s.type}</p>
@@ -117,22 +114,22 @@ export default function SessionsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-3 text-xs text-muted-foreground whitespace-nowrap">
-                      <p>{s.date}</p>
-                      <p>{s.time}</p>
+                      <p>{s.session_date}</p>
+                      <p>{s.start_time}</p>
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
+                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s?.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
                         <span className="text-xs">{s.coach}</span>
                       </div>
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Progress value={(s.enrollment / s.total) * 100} className="w-16 h-1.5" />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.enrollment}/{s.total}</span>
+                        <Progress value={(s.enrollment_cap / s.total) * 100} className="w-16 h-1.5" />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.enrollment_cap}/{s.total}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue}</td>
+                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue_kes}</td>
                     <td className="py-3 px-3">
                       <Badge variant={statusConfig[s.status]?.variant} className="text-[10px]">
                         {statusConfig[s.status]?.label}

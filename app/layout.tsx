@@ -3,7 +3,7 @@ import "./globals.css"
 import { AuthProvider } from "@/context/auth-context"
 
 export const metadata: Metadata = {
-  title: "AcademyPro — Football Academy Management",
+  title: "Legacy Football Academy Management",
   description: "Comprehensive football academy management platform",
 }
 

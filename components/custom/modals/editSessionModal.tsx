@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,30 +19,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload, CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { setDate } from "date-fns";
-import { format } from "path";
+import { UserRoundPlus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-
+import { CoachProfile } from "@/types/coaches";
+import { Equipment } from "@/types/equipment";
 // interface EditCoachModalProps {
 //   open: boolean;
 //   onOpenChange: (open: boolean) => void;
 //   onSubmit?: (data: CoachFormData) => void;
 // }
 
+// interface SessionFormData {
+//   session_name: string;
+//   session_objective: string;
+//   equipment_needed: string[];
+//   drills: string[];
+// }
 interface SessionFormData {
-  session_name: string;
+  name: string;
+  type: string;
+  coach_id: string | null;
+  venue_id: string;
+  session_date: Date;
+  start_time: string;
+  end_time: string;
+  enrollment_cap: number;
   session_objective: string;
   equipment_needed: string[];
   drills: string[];
 }
+
 
 const TEAM_OPTIONS = [
   { id: "under-15s", label: "Under-15s" },
@@ -60,6 +66,25 @@ const SPECIALIZATIONS = [
   "Youth Development",
 ];
 
+
+const DRILLS = [
+  { id: "drill-1", label: "Passing Drill" },
+  { id: "drill-2", label: "Shooting Drill" },
+  { id: "drill-3", label: "Defensive Drill" },
+  { id: "drill-4", label: "Tactical Drill" },
+  { id: "drill-5", label: "Fitness Drill" },
+]
+
+const VENUE = [
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f15ec", label: "Main" },
+  { id: "d584f8cc-2ed3-4248-862c-e590d61f16ec", label: "Other" },
+
+];
+
+const SESSION_TYPE = [
+  "group",
+  "individual"
+]
 export default function EditSessionModal(
 //     {
 //   open,
@@ -67,22 +92,30 @@ export default function EditSessionModal(
 //   onSubmit,
 // }: EditCoachModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>();
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+  // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [coaches, setCoaches] = useState<CoachProfile[]>([])
+  const { user, tokens } = useAuth();
+  const [equipments  , setEquipments] = useState<Equipment[]>([])
   const [form, setForm] = useState<SessionFormData>({
-    session_name: "",
+    name: "",
+    type: "",
+    coach_id: user?.id ?? null,
+    venue_id: "",
+    session_date: new Date(),
+    start_time: "",
+    end_time:"",
+    enrollment_cap: 0,
     session_objective: "",
     equipment_needed: [],
     drills: [],
   });
-
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
+  // const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+  //   setForm((prev) => ({ ...prev, profilePhoto: file }));
+  //   setPreviewUrl(URL.createObjectURL(file));
+  // };
 
   const handleEquipmentToggle = (teamId: string, checked: boolean) => {
     setForm((prev) => ({
@@ -154,16 +187,16 @@ export default function EditSessionModal(
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
 
           {/* Full Name + Role */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Session Name
               </Label>
               <Input
                 placeholder="e.g. Pep Guardiola"
-                value={form.session_name}
+                value={form.name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, session_name: e.target.value }))
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -172,17 +205,30 @@ export default function EditSessionModal(
               <Label className="text-sm font-medium text-gray-700">
                 Session Objective
               </Label>
-              <Select
+              <Input
+                placeholder="e.g. Pep Guardiola"
                 value={form.session_objective}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, session_objective: e.target.value }))
+                }
+                className="placeholder:text-gray-400"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Session Type
+              </Label>
+              <Select
+                value={form.type}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, session_objective: val }))
+                  setForm((prev) => ({ ...prev, type: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
+                  <SelectValue placeholder="Session Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {SESSION_TYPE.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
@@ -192,27 +238,148 @@ export default function EditSessionModal(
             </div>
           </div>
 
-          {/* Equipment Needed */}
+                    {/* Date & time */}
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session Start Time
+                        </Label>
+                        <Input
+                          type="time"
+                          value={form.start_time}
+                          onChange={(e) =>
+                            setForm((prev) => ({ ...prev, start_time: e.target.value }))
+                          }
+                          className="placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session End Time
+                        </Label>
+                        <Input
+                          type="time"
+                          value={form.end_time}
+                          onChange={(e) =>
+                            setForm((prev) => ({ ...prev, end_time: e.target.value }))
+                          }
+                          className="placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Session Date
+                        </Label>
+                        <Input
+                type="date"
+                placeholder="e.g. 01/01/2000"
+                value={form.session_date.toISOString().split('T')[0]}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, session_date: new Date(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"></Input>
+                        {/* <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-[240px] justify-start text-left">
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {session_date ? format(session_date, 'PPP') : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={session_date}
+                              onSelect={setDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover> */}
+                      </div>
+                    </div>
+
+                              {/* Coach , venue and enrollment cap */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Coach
+              </Label>
+              <Select
+                value={form.coach_id ?? undefined}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, coach_id: val }))
+                }
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Coach" />
+                </SelectTrigger>
+                <SelectContent>
+                  {coaches.map((coach) => (
+                    <SelectItem key={coach.id} value={String(coach.id)}>
+                      {coach.name} - {coach.role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Venue 
+              </Label>
+              <Select
+                value={form.venue_id}
+                onValueChange={(val) =>
+                  setForm((prev) => ({ ...prev, venue_id: val }))
+                }
+              >
+                <SelectTrigger className="text-gray-500">
+                  <SelectValue placeholder="Select Venue" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VENUE.map((venue) => (
+                    <SelectItem key={venue.id} value={venue.id}>
+                      {venue.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Enrollment Cap
+              </Label>
+              <Input
+                placeholder="e.g. 30"
+                type="number"
+                value={form.enrollment_cap}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, enrollment_cap: Number(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"/>
+            </div>
+          </div>
+
+                    {/* Equipment Needed */}
+                    <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium text-gray-700">
               Equipment Needed
             </Label>
-            <div className="flex items-center gap-4">
-              {TEAM_OPTIONS.map((team) => (
-                <div key={team.id} className="flex items-center gap-2">
+            <div className="gap-4">
+              {equipments.map((equipment) => (
+                <div key={equipment.name} className="flex items-center gap-2">
                   <Checkbox
-                    id={team.id}
-                    checked={form.equipment_needed.includes(team.id)}
+                    id={equipment.name}
+                    checked={form.equipment_needed.includes(equipment.name)}
                     onCheckedChange={(checked) =>
-                      handleEquipmentToggle(team.id, !!checked)
+                      handleEquipmentToggle(equipment.name, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={team.id}
+                    htmlFor={equipment.name}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {team.label}
+                    {equipment.name}
                   </label>
                 </div>
               ))}
@@ -223,76 +390,28 @@ export default function EditSessionModal(
             <Label className="text-sm font-medium text-gray-700">
               Drills
             </Label>
-            <div className="flex items-center gap-4">
-              {TEAM_OPTIONS.map((team) => (
-                <div key={team.id} className="flex items-center gap-2">
+            <div className="gap-4">
+              {DRILLS.map((drill) => (
+                <div key={drill.id} className="flex items-center gap-2">
                   <Checkbox
-                    id={team.id}
-                    checked={form.equipment_needed.includes(team.id)}
+                    id={drill.id}
+                    checked={form.drills.includes(drill.id)}
                     onCheckedChange={(checked) =>
-                      handleDrillsToggle(team.id, !!checked)
+                      handleDrillsToggle(drill.id, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={team.id}
+                    htmlFor={drill.id}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {team.label}
+                    {drill.label}
                   </label>
                 </div>
               ))}
             </div>
           </div>
-                    {/* Date & time */}
-                    <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Session Time
-              </Label>
-              <Select
-                value={form.session_objective}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, session_objective: val }))
-                }
-              >
-                <SelectTrigger className="text-gray-500">
-                  <SelectValue placeholder="Select Specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Session Objective
-              </Label>
-                  <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[240px] justify-start text-left">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : "Pick a date"}
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-            </div>
-          </div>
-
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-2">
             <Button
               variant="ghost"
@@ -305,7 +424,7 @@ export default function EditSessionModal(
               onClick={handleSubmit}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
             >
-              Edit Session
+              Add Session
             </Button>
           </div>
         </div>

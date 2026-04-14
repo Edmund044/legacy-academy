@@ -4,7 +4,7 @@ import { PageHeader, StatCard } from "@/components/modules/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ShoppingBag, DollarSign, Package, Plus, MoreVertical, Eye } from "lucide-react"
+import { ShoppingBag, DollarSign, Package, Plus, Eye } from "lucide-react"
 
 const products = [
   { name: "Elite Training Jersey", desc: "Premium athletic fabric", price: "$45.00", stock: 84, tag: "BEST SELLER", color: "bg-green-600" },

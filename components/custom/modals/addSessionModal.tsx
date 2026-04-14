@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,31 +19,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload, CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { setDate } from "date-fns";
-import { format } from "path";
+import { UserRoundPlus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { toast } from "sonner";
+import React from "react";
+import { CoachProfile } from "@/types/coaches";
+import { Equipment } from "@/types/equipment";
+import { ApiResponse } from "@/types/api-response";
 
-// interface AddCoachModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: CoachFormData) => void;
-// }
+interface AddCoachModalProps {
+  onSubmit: () => void;
+}
 
 interface SessionFormData {
   name: string;
   type: string;
-  coach_id: string;
+  coach_id: string | null;
   venue_id: string;
-  session_date:string;
+  session_date: Date;
   start_time: string;
   end_time: string;
   enrollment_cap: number;
@@ -98,7 +90,7 @@ const VENUE = [
 
 const COACHES = [
   {
-    id: "d574f8cc-2ed3-4248-862c-e590d61f17ec", name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
+    id: "d574f8cc-2ed3-4248-862c-e590d61f15ec", name: "Julian Nagelsmann", role: "Tactical Analysis Specialist", license: "UEFA Pro License",
     bio: "Former professional focused on data-driven tactical periodization and youth elite development. Leading Elite Division since 2021.",
     stats: { experience: 12, teams: 8, winRate: 68 },
     teams: ["Under-19 (Elite Division · 24 players)", "Under-16 (Regional League · 18 players)"],
@@ -124,21 +116,20 @@ const COACHES = [
 ]
 
 export default function AddSessionModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddCoachModalProps
+    {
+  onSubmit,
+}: AddCoachModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [date, setDate] = useState<Date>();
+  const [coaches, setCoaches] = useState<CoachProfile[]>([])
+  const [open, setOpen] = useState(false);
+  const { user, tokens } = useAuth();
+  const [equipments  , setEquipments] = useState<Equipment[]>([])
   const [form, setForm] = useState<SessionFormData>({
     name: "",
     type: "",
-    coach_id: "",
+    coach_id: user?.id ?? null,
     venue_id: "",
-    session_date: "",
+    session_date: new Date(),
     start_time: "",
     end_time:"",
     enrollment_cap: 0,
@@ -147,12 +138,26 @@ export default function AddSessionModal(
     drills: [],
   });
 
-  // const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-  //   setForm((prev) => ({ ...prev, profilePhoto: file }));
-  //   setPreviewUrl(URL.createObjectURL(file));
-  // };
+
+
+  const fetchEquipment = async () => {
+    try {
+      const response = await apiClient<ApiResponse<Equipment[]>>({
+        endpoint: `/v1/equipment/inventory?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      setEquipments((response?.data as Equipment[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    }
+  };
+
+
 
   const handleEquipmentToggle = (teamId: string, checked: boolean) => {
     setForm((prev) => ({
@@ -179,29 +184,43 @@ export default function AddSessionModal(
         endpoint: "/v1/sessions",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: {
           ...form
         },
       });
-      // setOpen(false);
-      // onConfirm();
+      setOpen(false);
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
       // toast.error("Something went wrong. Please try again later.");
     }
   };
 
-//   const handleCancel = () => {
-//     onOpenChange(false);
-//   };
+  const fetchCoaches = async () => {
+    try {
+      const response = await apiClient<ApiResponse<CoachProfile[]>>({
+        endpoint: `v1/coaches?page=1&per_page=100`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tokens?.accessToken}`,
+        },
+      });
+
+      setCoaches((response?.data as CoachProfile[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch coaches. Please try again later.");
+    }
+  };
+
+
+  React.useEffect(() => {fetchEquipment(),fetchCoaches()},[]);
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
         <Button size="sm" className="mt-3 bg-white text-brand hover:bg-white/90"> + Add Session</Button>
@@ -301,22 +320,30 @@ export default function AddSessionModal(
                         <Label className="text-sm font-medium text-gray-700">
                           Session Date
                         </Label>
-                        <Popover>
+                        <Input
+                type="date"
+                placeholder="e.g. 01/01/2000"
+                value={form.session_date.toISOString().split('T')[0]}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, session_date: new Date(e.target.value) }))
+                }
+                className="placeholder:text-gray-400"></Input>
+                        {/* <Popover>
                           <PopoverTrigger asChild>
                             <Button variant="outline" className="w-[240px] justify-start text-left">
                               <CalendarIcon className="mr-2 h-4 w-4" />
-                              {date ? format(date, "PPP") : "Pick a date"}
+                              {session_date ? format(session_date, 'PPP') : "Pick a date"}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0">
                             <Calendar
                               mode="single"
-                              selected={date}
+                              selected={session_date}
                               onSelect={setDate}
                               initialFocus
                             />
                           </PopoverContent>
-                        </Popover>
+                        </Popover> */}
                       </div>
                     </div>
 
@@ -327,7 +354,7 @@ export default function AddSessionModal(
                 Coach
               </Label>
               <Select
-                value={form.coach_id}
+                value={form.coach_id ?? undefined}
                 onValueChange={(val) =>
                   setForm((prev) => ({ ...prev, coach_id: val }))
                 }
@@ -336,7 +363,7 @@ export default function AddSessionModal(
                   <SelectValue placeholder="Select Coach" />
                 </SelectTrigger>
                 <SelectContent>
-                  {COACHES.map((coach) => (
+                  {coaches.map((coach) => (
                     <SelectItem key={coach.id} value={String(coach.id)}>
                       {coach.name} - {coach.role}
                     </SelectItem>
@@ -359,7 +386,7 @@ export default function AddSessionModal(
                 </SelectTrigger>
                 <SelectContent>
                   {VENUE.map((venue) => (
-                    <SelectItem key={venue.id} value={venue.label}>
+                    <SelectItem key={venue.id} value={venue.id}>
                       {venue.label}
                     </SelectItem>
                   ))}
@@ -388,21 +415,21 @@ export default function AddSessionModal(
               Equipment Needed
             </Label>
             <div className="gap-4">
-              {EQUIPMENTS.map((equipment) => (
-                <div key={equipment.id} className="flex items-center gap-2">
+              {equipments.map((equipment) => (
+                <div key={equipment.name} className="flex items-center gap-2">
                   <Checkbox
-                    id={equipment.id}
-                    checked={form.equipment_needed.includes(equipment.id)}
+                    id={equipment.name}
+                    checked={form.equipment_needed.includes(equipment.name)}
                     onCheckedChange={(checked) =>
-                      handleEquipmentToggle(equipment.id, !!checked)
+                      handleEquipmentToggle(equipment.name, !!checked)
                     }
                     className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                   />
                   <label
-                    htmlFor={equipment.id}
+                    htmlFor={equipment.name}
                     className="text-sm text-gray-700 cursor-pointer select-none"
                   >
-                    {equipment.label}
+                    {equipment.name}
                   </label>
                 </div>
               ))}

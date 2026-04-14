@@ -10,12 +10,22 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/context/auth-context";
 
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export default function LoginPage() {
   const { login, isLoading, error, clearError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [form, setForm] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
 
   // Clear any stale error when the user starts editing
   useEffect(() => {
@@ -25,7 +35,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    await login(form.email, form.password);
     // On success, AuthContext calls router.push("/dashboard") automatically
   };
 
@@ -55,6 +65,10 @@ export default function LoginPage() {
                 placeholder="name@company.com"
                 className="h-11 rounded-xl border-gray-200 focus-visible:ring-red-500 focus-visible:border-red-500"
                 required
+                value={form.email}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, email: e.target.value }))
+                }
               />
             </div>
 
@@ -78,6 +92,10 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-red-500 focus-visible:border-red-500"
                   required
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, password: e.target.value }))
+                  }
                 />
                 <button
                   type="button"

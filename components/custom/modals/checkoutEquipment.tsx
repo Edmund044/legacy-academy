@@ -11,8 +11,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Package, CheckCircle2} from "lucide-react";
 import { apiClient } from "@/lib/api-client";
+import { equipment } from "@/data/data";
+import { useAuth } from "@/context/auth-context";
 
 const CONDITIONS = ["excellent", "good", "fair", "needs_repair", "condemned"];
+
+interface CheckoutEquipmentModalProps {
+  coachId: string;
+  sessionId: string;
+  equipments: string;
+}
 
 interface Equipment {
   id: string;
@@ -43,13 +51,14 @@ const MOCK_CATALOG: Equipment[] = [
   { id: "293a4b5c-9abc-4234-0678-223344558899", name: "First Aid Kit", category: "Medical", stock: 5 },
 ];
 
-export default function CheckoutHandover() {
-  const [catalog, setCatalog] = useState<Equipment[]>(MOCK_CATALOG);
+export default function CheckoutHandover({ sessionId,coachId, equipments }: CheckoutEquipmentModalProps) {
+  const [catalog] = useState<Equipment[]>(MOCK_CATALOG);
   const [selected, setSelected] = useState<SelectedItem[]>([]);
   const [query, setQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const { tokens } = useAuth();
 
   // Swap this for your real API call
   // useEffect(() => {
@@ -113,8 +122,8 @@ export default function CheckoutHandover() {
 
   async function handleSubmit() {
     const payload = {
-      coach_id: "586bac9d-635e-40d7-9428-e7e9c4af962d",
-      session_id: "8a39ec50-9af2-4813-a045-e17099f916d2",
+      coach_id: coachId,
+      session_id: sessionId,
       items: selected.map(({ equipment_id, qty, condition_out }) => ({
         equipment_id,
         qty,
@@ -126,8 +135,7 @@ export default function CheckoutHandover() {
         endpoint: "/v1/equipment/handovers",
         method: "POST",
         headers: {
-          // Authorization: `Bearer ${tokens?.accessToken}`,
-          "Authorization": "Bearer ",
+          Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
         },
         body: payload
@@ -177,11 +185,12 @@ export default function CheckoutHandover() {
             Equipment issuance
           </DialogTitle>
         </DialogHeader>
-        <div className="max-w-2xl mx-auto p-6" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div className="max-w-2xl mx-auto p-6" style={{ maxHeight: '500px', overflowY: 'auto' }}>
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-base font-medium text-gray-900">Equipment issuance</h2>
+             <p>{equipments}</p>
               <p className="text-sm text-gray-500 mt-0.5">Search and select equipment to check out</p>
             </div>
             <span className="text-xs font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-600">
@@ -332,7 +341,7 @@ export default function CheckoutHandover() {
               <button
                 onClick={handleSubmit}
                 disabled={selected.length === 0}
-                className="px-5 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="px-5 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 Issue equipment
               </button>

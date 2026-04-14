@@ -10,14 +10,11 @@ import AddEquipmentModal from "@/components/custom/modals/addEquipmentModal"
 import EditEquipmentModal from "@/components/custom/modals/editEquipmentModal"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { Equipment } from "@/types/equipment";
+import { convertToUpperCase } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+import { ApiResponse } from "@/types/api-response";
 
-const equipment = [
-  { name: "FIFA Pro Match Ball", category: "Balls", stock: 120, assigned: 90, condition: "Excellent", cost: "$120.00" },
-  { name: "Agility Training Cones", category: "Training Gear", stock: 500, assigned: 450, condition: "Good", cost: "$5.50" },
-  { name: "Portable Goal Post (U10)", category: "Field Equipment", stock: 12, assigned: 12, condition: "Needs Repair", cost: "$850.00" },
-  { name: "Training Bibs (Neon Green)", category: "Training Gear", stock: 200, assigned: 80, condition: "Excellent", cost: "$12.99" },
-  { name: "Pro Stopwatches", category: "Training Gear", stock: 30, assigned: 5, condition: "Fair", cost: "$45.00" },
-]
 
 const conditionConfig: Record<string, string> = {
   "Excellent": "success",
@@ -26,28 +23,31 @@ const conditionConfig: Record<string, string> = {
   "Needs Repair": "destructive",
 }
 
-const categories = ["All Equipment", "Balls", "Training Gear", "Field Equipment", "Medical Kits"]
+const categories = ["All Equipment", "balls", "training_gear", "field_equipment", "medical_kits"]
 
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState("All Equipment")
+  const [equipment  , setEquipment] = useState<Equipment[]>([])
+  const [loading, setLoading] = useState(true);
   const filtered = equipment.filter(e => activeCategory === "All Equipment" || e.category === activeCategory)
   const { user, tokens } = useAuth();
 
   const fetchEquipment = async () => {
     try {
-      const response = await apiClient({
-        endpoint: `/v1/equipment/inventory?page=1&per_page=20`,
+      const response = await apiClient<ApiResponse<Equipment[]>>({
+        endpoint: `/v1/equipment/inventory?page=1&per_page=100`,
         method: "GET",
         headers: {
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
         },
       });
   
-      // setBookings((response.data as any[]) ?? []);
+      setEquipment((response.data as Equipment[]) ?? []);
     } catch (error) {
+      alert("Failed to fetch equipment inventory. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
   
@@ -56,7 +56,7 @@ export default function EquipmentPage() {
   return (
     <>
       <PageHeader title="Equipment Inventory" description="Manage and track football academy assets across all campuses.">
-        <AddEquipmentModal/>
+        <AddEquipmentModal fetchEquipment={fetchEquipment}/>
       </PageHeader>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -77,13 +77,21 @@ export default function EquipmentPage() {
                 </button>
               ))}
             </div>
-            <div className="relative sm:ml-auto">
+            {/* <div className="relative sm:ml-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <input className="h-8 pl-8 pr-3 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 w-full sm:w-56" placeholder="Search equipment, SKU..." />
-            </div>
+            </div> */}
           </div>
         </CardHeader>
         <CardContent>
+          {loading ? (
+                  <div className="flex items-center justify-center">
+                  {/* The animate-spin class makes the icon rotate infinitely */}
+                  <Loader2 className="animate-spin h-8 w-8 text-red-600" />
+                </div>
+
+          ):
+          (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -97,22 +105,22 @@ export default function EquipmentPage() {
                 {filtered.map((e, i) => (
                   <tr key={i} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                     <td className="py-3 px-3 text-sm font-semibold">{e.name}</td>
-                    <td className="py-3 px-3 text-xs text-muted-foreground">{e.category}</td>
-                    <td className="py-3 px-3 text-sm font-semibold">{e.stock}</td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground">{e.category.charAt(0).toUpperCase() + e.category.slice(1)}</td>
+                    <td className="py-3 px-3 text-sm font-semibold">{e.stock_total}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Progress value={(e.assigned / e.stock) * 100} className="w-16 h-1.5" />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{e.assigned}/{e.stock}</span>
+                        <Progress value={(e.stock_assigned / e.stock_total) * 100} className="w-16 h-1.5" />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{e.stock_assigned}/{e.stock_total}</span>
                       </div>
                     </td>
                     <td className="py-3 px-3">
-                      <Badge variant={conditionConfig[e.condition] as any} className="text-[10px]">{e.condition}</Badge>
+                      <Badge variant={conditionConfig[e.condition] as any} className="text-[10px]">{convertToUpperCase(e.condition)}</Badge>
                     </td>
-                    <td className="py-3 px-3 text-sm font-medium">{e.cost}</td>
+                    <td className="py-3 px-3 text-sm font-medium">KSH {e.replacement_cost_usd}</td>
                     <td className="py-3 px-3">
                       {/* <button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button> */}
                       <button className="p-1 rounded hover:bg-muted text-muted-foreground">
-                        <EditEquipmentModal/>
+                        <EditEquipmentModal equipment={e} onSubmit={fetchEquipment}/>
                       </button>
                     </td>
                   </tr>
@@ -120,6 +128,10 @@ export default function EquipmentPage() {
               </tbody>
             </table>
           </div>
+          )
+        
+        }
+
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
             <p className="text-xs text-muted-foreground">Showing {filtered.length} of {equipment.length} items</p>
             <div className="flex gap-1">

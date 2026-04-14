@@ -11,8 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,16 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload, Plus } from "lucide-react";
+import { UserRoundPlus, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
+import { EQUIPMENT_CATEGORY, CONDITION } from "@/constants/constants";
 
-// interface AddEquipmentModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: EquipmentFormData) => void;
-// }
+interface AddEquipmentModalProps {
+  fetchEquipment: () => void;
+}
 
 interface EquipmentFormData {
   name: string;
@@ -55,33 +52,17 @@ const SPECIALIZATIONS = [
   "Youth Development",
 ];
 
-const EQUIPMENT_CATEGORY = [
-  "balls",
-  "training_gear",
-  "field_equipment",
-  "medical_kits",
-  "goalkeeping",
-  "protective"
-]
 
-const CONDITION = [
-  "excellent",
-  "good",
-  "fair",
-  "needs_repair",
-  "condemned"
-]
 
 export default function AddEquipmentModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: AddEquipmentModalProps
+    {
+      fetchEquipment
+}: AddEquipmentModalProps
 ) {
   // const fileInputRef = useRef<HTMLInputElement>(null);
   // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { tokens } = useAuth();
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<EquipmentFormData>({
     name: "",
     category: "",
@@ -120,7 +101,8 @@ export default function AddEquipmentModal(
           ...form,
         },
       });
-      // setOpen(false);
+      setOpen(false);
+      fetchEquipment();
       toast.success("Availability confirmed!");
     } catch (error) {
       alert((error as Error).message);
@@ -134,7 +116,7 @@ export default function AddEquipmentModal(
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+    open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
               <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New Equipment</Button>
@@ -213,7 +195,7 @@ export default function AddEquipmentModal(
                 min={0}
                 value={form.stock_total}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, stock_total: e.target.value }))
+                  setForm((prev) => ({ ...prev, stock_total: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -228,7 +210,7 @@ export default function AddEquipmentModal(
                 min={0}
                 value={form.replacement_cost_usd}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, replacement_cost_usd: e.target.value }))
+                  setForm((prev) => ({ ...prev, replacement_cost_usd: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />

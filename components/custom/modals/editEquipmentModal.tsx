@@ -22,20 +22,36 @@ import {
 } from "@/components/ui/select";
 import { UserRoundPlus, Edit, Plus } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
-import { useAuth } from "@/context/auth-context";
-
-// interface EditEquipmentModalProps {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-//   onSubmit?: (data: EquipmentFormData) => void;
-// }
+import { EQUIPMENT_CATEGORY,  CONDITION } from "@/constants/constants";
+import { Equipment } from "@/types/equipment";
 
 interface EquipmentFormData {
-  itemName: string;
+  name: string;
   category: string;
-  stock: string;
+  sku: string;
+  stock_total: number;
   condition: string;
-  replacement: string;
+  replacement_cost_usd: number;
+}
+interface EquipmentData {
+  id: string;
+  name: string;
+  category: string;
+  sku: string;
+  stock_total: number;
+  stock_assigned: number;
+  utilization_pct: number;
+  assigned: number;
+  condition: "Excellent" | "Good" | "Fair" | "Poor"; // optional: restrict values
+  replacement_cost_usd: number; 
+}
+
+
+interface EditEquipmentModalProps {
+  // open: boolean;
+  // onOpenChange: (open: boolean) => void;
+  equipment: Equipment;
+  onSubmit: () => void;
 }
 
 const TEAM_OPTIONS = [
@@ -54,42 +70,22 @@ const SPECIALIZATIONS = [
 ];
 
 export default function EditEquipmentModal(
-//     {
-//   open,
-//   onOpenChange,
-//   onSubmit,
-// }: EditEquipmentModalProps
+{equipment,onSubmit}: EditEquipmentModalProps
 ) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<EquipmentFormData>({
-    itemName: "",
-    category: "",
-    stock: "",
-    condition: "",
-    replacement: "",
+    name: equipment?.name || "",
+    category: equipment?.category || "",
+    stock_total: equipment?.stock_total || 0,
+    condition: equipment?.condition || "",
+    replacement_cost_usd: Number(equipment?.replacement_cost_usd) || 0,
+    sku: equipment?.sku || ""
   });
-
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setForm((prev) => ({ ...prev, profilePhoto: file }));
-    setPreviewUrl(URL.createObjectURL(file));
-  };
-
-  const handleTeamToggle = (teamId: string, checked: boolean) => {
-    setForm((prev) => ({
-      ...prev,
-      assignedTeams: checked
-        ? [...prev.assignedTeams, teamId]
-        : prev.assignedTeams.filter((t) => t !== teamId),
-    }));
-  };
 
   const handleSubmit = async () => {
     try {
       await apiClient({
-        endpoint: "/v1/equipment/inventory/8b199dbb-c404-45c9-9fdb-58cb41316a3a",
+        endpoint: `/v1/equipment/inventory/${equipment?.id}`,
         method: "PATCH",
         headers: {
           // Authorization: `Bearer ${tokens?.accessToken}`,
@@ -97,29 +93,23 @@ export default function EditEquipmentModal(
           "Content-Type": "application/json",
         },
         body: {
-          "name": "Mikasa big balls Updated",
-          "category": "balls",
-          "sku": "ball-001",
-          "stock_total": 200,
-          "condition": "excellent",
-          "replacement_cost_usd": 100,
-          "campus_id": "979a583b-97ae-4575-9625-6d6a7d57e8c5"
+          ...form
         },
       });
-      // setOpen(false);
-      // onConfirm();
+      setOpen(false);
+      onSubmit();
       // toast.success("Availability confirmed!");
     } catch (error) {
+      alert("Failed to update equipment. Please try again later.");
       // toast.error("Something went wrong. Please try again later.");
     }
   };
-//   const handleCancel = () => {
-//     onOpenChange(false);
-//   };
+
 
   return (
     <Dialog 
-    // open={open} onOpenChange={onOpenChange}
+      open={open}
+        onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
               <Edit className="w-3.5 h-3.5 mr-1.5" />
@@ -132,7 +122,6 @@ export default function EditEquipmentModal(
             Edit New Equipment
           </DialogTitle>
         </DialogHeader>
-
         <div className="px-6 pb-6 space-y-5 overflow-y-auto max-h-[80vh]">
           {/* Full Name + Role */}
           <div className="grid grid-cols-2 gap-4">
@@ -142,9 +131,9 @@ export default function EditEquipmentModal(
               </Label>
               <Input
                 placeholder="e.g. Ball"
-                value={form.itemName}
+                value={form.name}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, itemName: e.target.value }))
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -154,16 +143,16 @@ export default function EditEquipmentModal(
                 Category
               </Label>
               <Select
-                value={form.stock}
+                value={form.category}
                 onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, stock: val }))
+                  setForm((prev) => ({ ...prev, category: val }))
                 }
               >
                 <SelectTrigger className="text-gray-500">
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {EQUIPMENT_CATEGORY.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
@@ -183,9 +172,9 @@ export default function EditEquipmentModal(
                 placeholder="e.g. 10"
                 type="number"
                 min={0}
-                value={form.stock}
+                value={form.stock_total}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, stock: e.target.value }))
+                  setForm((prev) => ({ ...prev, stock_total: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -198,9 +187,9 @@ export default function EditEquipmentModal(
                 placeholder="e.g. 10"
                 type="number"
                 min={0}
-                value={form.replacement}
+                value={form.replacement_cost_usd}
                 onChange={(e) =>
-                  setForm((prev) => ({ ...prev, replacement: e.target.value }))
+                  setForm((prev) => ({ ...prev, replacement_cost_usd: Number(e.target.value) }))
                 }
                 className="placeholder:text-gray-400"
               />
@@ -219,7 +208,7 @@ export default function EditEquipmentModal(
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SPECIALIZATIONS.map((s) => (
+                  {CONDITION.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}
                     </SelectItem>
