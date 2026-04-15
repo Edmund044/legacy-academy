@@ -13,6 +13,7 @@ import { Session } from "@/types/sessions";
 import { CoachProfile } from "@/types/coaches";
 import { Loader2 } from "lucide-react";
 import { ApiResponse } from "@/types/api-response";
+import PayModal from "@/components/custom/modals/payModal";
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -112,7 +113,7 @@ export default function PlayerDashboardPage() {
           ):
           (
             <>
-                  <PageHeader title="Parent Dashboard" description="Your sessions, bills, and activity at a glance." />
+                  <PageHeader title="Enroll Session" description="Pay for elite or group training" />
 
 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
   <Card className="sm:col-span-1 bg-brand text-white border-0">
@@ -145,6 +146,7 @@ export default function PlayerDashboardPage() {
       </CardHeader>
       <CardContent className="space-y-3">
         {sessions.filter(s => s.type === 'individual').map((s, i) => (
+
           <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border`}>
             <Avatar className="h-10 w-10"><AvatarFallback>{s.name.charAt(0)}</AvatarFallback></Avatar>
             <div className="flex-1 min-w-0">
@@ -157,15 +159,27 @@ export default function PlayerDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
 
+            <PayModal 
+            paymentRequest={{
+              amount: 1,
+              itemName: s.name,
+              itemDescription: s.type,
+              paymentFor: "elite training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => handlEnroll(s.id)}
 
-              <Button
+            
+            ></PayModal>
+              {/* <Button
             key={s.id}
             size="sm"
             onClick={() => toggleEnroll(s.id)}
           >
             {loadingButton && <span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />}
             {enrolledRecordId === s.id ? "Undo" : "Enroll"}
-          </Button>
+          </Button> */}
 
           </div>
         ))}
@@ -193,7 +207,20 @@ export default function PlayerDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
             
-            <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Enroll</Button>
+            {/* <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Enroll</Button> */}
+            <PayModal 
+            paymentRequest={{
+              amount: 2500,
+              itemName: s.name,
+              itemDescription: s.type,
+              paymentFor: "group training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => toggleEnroll(s.id)}
+
+            
+            ></PayModal>
           </div>
         ))}
       </CardContent>

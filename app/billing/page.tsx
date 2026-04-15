@@ -31,7 +31,7 @@ export default function BillingPage() {
   const { tokens,user } = useAuth();
   const config = {
     reference: uuidv4(),
-    email: user?.email || "Cliffobure@gmail.com",
+    email: user?.email || "legacyuser@gmail.com",
     // amount: Math.round(total * 100),
     amount: 100,
     publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
