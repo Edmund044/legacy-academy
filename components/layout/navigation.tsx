@@ -60,7 +60,8 @@ const naviGroups: NavGroup[] = [
     label: "Parent Portal",
     roles: [RoleNames.PARENT],
     items: [
-      { href: "/bookings", icon: BookOpen, label: "Bookings" },
+      // { href: "/bookings", icon: BookOpen, label: "Bookings" },
+      { href: "/subcriptions", icon: UserCircle, label: "Subscriptions" },
       { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },

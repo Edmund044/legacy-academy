@@ -17,7 +17,8 @@ import { apiClient } from "@/lib/api-client";
 import { ApiResponse } from "@/types/api-response";
 import { PaymentRequest } from "@/types/payment-request";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CreditCard, Download, MessageSquare, CheckCircle2 } from "lucide-react"
+import { Download, MessageSquare } from "lucide-react"
+import { Star, Smartphone } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/primitives";
 
 
@@ -112,13 +113,21 @@ export default function PayModal(
                   </div>
 
                   <Button className="w-full">Complete Booking →</Button> */}
-                  <PaystackButton
+                <PaystackButton
                 {...config}
-                text={paymentRequest.buttonText || "Complete Payment →"}
+                text="Pay with M-Pesa"
                 className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
                 onSuccess={onSuccess}
                 onClose={onClose}
               />
+                  <Button className="w-full text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300">Pay with Debt →</Button>
+                  {/* <button className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all`}>
+                        <div className={`w-8 h-5 rounded flex items-center justify-center`}><Smartphone className="w-4 h-4 text-green-600" /></div>
+                        <span className="text-sm font-medium flex-1 text-left">Pay with Debt</span>
+                        <div className={`w-4 h-4 rounded-full border-2`}>
+                          {<div className="w-1.5 h-1.5 bg-white rounded-full m-auto mt-0.5" />}
+                        </div>
+                      </button> */}
                 </CardContent>
               </Card>
             </div>
