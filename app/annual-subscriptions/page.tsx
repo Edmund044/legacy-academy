@@ -74,9 +74,9 @@ export default function BillingPage() {
         },
         body: {
           "player_id": playerId,
-          "plan_type": "string",
+          "plan_type": "annual_membership",
           "annual_fee_kes": annual_fee_kes,
-          "discount_pct": 0,
+          "discount_pct": scholarship_applied ? 100 : 0,
           "scholarship_applied": scholarship_applied,
           "renewal_date": renewalDate.toISOString().split('T')[0]
         }

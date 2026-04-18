@@ -27,4 +27,8 @@ export interface ApiResponse<T> {
     per_page: number;
     total: number;
     pages: number;
+    total_active?: number;
+    net_revenue_kes?: number;
+    inactive_count?: number;
+
   }

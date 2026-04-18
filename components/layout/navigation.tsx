@@ -61,7 +61,7 @@ const naviGroups: NavGroup[] = [
     roles: [RoleNames.PARENT],
     items: [
       // { href: "/bookings", icon: BookOpen, label: "Bookings" },
-      { href: "/subcriptions", icon: UserCircle, label: "Subscriptions" },
+      { href: "/annual-subscriptions", icon: UserCircle, label: "Subscriptions" },
       { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
@@ -115,6 +115,9 @@ const naviGroups: NavGroup[] = [
     items: [
       { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
       { href: "/price-configurations", icon: CalendarDays, label: "Price Configurations" },
+      { href: "/annual-subscriptions-report", icon: ScanLine, label: "Annual Subscriptions" },
+      { href: "/attendance-billing", icon: Package, label: "Attendance Billing" },
+      { href: "/revenue-splits", icon: Package, label: "Revenue Splits" },
       { href: "/coaches", icon: Users, label: "Coaches" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
