@@ -36,7 +36,7 @@ export default function SessionsPage() {
   const fetchSessions = async () => {
     try {
       const response = await apiClient<ApiResponse<Session[]>>({
-        endpoint: `v1/sessions?page=1&per_page=100`,
+        endpoint: `v1/billing/revenue-splits?page=1&per_page=100`,
         method: "GET",
         headers: {
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
@@ -56,7 +56,7 @@ export default function SessionsPage() {
 
   return (
     <>
-      <PageHeader title="Session Reporting" description="Detailed overview of training sessions, enrollment, and revenue performance.">
+      <PageHeader title="Revenue Split Reports" description="Detailed overview of elite training sessions revenue performance.">
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
