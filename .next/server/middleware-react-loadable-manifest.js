@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"components/custom/modals/payModal.tsx -> react-paystack\":{\"id\":\"components/custom/modals/payModal.tsx -> react-paystack\",\"files\":[\"static/chunks/_app-pages-browser_node_modules_react-paystack_dist_index_es_js.js\"]}}"
