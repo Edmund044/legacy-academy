@@ -1,3 +1,4 @@
+import { Subscription } from "./subscription";
 export type PlayerStatus = "active" | "inactive";
 export type RelationshipType = "Father" | "Mother" | "Guardian" | "Other";
 
@@ -13,6 +14,7 @@ export interface Player {
   group_name: string | null;
   sponsored: number;
   training_center: string;
+  subscriptions: Subscription[];
 }
 
 export interface Guardian {

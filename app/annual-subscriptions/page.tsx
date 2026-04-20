@@ -8,7 +8,7 @@ import { useAuth } from "@/context/auth-context";
 import { Subscription } from "@/types/subscription";
 import { apiClient } from "@/lib/api-client";
 import PayModal from "@/components/custom/modals/payModal";
-import { ApiResponse } from "@/types/api-response";
+import { ApiResponse, PaginationMeta } from "@/types/api-response";
 import { Guardian } from "@/types/guardians"
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
@@ -43,6 +43,8 @@ export default function BillingPage() {
   const [loadingButton, setLoadingButton] = useState(false);
   const [guardians, setGuardians] = useState<Guardian>()
   const [loading, setLoading] = useState(true);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
+  const [meta,setMeta] = useState<PaginationMeta>()
   const config = {
     reference: uuidv4(),
     email: user?.email || "legacyuser@gmail.com",
@@ -93,7 +95,7 @@ export default function BillingPage() {
   const fetchGuardians = async () => {
     try {
       const response = await apiClient<ApiResponse<Guardian>>({
-        endpoint: `v1/guardians/83e5c848-de1b-4677-8a79-10581e4aebab`,
+        endpoint: `v1/guardians/${user?.id}`,
         method: "GET",
         headers: {
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
@@ -102,10 +104,29 @@ export default function BillingPage() {
 
       setGuardians((response.data as Guardian) ?? []);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch guardians. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       setLoading(false);
+    }
+  };
+  const fetchSubscriptions = async (player_id:number) => {
+    try {
+      const response = await apiClient<ApiResponse<Subscription[]>>({
+        endpoint: `/v1/billing/subscriptions/b7671cd6-406b-4eec-b232-53c9c8e7a6f0`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setSubscriptions((response.data as Subscription[]) ?? []);
+      setMeta(response.meta);
+    } catch (error) {
+      alert("Failed to fetch subscriptions. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
     }
   };
 
@@ -157,7 +178,9 @@ export default function BillingPage() {
                 <p className="text-xs text-muted-foreground line-through mt-1">{p.sponsored == 3 || checkIfSiblingDiscount(p.id) ? "KES 14,000 / year":""}</p>
                 <p className={`text-xl font-bold ${checkIfSiblingDiscount(p.id) ? "text-brand" : "text-foreground"}`}>KES {calculateDiscountedPrice(14000,p.sponsored,guardians.players.length,checkIfSiblingDiscount(p.id))}</p>
                 <p className="text-[11px] text-muted-foreground">{p.group_name}</p>
-                <p className="text-xs text-muted-foreground">Next renewal date: Jan 15, 2025</p>
+                <p className="text-xs text-muted-foreground">{p.subscriptions.map(
+                  (s,i) => `${new Date(s.renewal_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} - ${s.status.toUpperCase()}`
+                )}</p>
                 
                 {p.sponsored != 3 && <PayModal 
             paymentRequest={{
