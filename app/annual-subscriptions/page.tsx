@@ -112,6 +112,26 @@ export default function BillingPage() {
   React.useEffect(() => {
     fetchGuardians();
   }, [tokens]);
+
+  const calculateDiscountedPrice = (originalPrice: number, sponsored: number,players:number,sibling: boolean) => {
+    if (sponsored == 3) {
+      return 0; // 100% discount for scholarship
+    }
+    else if (sponsored == 1 && players > 1 && sibling) {
+      return originalPrice * 0.85; // 15% discount for sibling
+    }
+    else {
+      return originalPrice; // No discount
+    }
+
+  }
+
+
+  const checkIfSiblingDiscount = (playerId: string) => {
+    if (!guardians || !Array.isArray(guardians.players)) return false;
+    const playerIndex = guardians.players.findIndex(p => p.id === playerId);
+    return playerIndex > 0 && guardians.players.length > 1; // Sibling discount applies to the second player if there are multiple players
+  }
   
   return (
     <>
@@ -130,22 +150,18 @@ export default function BillingPage() {
               <div key={i} className="p-4 bg-muted/30 rounded-xl border border-border">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-[10px] text-muted-foreground font-bold">{p.first_name} {p.last_name}</p>
-                  <Badge variant={p.sponsored == 3 ? "brand" :"info" as any} className="text-[10px]">{p.sponsored == 3 ? "SCHOLARSHIP APPLIED":""}</Badge>
+                  {p.sponsored == 3 && <Badge variant="brand" className="text-[10px]">SCHOLARSHIP APPLIED</Badge>}
+                  {guardians.players.length > 1 && p.sponsored == 1 && checkIfSiblingDiscount(p.id) && <Badge variant="info" className="text-[10px]">SIBLING DISCOUNT</Badge>}
                 </div>
                 <p className="text-lg font-bold">{p.first_name} {p.last_name}</p>
-                <p className="text-xs text-muted-foreground line-through mt-1">KES 14,000 / year</p>
-                {/* <p className={`text-xl font-bold ${p.sponsored == 3 ? "text-brand" : "text-foreground"}`}>KES {p.finalPrice}</p> */}
+                <p className="text-xs text-muted-foreground line-through mt-1">{p.sponsored == 3 || checkIfSiblingDiscount(p.id) ? "KES 14,000 / year":""}</p>
+                <p className={`text-xl font-bold ${checkIfSiblingDiscount(p.id) ? "text-brand" : "text-foreground"}`}>KES {calculateDiscountedPrice(14000,p.sponsored,guardians.players.length,checkIfSiblingDiscount(p.id))}</p>
                 <p className="text-[11px] text-muted-foreground">{p.group_name}</p>
-                <PaystackButton
-                {...config}
-                text="Pay with M-Pesa"
-                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
-                onSuccess={() => console.log("Modal closed")}
-                onClose={() => console.log("Modal closed")}
-              />
-                <PayModal 
+                <p className="text-xs text-muted-foreground">Next renewal date: Jan 15, 2025</p>
+                
+                {p.sponsored != 3 && <PayModal 
             paymentRequest={{
-              amount: 100,
+              amount: calculateDiscountedPrice(14000,p.sponsored,guardians.players.length,checkIfSiblingDiscount(p.id)),
               itemName: "Annual Membership",
               itemDescription: p.first_name + " - " + p.last_name + " Elite Membership",
               paymentFor: "membership",
@@ -155,14 +171,10 @@ export default function BillingPage() {
             onSuccess={() => handlSubscription(p.id,200,true)}
 
             
-            ></PayModal>
+            ></PayModal>}
               </div>
             ))}
           </div>}
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
-            <p className="text-xs text-muted-foreground">Next renewal date: Jan 15, 2025</p>
-
-          </div>
         </CardContent>
       </Card>
 

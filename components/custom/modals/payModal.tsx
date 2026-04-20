@@ -43,6 +43,7 @@ export default function PayModal(
 }: AddPlayerModalProps
 ) {
     const { tokens,user } = useAuth();
+    const [open, setOpen] = useState(false);
     const config = {
       reference: uuidv4(),
       email: user?.email || "legacyuser@gmail.com",
@@ -66,12 +67,14 @@ export default function PayModal(
 
 
   return (
-    <Dialog 
+    <>
+       <Dialog  onOpenChange={(open) => {}} 
+            open={false}
     >
               <DialogTrigger asChild>
-              <Button>{paymentRequest.buttonText}</Button> 
+              {/* <Button>{paymentRequest.buttonText}</Button>  */}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[540px]  p-0 gap-0 overflow-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-[540px] pointer-events-auto  p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
@@ -113,13 +116,10 @@ export default function PayModal(
                   </div>
 
                   <Button className="w-full">Complete Booking →</Button> */}
-                <PaystackButton
-                {...config}
-                text="Pay with M-Pesa"
-                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
-                onSuccess={onSuccess}
-                onClose={onClose}
-              />
+                  
+
+                
+
                   <Button className="w-full text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300">Pay with Debt →</Button>
                   {/* <button className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all`}>
                         <div className={`w-8 h-5 rounded flex items-center justify-center`}><Smartphone className="w-4 h-4 text-green-600" /></div>
@@ -134,5 +134,15 @@ export default function PayModal(
 
       </DialogContent>
     </Dialog>
+    <PaystackButton
+                {...config}
+                text={paymentRequest.buttonText}
+                className=" w-48 bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
+                onSuccess={onSuccess}
+                onClose={onClose}
+              />
+    </>
+ 
+    
   );
 }

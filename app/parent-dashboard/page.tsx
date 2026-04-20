@@ -14,6 +14,7 @@ import { CoachProfile } from "@/types/coaches";
 import { Loader2 } from "lucide-react";
 import { ApiResponse } from "@/types/api-response";
 import PayModal from "@/components/custom/modals/payModal";
+import { Guardian } from "@/types/guardians"
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -35,6 +36,7 @@ export default function PlayerDashboardPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
+  const [guardians, setGuardians] = useState<Guardian>()
   const [loadingButton, setLoadingButton] = useState(false);
   const [enrolledRecordId, setEnrolledRecordId] = useState<string | null>(null);
 
@@ -99,6 +101,29 @@ export default function PlayerDashboardPage() {
     }
   };
 
+  const fetchGuardians = async () => {
+    try {
+      console.log("Fetching guardians for user ID:", user?.id);
+      const response = await apiClient<ApiResponse<Guardian>>({
+        endpoint: `v1/guardians/${user?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setGuardians((response.data as Guardian) ?? []);
+    } catch (error) {
+      alert("Failed to fetch guardian information. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchGuardians();
+  }, [tokens]);
   React.useEffect(() => {
     fetchSessions();
   }, [tokens]);

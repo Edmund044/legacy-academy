@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await saveRefreshToken(newTokens.refreshToken);
 
       setTokens(newTokens);
+      console.log(  "Persisted user:", authenticatedUser, "with tokens:", newTokens);
       setUser(authenticatedUser);
 
       scheduleRefresh(newTokens);
