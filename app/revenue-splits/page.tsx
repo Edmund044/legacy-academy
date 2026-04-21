@@ -8,26 +8,28 @@ import { Progress, Avatar, AvatarFallback } from "@/components/ui/primitives"
 import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  Edit} from "lucide-react"
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { Session } from "@/types/sessions";
-import { ApiResponse } from "@/types/api-response";
+import { SessionPayout } from "@/types/session-payout";
+import { ApiResponse, PaginationMeta } from "@/types/api-response";
 
 
 const statusConfig: Record<string, { label: string; variant: any }> = {
-  active: { label: "ACTIVE", variant: "success" },
-  upcoming: { label: "UPCOMING", variant: "warning" },
-  completed: { label: "COMPLETED", variant: "secondary" },
-  cancelled: { label: "CANCELLED", variant: "destructive" },
+  pending: { label: "PENDING", variant: "secondary" },
+  reconciled: { label: "RECONCILED", variant: "warning" },
+  paid: { label: "PAID", variant: "success" },
+  disputed: { label: "DISPUTED", variant: "destructive" },
 }
 
 export default function SessionsPage() {
-  const [sessions, setSessions] = useState<Session[]>([])
+  const [sessions, setSessions] = useState<SessionPayout[]>([])
   const [activeTab, setActiveTab] = useState("all")
   const [search, setSearch] = useState("")
+  const [meta,setMeta] = useState<PaginationMeta>()
 
   const filtered = sessions.filter(s => {
-    const matchesTab = activeTab === "all" || s.status === activeTab
-    const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.coach.toLowerCase().includes(search.toLowerCase())
-    return matchesTab && matchesSearch
+    const matchesTab = activeTab === "all" || s.payout_status === activeTab
+    // const matchesSearch = s.session.name.toLowerCase().includes(search.toLowerCase()) || s.coach.toLowerCase().includes(search.toLowerCase())
+    return matchesTab 
+    // && matchesSearch
   })
 
   const { tokens } = useAuth();
@@ -35,7 +37,7 @@ export default function SessionsPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await apiClient<ApiResponse<Session[]>>({
+      const response = await apiClient<ApiResponse<SessionPayout[]>>({
         endpoint: `v1/billing/revenue-splits?page=1&per_page=100`,
         method: "GET",
         headers: {
@@ -43,9 +45,10 @@ export default function SessionsPage() {
         },
       });
 
-      setSessions((response.data as Session[]) ?? []);
+      setSessions((response.data as SessionPayout[]) ?? []);
+      setMeta(response.meta);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch sessions. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       // setLoading(false);
@@ -96,7 +99,7 @@ export default function SessionsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  {["SESSION NAME", "DATE & TIME", "LEAD COACH", "ENROLLMENT", "REVENUE", "STATUS", ""].map(h => (
+                  {["SESSION NAME", "DATE & TIME", "LEAD COACH", "ENROLLMENT", "COACH REVENUE","ACADEMY REVENUE", "STATUS", ""].map(h => (
                     <th key={h} className="text-left py-2 px-3 text-[10px] font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
@@ -108,31 +111,36 @@ export default function SessionsPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-bold bg-brand/10 text-brand px-1.5 py-0.5 rounded w-8 text-center flex-shrink-0">LM</span>
                         <div>
-                          <p className="text-sm font-semibold">{s.name}</p>
-                          <p className="text-[11px] text-muted-foreground">{s.type}</p>
+                          <p className="text-sm font-semibold">{s.session.name}</p>
+                          <p className="text-[11px] text-muted-foreground">{s.session.type}</p>
                         </div>
                       </div>
                     </td>
                     <td className="py-3 px-3 text-xs text-muted-foreground whitespace-nowrap">
-                      <p>{s.session_date}</p>
-                      <p>{s.start_time}</p>
+                      <p>{s.session.session_date}</p>
+                      <p>{s.session.start_time}</p>
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s?.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
-                        <span className="text-xs">{s.coach}</span>
+                        <Avatar className="h-6 w-6"><AvatarFallback className="text-[10px]">{s?.session.coach.split(" ").map(n=>n[0]).join("")}</AvatarFallback></Avatar>
+                        <span className="text-xs">{s.session.coach}</span>
                       </div>
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Progress value={(s.enrollment_cap / s.total) * 100} className="w-16 h-1.5" />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.enrollment_cap}/{s.total}</span>
+                        <Progress value={(s.session.enrollment_cap / s.session.enrollment_cap) * 100} className="w-16 h-1.5" />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.session.enrollment_cap}/{s.session.enrollment_cap}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue_kes}</td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground whitespace-nowrap">
+                      <p>{meta?.total_academy_revenue_kes}</p>
+                    </td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground whitespace-nowrap">
+                      <p>{meta?.total_coach_revenue_kes}</p>
+                    </td>
                     <td className="py-3 px-3">
-                      <Badge variant={statusConfig[s.status]?.variant} className="text-[10px]">
-                        {statusConfig[s.status]?.label}
+                      <Badge variant={statusConfig[s.payout_status]?.variant} className="text-[10px]">
+                        {statusConfig[s.payout_status]?.label}
                       </Badge>
                     </td>
                     {/* <td className="py-3 px-3">

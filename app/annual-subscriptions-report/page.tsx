@@ -64,16 +64,20 @@ export default function SessionsPage() {
       <PageHeader title="Annual Subscriptions Reporting" description="Detailed overview of annual subscriptions revenue performance.">
       </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <StatCard title="Revenue" value={String(meta?.net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
-        <StatCard title="Active" value={String(meta?.total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
-        <StatCard title="Expired" value={String(meta?.net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
-        {/* <StatCard title="Suspended" value={String(meta?.total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
-        <StatCard title="Pending Renewal" value={String(meta?.inactive_count)}  icon={<Activity className="w-4 h-4" />} />
-        <StatCard title="Annual " value={String(meta?.inactive_count)}  icon={<Activity className="w-4 h-4" />} />
-        <StatCard title="Monthly Regular" value={String(meta?.net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
-        <StatCard title="Quaterly Regular" value={String(meta?.total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
-        <StatCard title="Scholarships" value={String(meta?.inactive_count)}  icon={<Activity className="w-4 h-4" />} /> */}
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
+        <StatCard title="Total Revenue" value={String(meta?.net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Total Active" value={String(meta?.total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Total Inactive" value={String(meta?.inactive_count)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Annual Subscription Revenue" value={String(meta?.annual_standard_net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Annual Active" value={String(meta?.annual_standard_total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Monthly Regular" value={String(meta?.monthly_regular_class_net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Monthly Regular Active" value={String(meta?.monthly_regular_class_total_active)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Quarterly Regular" value={String(meta?.quarterly_regular_class_net_revenue_kes)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Quarterly Regular Active" value={String(meta?.quarterly_regular_total_active)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Annual Scholarship value" value={String(meta?.scholarship_annual_net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Annual Scholarship Active" value={String(meta?.scholarship_annual_total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Regular Scholarship" value={String(meta?.scholarship_regular_net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Regular Scholarship Active" value={String(meta?.scholarship_regular_total_active)}  icon={<TrendingUp className="w-4 h-4" />} />
 
       </div>
 

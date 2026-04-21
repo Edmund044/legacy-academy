@@ -3,8 +3,8 @@ import type {
   RefreshResponse,
 } from "@/types/auth";
 
-const API_BASE = "https://legacy-academy-backend-271490766088.europe-west1.run.app";
-//const API_BASE = "http://localhost:8000";
+//const API_BASE = "https://legacy-academy-backend-271490766088.europe-west1.run.app";
+const API_BASE = "http://localhost:8000";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function handleResponse<T>(res: Response): Promise<T> {

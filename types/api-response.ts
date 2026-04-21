@@ -30,5 +30,21 @@ export interface ApiResponse<T> {
     total_active?: number;
     net_revenue_kes?: number;
     inactive_count?: number;
-
+    annual_standard_net_revenue_kes?: number;
+    monthly_regular_class_net_revenue_kes?: number;
+    quarterly_regular_class_net_revenue_kes?: number;
+    scholarship_annual_net_revenue_kes?: number;
+   scholarship_regular_net_revenue_kes?: number;
+   annual_standard_total_active?: number;
+    monthly_regular_class_total_active?: number;
+    quarterly_regular_total_active ?: number;
+    scholarship_annual_total_active?: number;
+    scholarship_regular_total_active?: number;
+    total_revenue_kes?: number;
+    total_coach_revenue_kes?: number;
+    total_academy_revenue_kes?: number;
+    total_paid?: number;
+    total_pending?:  number;
+    total_reconciled?: number;
+    total_disputed?: number;
   }
