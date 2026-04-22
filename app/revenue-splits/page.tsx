@@ -62,10 +62,15 @@ export default function SessionsPage() {
       <PageHeader title="Revenue Split Reports" description="Detailed overview of elite training sessions revenue performance.">
       </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <StatCard title="Total Revenue" value="KES 42,850" change="+12.5%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
-        <StatCard title="Total Enrolled" value="1,240" change="+5.2%" changeType="up" icon={<Users className="w-4 h-4" />} />
-        <StatCard title="Active Sessions" value="48" badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Activity className="w-4 h-4" />} />
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+      <StatCard title="Total Sessions" value={String(meta?.total)} change="+12.5%" changeType="up" badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Total Revenue" value={String(meta?.total_revenue_kes)} change="+12.5%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Total Coach Revenue" value={String(meta?.total_coach_revenue_kes)} change="+5.2%" changeType="up" icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Total Academy Revenue" value={String(meta?.total_academy_revenue_kes)}  icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Total Paid" value={String(meta?.total_paid)}  icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Total Pending" value={String(meta?.total_pending)}  icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Total Reconciled" value={String(meta?.total_reconciled)}  icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Total Disputed" value={String(meta?.total_disputed)}  icon={<Activity className="w-4 h-4" />} />
       </div>
 
       <Card>

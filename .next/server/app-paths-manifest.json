@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/login/page": "app/login/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
   "/annual-subscriptions-report/page": "app/annual-subscriptions-report/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/revenue-splits/page": "app/revenue-splits/page.js",
   "/attendance-billing/page": "app/attendance-billing/page.js"
 }
