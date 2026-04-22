@@ -34,8 +34,8 @@ export interface ApiResponse<T> {
     monthly_regular_class_net_revenue_kes?: number;
     quarterly_regular_class_net_revenue_kes?: number;
     scholarship_annual_net_revenue_kes?: number;
-   scholarship_regular_net_revenue_kes?: number;
-   annual_standard_total_active?: number;
+    scholarship_regular_net_revenue_kes?: number;
+    annual_standard_total_active?: number;
     monthly_regular_class_total_active?: number;
     quarterly_regular_total_active ?: number;
     scholarship_annual_total_active?: number;
@@ -47,4 +47,10 @@ export interface ApiResponse<T> {
     total_pending?:  number;
     total_reconciled?: number;
     total_disputed?: number;
+    total_planned_sessions?: number;
+    total_active_sessions?: number;
+    total_completed_sessions?: number;
+    total_cancelled_sessions?: number;
+    total_group_sessions?: number;
+    total_individual_sessions?: number;
   }

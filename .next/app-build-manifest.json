@@ -101,10 +101,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/revenue-splits/layout.js"
     ],
-    "/_not-found/page": [
+    "/sessions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/sessions/page.js"
+    ],
+    "/sessions/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sessions/layout.js"
     ]
   }
 }
