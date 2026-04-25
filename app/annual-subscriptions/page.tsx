@@ -76,7 +76,7 @@ export default function BillingPage() {
         },
         body: {
           "player_id": playerId,
-          "plan_type": "annual_standard",
+          "plan_type": "annual_membership",
           "annual_fee_kes": annual_fee_kes,
           "discount_pct": scholarship_applied ? 100 : 0,
           "scholarship_applied": scholarship_applied,
@@ -192,7 +192,7 @@ export default function BillingPage() {
               buttonText: "Renew Membership"
             }}
             onClose={() => console.log("Modal closed")}
-            onSuccess={() => handlSubscription(p.id,200,true)}
+            onSuccess={() => handlSubscription(p.id,200,false)}
 
             
             ></PayModal>}
