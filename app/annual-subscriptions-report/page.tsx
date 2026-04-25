@@ -13,6 +13,7 @@ import { ApiResponse, PaginationMeta } from "@/types/api-response";
 import { BadgeProps } from "@/components/ui/badge";
 
 
+
 type BadgeVariant = BadgeProps["variant"];
 
 const statusConfig: Record<string, { label: string; variant: BadgeVariant }> = {
@@ -64,7 +65,7 @@ export default function SessionsPage() {
       <PageHeader title="Annual Subscriptions Reporting" description="Detailed overview of annual subscriptions revenue performance.">
       </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <StatCard title="Total Revenue" value={String(meta?.net_revenue_kes)}  icon={<TrendingUp className="w-4 h-4" />} />
         <StatCard title="Total Active" value={String(meta?.total_active)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Users className="w-4 h-4" />} />
         <StatCard title="Total Inactive" value={String(meta?.inactive_count)}  icon={<TrendingUp className="w-4 h-4" />} />

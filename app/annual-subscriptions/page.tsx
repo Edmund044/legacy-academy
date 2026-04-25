@@ -76,11 +76,11 @@ export default function BillingPage() {
         },
         body: {
           "player_id": playerId,
-          "plan_type": "annual_membership",
+          "plan_type": "annual_standard",
           "annual_fee_kes": annual_fee_kes,
           "discount_pct": scholarship_applied ? 100 : 0,
           "scholarship_applied": scholarship_applied,
-          "renewal_date": renewalDate.toISOString().split('T')[0]
+          "renewal_date": renewalDate.toISOString().split('T')[0],
         }
       });
 
@@ -184,7 +184,8 @@ export default function BillingPage() {
                 
                 {p.sponsored != 3 && <PayModal 
             paymentRequest={{
-              amount: calculateDiscountedPrice(14000,p.sponsored,guardians.players.length,checkIfSiblingDiscount(p.id)),
+              //amount: calculateDiscountedPrice(14000,p.sponsored,guardians.players.length,checkIfSiblingDiscount(p.id)),
+              amount: 1,
               itemName: "Annual Membership",
               itemDescription: p.first_name + " - " + p.last_name + " Elite Membership",
               paymentFor: "membership",

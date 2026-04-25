@@ -1,7 +1,7 @@
 {
-  "/annual-subscriptions-report/page": "app/annual-subscriptions-report/page.js",
-  "/attendance-billing/page": "app/attendance-billing/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/login/page": "app/login/page.js",
+  "/annual-subscriptions/page": "app/annual-subscriptions/page.js",
   "/revenue-splits/page": "app/revenue-splits/page.js",
-  "/tournaments/page": "app/tournaments/page.js",
-  "/sessions/page": "app/sessions/page.js"
+  "/dashboard/page": "app/dashboard/page.js"
 }
