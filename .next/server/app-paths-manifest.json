@@ -1,6 +1,7 @@
 {
-  "/login/page": "app/login/page.js",
   "/annual-subscriptions/page": "app/annual-subscriptions/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/revenue-splits/page": "app/revenue-splits/page.js"
+  "/bookings/page": "app/bookings/page.js",
+  "/parent-dashboard/page": "app/parent-dashboard/page.js",
+  "/tournaments/page": "app/tournaments/page.js"
 }

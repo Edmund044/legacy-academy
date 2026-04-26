@@ -49,7 +49,7 @@ export default function MerchandisePage() {
     }
   };
 
-  const handleTournament = async (tournamentId:string,enrollement_total:number) => {
+  const handleTournament = async (tournamentId:string,amount: Number,enrollement_total:number,format:string) => {
     try {
       await apiClient({
         endpoint: `/v1/tournaments/${tournamentId}`,
@@ -61,7 +61,10 @@ export default function MerchandisePage() {
         },
         body: {
           // stock_total: stock_total - 1
-          enrollement_total: enrollement_total + 1
+          enrollement_total: enrollement_total + 1,
+          "user_id":user?.id,
+          "amount_kes": amount,
+          "format": format
         },
       });
       fetchTournament();

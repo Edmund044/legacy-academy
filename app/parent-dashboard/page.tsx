@@ -156,21 +156,44 @@ export default function PlayerDashboardPage() {
 
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
   <div className="lg:col-span-12">
-                    {/* Tabs */}
-                    <Tabs value={tab} onValueChange={setTab} className="mt-4">
-              <TabsList>
-                <TabsTrigger value="individual">Individual</TabsTrigger>
-                <TabsTrigger value="group">Group</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="individual">
-              
-              <Card>
+  <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-sm">Sessions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {sessions.filter(s => s.type === 'individual').map((s, i) => (
+      <div className="grid grid-cols-3 gap-3">
+      {sessions.map((c, i) => (
+                      <div key={i}
+                        className={`cursor-pointer p-3 rounded-xl border transition-all border-border hover:border-brand/30"`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Avatar className="h-10 w-10"><AvatarFallback className="text-xs">{c.name.split(" ").slice(-1)[0][0]}</AvatarFallback></Avatar>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold truncate">{c.name}</p>
+                            <p className="text-[10px] text-brand font-medium"><span>{c.start_time} - {c.end_time}</span></p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {c.session_date}
+                        </div>
+                        <p className="text-xs font-medium mt-1">{c.enrollment_cap}</p>
+                        <PayModal 
+            paymentRequest={{
+              amount: 1,
+              itemName: c.name,
+              itemDescription: c.type,
+              paymentFor: "elite training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => handlEnroll(c.id)}
+
+            
+            ></PayModal>
+                      </div>
+                    ))}
+                    </div>
+        {/* {sessions.filter(s => s.type === 'individual').map((s, i) => (
 
           <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border`}>
             <Avatar className="h-10 w-10"><AvatarFallback>{s.name.charAt(0)}</AvatarFallback></Avatar>
@@ -197,19 +220,29 @@ export default function PlayerDashboardPage() {
 
             
             ></PayModal>
-              {/* <Button
+              <Button
             key={s.id}
             size="sm"
             onClick={() => toggleEnroll(s.id)}
           >
             {loadingButton && <span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />}
             {enrolledRecordId === s.id ? "Undo" : "Enroll"}
-          </Button> */}
+          </Button>
 
           </div>
-        ))}
+        ))} */}
       </CardContent>
     </Card>
+                    {/* Tabs */}
+                    <Tabs value={tab} onValueChange={setTab} className="mt-4">
+              <TabsList>
+                <TabsTrigger value="individual">Individual</TabsTrigger>
+                <TabsTrigger value="group">Group</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="individual">
+              
+
   
               </TabsContent>
 
