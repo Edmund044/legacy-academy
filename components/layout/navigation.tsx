@@ -62,7 +62,8 @@ const naviGroups: NavGroup[] = [
     items: [
       // { href: "/bookings", icon: BookOpen, label: "Bookings" },
       { href: "/annual-subscriptions", icon: UserCircle, label: "Subscriptions" },
-      { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      // { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      { href : "/children", icon: UserCircle, label: "My Children" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },

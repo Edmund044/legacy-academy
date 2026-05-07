@@ -109,7 +109,8 @@ export default function MerchandisePage() {
                   <p className="text-[11px] text-muted-foreground">Stock: {p.stock_total}</p>
                   <PayModal 
             paymentRequest={{
-              amount: Number(p.replacement_cost_usd),
+              // amount: Number(p.replacement_cost_usd),
+              amount: 1,
               itemName: p.name,
               itemDescription: p.category + " - " + p.name,
               paymentFor: "merchandise",

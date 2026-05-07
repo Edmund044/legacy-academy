@@ -1,5 +1,31 @@
 {
   "pages": {
+    "/attendance-billing/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/attendance-billing/page.js"
+    ],
+    "/attendance-billing/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/attendance-billing/layout.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/annual-subscriptions-report/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/annual-subscriptions-report/page.js"
+    ],
+    "/annual-subscriptions-report/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/annual-subscriptions-report/layout.js"
+    ],
     "/revenue-splits/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -10,11 +36,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/revenue-splits/layout.js"
     ],
-    "/layout": [
+    "/coaches/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
+      "static/chunks/app/coaches/page.js"
+    ],
+    "/coaches/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/coaches/layout.js"
     ],
     "/login/page": [
       "static/chunks/webpack.js",
@@ -41,45 +71,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/annual-subscriptions/layout.js"
     ],
-    "/merchandise/page": [
+    "/children/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/merchandise/page.js"
+      "static/chunks/app/children/page.js"
     ],
-    "/merchandise/layout": [
+    "/children/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/merchandise/layout.js"
+      "static/chunks/app/children/layout.js"
     ],
-    "/parent-dashboard/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/parent-dashboard/page.js"
-    ],
-    "/parent-dashboard/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/parent-dashboard/layout.js"
-    ],
-    "/bookings/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/bookings/page.js"
-    ],
-    "/bookings/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/bookings/layout.js"
-    ],
-    "/tournaments/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/tournaments/page.js"
-    ],
-    "/tournaments/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/tournaments/layout.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

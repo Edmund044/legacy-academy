@@ -39,6 +39,8 @@ export default function PlayerDashboardPage() {
   const [guardians, setGuardians] = useState<Guardian>()
   const [loadingButton, setLoadingButton] = useState(false);
   const [enrolledRecordId, setEnrolledRecordId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
 
   const handlEnroll = async (sessionId:string) => {
     try {
@@ -68,6 +70,25 @@ export default function PlayerDashboardPage() {
     handlEnroll(recordId);
   };
 
+  const searchPlayer = async () => {
+    try {
+      const response = await apiClient<ApiResponse<Guardian[]>>({
+        endpoint: `v1/players?search=${user?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      setResults((response.data as Guardian[]) ?? []);
+    } catch (error) {
+      alert("Failed to search player. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  
+  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -121,11 +142,10 @@ export default function PlayerDashboardPage() {
     }
   };
 
-  React.useEffect(() => {
-    fetchGuardians();
-  }, [tokens]);
+
   React.useEffect(() => {
     fetchSessions();
+    searchPlayer();
   }, [tokens]);
   return (
     <>

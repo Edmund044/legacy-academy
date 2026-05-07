@@ -1,7 +1,9 @@
 {
-  "/annual-subscriptions/page": "app/annual-subscriptions/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/login/page": "app/login/page.js",
+  "/children/page": "app/children/page.js",
+  "/coaches/page": "app/coaches/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/bookings/page": "app/bookings/page.js",
-  "/parent-dashboard/page": "app/parent-dashboard/page.js",
-  "/tournaments/page": "app/tournaments/page.js"
+  "/revenue-splits/page": "app/revenue-splits/page.js",
+  "/annual-subscriptions/page": "app/annual-subscriptions/page.js"
 }

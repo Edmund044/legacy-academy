@@ -117,7 +117,7 @@ const searchGuardians = async (value: string) => {
 
   try {
     const response = await apiClient<ApiResponse<Guardian[]>>({
-      endpoint: `v1/guardians?psearch=${value}`,
+      endpoint: `v1/guardians?search=${value}`,
       method: "GET",
       headers: {
         Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",

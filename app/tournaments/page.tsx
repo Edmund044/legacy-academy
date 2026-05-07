@@ -32,6 +32,7 @@ export default function MerchandisePage() {
   const { user, tokens } = useAuth();
   const fetchTournament = async () => {
     try {
+      console.log("user",user)
       const response = await apiClient<ApiResponse<Tournament[]>>({
         endpoint: `/v1/tournaments?page=1&per_page=100`,
         method: "GET",
@@ -116,14 +117,14 @@ export default function MerchandisePage() {
                   <PayModal 
             paymentRequest={{
               // amount: Number(p.cost),
-              amount: 2000,
+              amount: 1,
               itemName: p.name,
               itemDescription: p.format + " - " + p.name,
               paymentFor: "merchandise",
               buttonText: "Book"
             }}
             onClose={() => console.log("Modal closed")}
-            onSuccess={() => handleTournament(p.id,2)}
+            onSuccess={() => handleTournament(p.id,2000,2,p.format)}
 
             
             ></PayModal>
