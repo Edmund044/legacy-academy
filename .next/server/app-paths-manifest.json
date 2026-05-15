@@ -1,9 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/login/page": "app/login/page.js",
-  "/children/page": "app/children/page.js",
-  "/coaches/page": "app/coaches/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
+  "/partnerships/page": "app/partnerships/page.js",
   "/revenue-splits/page": "app/revenue-splits/page.js",
-  "/annual-subscriptions/page": "app/annual-subscriptions/page.js"
+  "/social-impact/page": "app/social-impact/page.js",
+  "/sponsorship-cases/page": "app/sponsorship-cases/page.js",
+  "/contracts/page": "app/contracts/page.js"
 }
