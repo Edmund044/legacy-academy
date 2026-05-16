@@ -1,8 +1,3 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/partnerships/page": "app/partnerships/page.js",
-  "/revenue-splits/page": "app/revenue-splits/page.js",
-  "/social-impact/page": "app/social-impact/page.js",
-  "/sponsorship-cases/page": "app/sponsorship-cases/page.js",
-  "/contracts/page": "app/contracts/page.js"
+  "/sponsorship-cases/page": "app/sponsorship-cases/page.js"
 }

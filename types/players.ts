@@ -28,6 +28,21 @@ export interface PlayerPhysical {
   bmi: number | null;
 }
 
+export interface sponsorship_cases {
+  
+    id: string,
+    player_id: string,
+    annual_budget_kes: number,
+    status: string,
+    start_date: string,
+    created_at: string,
+    case_ref: string,
+    sponsor_name: string,
+    total_spent_kes: number,
+    end_date: string,
+    updated_at: string,
+}
+
 export interface PlayerProfile {
   id: string;
   first_name: string;
@@ -42,6 +57,7 @@ export interface PlayerProfile {
   group_name: Group; // ⚠️ name is misleading (it's actually an object)
 
   guardian: string | null;
+  sponsorship_cases: sponsorship_cases | null;
   sponsored: number; // ⚠️ API gives 0/1 → convert to boolean in frontend
   training_center: string | null;
 

@@ -13,7 +13,7 @@ import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
 import { PlayerProfile } from "@/types/players";
 import { ApiResponse } from "@/types/api-response";
-
+import AddCostLogModal from "@/components/custom/modals/addCostLogModal";
 
 const costLog = [
   { date: "Oct 12, 2023", category: "Equipment", desc: "Professional Football Boots", amount: "KES 12,500" },
@@ -294,24 +294,24 @@ export default function PlayersPage() {
       <br></br>
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
             {/* Player List */}
-            <div className="space-y-2">
-              <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
-              {players.map(p => (
-                <div key={p.id} onClick={() => setSelected(p)}
-                  className={`cursor-pointer p-3 rounded-xl border transition-all ${selected?.id === p.id ? "border-brand bg-brand/5" : "border-border bg-white hover:border-brand/30"}`}>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10"><AvatarFallback>{(p.first_name[0])}</AvatarFallback></Avatar>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm truncate">{p.first_name + " " + p.last_name}</p>
-                      <p className="text-xs text-muted-foreground">{p.position} ·  </p>
+                  <div className="space-y-2">
+                    <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
+                    {players.filter(p => p.sponsored === 1).map(p => (
+                    <div key={p.id} onClick={() => setSelected(p)}
+                      className={`cursor-pointer p-3 rounded-xl border transition-all ${selected?.id === p.id ? "border-brand bg-brand/5" : "border-border bg-white hover:border-brand/30"}`}>
+                      <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10"><AvatarFallback>{(p.first_name[0])}</AvatarFallback></Avatar>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-sm truncate">{p.first_name + " " + p.last_name}</p>
+                        <p className="text-xs text-muted-foreground">{p.position} ·  </p>
+                      </div>
+                      <Badge variant="brand" className="ml-auto text-[10px] shrink-0">{p.sponsored == 1 ? "Sponsored" : "Paid" }</Badge>
+                      </div>
                     </div>
-                    <Badge variant="brand" className="ml-auto text-[10px] shrink-0">{p.sponsored == 1 ? "Sponsored" : "Paid" }</Badge>
+                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
-    
-            {/* Detail */}
+              
+                  {/* Detail */}
             <div className="xl:col-span-3 space-y-4">
               {/* Header */}
               <Card>
@@ -444,7 +444,11 @@ export default function PlayersPage() {
                     <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <CardTitle className="text-sm">Cost Log (Equipment & Transport)</CardTitle>
-              <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add Entry</Button>
+              {selected.sponsorship_cases?.filter(c => new Date(c.end_date) > new Date()).map(c => (
+                <div key={c.id} className="text-sm">{c.description}</div>
+              ))}
+              <AddCostLogModal sponsorship_case={selected.sponsorship_cases} onSubmit={() => fetchPlayers()}/>
+              {/* <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add Entry</Button> */}
             </CardHeader>
             <CardContent>
               <table className="w-full">

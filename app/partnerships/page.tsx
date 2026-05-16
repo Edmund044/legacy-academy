@@ -1,11 +1,16 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 import { PageHeader, StatCard } from "@/components/modules/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2, DollarSign, TrendingUp, Filter, Plus, MoreVertical } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts"
+import AddNewSchoolModal from "@/components/custom/modals/addNewSchool"
+import { ApiResponse } from "@/types/api-response"
+import { apiClient } from "@/lib/api-client"
+import { Schools } from  "@/types/schools"
+import { useAuth } from "@/context/auth-context"
 
 const schools = [
   { initials: "OH", name: "Oakwood High", location: "Oakland, CA", status: "Active", revenue: "$42,500", renewal: "Oct 12, 2024" },
@@ -15,9 +20,10 @@ const schools = [
 ]
 
 const statusConfig: Record<string, any> = {
-  "Active": "success",
-  "Renewal Pending": "warning",
-  "Terminated": "secondary",
+  "active": "success",
+  "renewal_pending": "warning",
+  "terminated": "secondary",
+  "prospect": "outline",
 }
 
 const pieData = [
@@ -35,10 +41,35 @@ const pipelineData = [
 ]
 
 export default function PartnershipsPage() {
+  const [schools, setSchools] = useState<Schools[]>([])
+  const [loading, setLoading] = useState(true);
+  const { tokens } = useAuth();
+  
+  const fetchSchools = async () => {
+    try {
+      const response = await apiClient<ApiResponse<Schools[]>>({
+        endpoint: `/v1/partnerships/school-partners`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setSchools((response.data as Schools[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch schools. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {fetchSchools()},[tokens]);
   return (
     <>
       <PageHeader title="Partnership Overview" description="Manage school partnership contracts and revenue.">
-        <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button>
+        {/* <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button> */}
+        <AddNewSchoolModal onSubmit={() => {}}/>
       </PageHeader>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -103,8 +134,9 @@ export default function PartnershipsPage() {
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="text-sm">Partnered Schools</CardTitle>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm"><Filter className="w-3.5 h-3.5 mr-1.5" />Filter</Button>
-            <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button>
+            {/* <Button variant="outline" size="sm"><Filter className="w-3.5 h-3.5 mr-1.5" />Filter</Button>
+            <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button> */}
+            <AddNewSchoolModal onSubmit={() => fetchSchools()}/>
           </div>
         </CardHeader>
         <CardContent>
@@ -112,7 +144,13 @@ export default function PartnershipsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  {["SCHOOL NAME", "CONTRACT STATUS", "REVENUE (YTD)", "COACH ALLOCATION", "RENEWAL DATE", ""].map(h => (
+                  {["SCHOOL NAME",
+                   "CONTRACT STATUS",
+                   "REVENUE (YTD)", 
+                   "COACH ALLOCATION", 
+                   "RENEWAL DATE", 
+                  //  "LOCATION",
+                   ""].map(h => (
                     <th key={h} className="text-left py-2 px-3 text-[10px] font-semibold text-muted-foreground">{h}</th>
                   ))}
                 </tr>
@@ -130,7 +168,7 @@ export default function PartnershipsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-3"><Badge variant={statusConfig[s.status]} className="text-[10px]">{s.status}</Badge></td>
-                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue}</td>
+                    <td className="py-3 px-3 text-sm font-semibold">$42,000</td>
                     <td className="py-3 px-3">
                       <div className="flex gap-1">
                         {s.status !== "Terminated" ? (
@@ -138,7 +176,7 @@ export default function PartnershipsPage() {
                         ) : <span className="text-xs text-muted-foreground">None</span>}
                       </div>
                     </td>
-                    <td className="py-3 px-3 text-xs text-muted-foreground">{s.renewal}</td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground"></td>
                     <td className="py-3 px-3"><button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button></td>
                   </tr>
                 ))}
