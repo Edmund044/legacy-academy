@@ -23,7 +23,7 @@ const statusConfig: Record<string, any> = {
   "active": "success",
   "renewal_pending": "warning",
   "terminated": "secondary",
-  "prospect": "outline",
+  "prospect": "primary",
 }
 
 const pieData = [
@@ -42,6 +42,11 @@ const pipelineData = [
 
 export default function PartnershipsPage() {
   const [schools, setSchools] = useState<Schools[]>([])
+  const [pendingRenewal, setPendingRenewal] = useState<Schools[]>(schools.filter(s => s.status === "renewal_pending"));
+  const [activeSchools, setActiveSchools] = useState<Schools[]>(schools.filter(s => s.status === "active"));
+  const [terminatedSchools, setTerminatedSchools] = useState<Schools[]>(schools.filter(s => s.status === "terminated"));
+  const [prospectSchools, setProspectSchools] = useState<Schools[]>(schools.filter(s => s.status === "prospect"));
+
   const [loading, setLoading] = useState(true);
   const { tokens } = useAuth();
   
@@ -72,15 +77,20 @@ export default function PartnershipsPage() {
         <AddNewSchoolModal onSubmit={() => {}}/>
       </PageHeader>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Contract Value" value="$1.24M" change="+12.5%" changeType="up" icon={<DollarSign className="w-4 h-4" />} />
-        <StatCard title="Active Partnerships" value="48 Schools" change="+4 this quarter" changeType="up" icon={<Building2 className="w-4 h-4" />} />
-        <StatCard title="Avg. Contract Term" value="2.4 Years" change="Stable" changeType="neutral" />
-        <StatCard title="Revenue Per School" value="$25.8k" change="+8%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* <StatCard title="Total Contract Value" value="$1.24M" change="+12.5%" changeType="up" icon={<DollarSign className="w-4 h-4" />} /> */}
+        <StatCard title="Total Partnerships" value={schools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Active Partnerships" value={activeSchools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Renewed Partnerships" value={activeSchools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Terminated Partnerships" value={terminatedSchools.length} changeType="down" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Prospective Partnerships" value={prospectSchools.length} changeType="neutral" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Pending Renewals" value={pendingRenewal.length} icon={<Building2 className="w-4 h-4" />} />
+        {/* <StatCard title="Avg. Contract Term" value="2.4 Years" change="Stable" changeType="neutral" />
+        <StatCard title="Revenue Per School" value="$25.8k" change="+8%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} /> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <Card>
+        {/* <Card>
           <CardHeader className="pb-3"><CardTitle className="text-sm">Revenue Split</CardTitle></CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
@@ -104,9 +114,9 @@ export default function PartnershipsPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card className="lg:col-span-2">
+        {/* <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm">Contract Pipeline</CardTitle>
             <div className="flex gap-1">
@@ -127,7 +137,7 @@ export default function PartnershipsPage() {
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       <Card>

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent, Avatar, AvatarFallback, Progress } from "@/components/ui/primitives"
-import { MapPin, Edit, Download, Phone, TrendingUp, Plus, Heart, BookOpen, Package, Bus } from "lucide-react"
+import { MapPin, Edit, Download, Phone, TrendingUp, Plus, Heart, BookOpen, Package, Bus, UserCircle } from "lucide-react"
 import AddPlayerModal from "@/components/custom/modals/addPlayerModal"
 import EditPlayerModal from "@/components/custom/modals/editPlayerModal"
 import { apiClient } from "@/lib/api-client";
@@ -242,6 +242,9 @@ const players2 = [
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerProfile[]>([])
   const [selected, setSelected] = useState<PlayerProfile>(players2[0])
+  const [sponsoredPlayers, setSponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 1))
+  const [unSponsoredPlayers, setUnSponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 3))
+  const [partiallySponsoredPlayers, setPartiallySponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 2))
   const [tab, setTab] = useState("overview")
   const { tokens } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -285,10 +288,13 @@ export default function PlayersPage() {
         <AddPlayerModal onSubmit={fetchPlayers} />
       </PageHeader>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Social Spend" value="KES 450,200" change="+12.4%" changeType="up" icon={<Heart className="w-4 h-4" />} />
-        <StatCard title="School Fees Paid" value="KES 210,000" change="+5.2%" changeType="up" icon={<BookOpen className="w-4 h-4" />} />
+        <StatCard title="Total Social Spend" value={sponsoredPlayers.length * 70000} changeType="up" icon={<Heart className="w-4 h-4" />} />
+        <StatCard title="Sponsored Players" value={sponsoredPlayers.length} changeType="up" icon={<UserCircle className="w-4 h-4" />} />
+        <StatCard title="Unsponsored Players" value={unSponsoredPlayers.length} changeType="down" icon={<UserCircle className="w-4 h-4" />} />
+        <StatCard title="Partially Sponsored Players" value={partiallySponsoredPlayers.length} changeType="neutral" icon={<UserCircle className="w-4 h-4" />} />  
+        {/* <StatCard title="School Fees Paid" value="KES 210,000"  changeType="up" icon={<BookOpen className="w-4 h-4" />} />
         <StatCard title="Equipment Costs" value="KES 120,000" change="Stable" changeType="neutral" icon={<Package className="w-4 h-4" />} />
-        <StatCard title="Transport Costs" value="KES 120,000" change="+15.0%" changeType="up" badge={<span className="text-[10px] font-bold text-brand">KES 6,000 BUS ACTIVE</span>} icon={<Bus className="w-4 h-4" />} />
+        <StatCard title="Transport Costs" value="KES 120,000" change="+15.0%" changeType="up" badge={<span className="text-[10px] font-bold text-brand">KES 6,000 BUS ACTIVE</span>} icon={<Bus className="w-4 h-4" />} /> */}
       </div>
       <hr></hr>
       <br></br>
@@ -425,7 +431,7 @@ export default function PlayersPage() {
                     </TabsContent>
     
                     <TabsContent value="cost">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
           { label: "Annual Budget", value: "KES 250,000", sub: null, color: "bg-white" },
           { label: "Total Spent", value: "KES 115,000", sub: "46% used", color: "bg-white" },
@@ -440,7 +446,7 @@ export default function PlayersPage() {
             </CardContent>
           </Card>
         ))}
-      </div>
+      </div> */}
                     <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <CardTitle className="text-sm">Cost Log (Equipment & Transport)</CardTitle>
