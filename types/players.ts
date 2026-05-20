@@ -57,7 +57,8 @@ export interface PlayerProfile {
   group_name: Group; // ⚠️ name is misleading (it's actually an object)
 
   guardian: string | null;
-  sponsorship_cases: sponsorship_cases | null;
+  sponsorship_case: sponsorship_cases[] | null;
+  sponsorship_case_id: string | null;
   sponsored: number; // ⚠️ API gives 0/1 → convert to boolean in frontend
   training_center: string | null;
 

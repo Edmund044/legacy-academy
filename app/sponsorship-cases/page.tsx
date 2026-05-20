@@ -450,10 +450,10 @@ export default function PlayersPage() {
                     <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <CardTitle className="text-sm">Cost Log (Equipment & Transport)</CardTitle>
-              {selected.sponsorship_cases?.filter(c => new Date(c.end_date) > new Date()).map(c => (
-                <div key={c.id} className="text-sm">{c.description}</div>
+              {selected.sponsorship_case?.filter(c => new Date(c.end_date) > new Date()).map(c => (
+                <div key={c.id} className="text-sm">{c.id}</div>
               ))}
-              <AddCostLogModal sponsorship_case={selected.sponsorship_cases} onSubmit={() => fetchPlayers()}/>
+              <AddCostLogModal sponsorship_case_id={selected.sponsorship_case_id} onSubmit={() => fetchPlayers()}/>
               {/* <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add Entry</Button> */}
             </CardHeader>
             <CardContent>

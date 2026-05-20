@@ -18,14 +18,14 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface CostLogModalProps {
-  sponsorship_case: any;
+  sponsorship_case_id: string;
   onSubmit: () => void;
 }
 
 interface CostLogFormData {
   category: string;
   description: string;
-  amount: number;
+  amount_kes: number;
   cost_date: string; 
 }
 
@@ -218,7 +218,7 @@ const CATEGORY = [
 
 export default function AddCostLogModal(
     {
-      sponsorship_case,
+      sponsorship_case_id,
   onSubmit,
 }: CostLogModalProps
 ) {
@@ -227,17 +227,16 @@ export default function AddCostLogModal(
   const [form, setForm] = useState<CostLogFormData>({
     category: "",
     description: "",
-    amount: 0,
-    cost_date: new Date().toISOString(), // default to current date
+    amount_kes: 0,
+    cost_date: new Date().toISOString().split('T')[0], // default to current date
   });
 
 
 
   const handleSubmit = async () => {
     try {
-      console.log("ssss: ", sponsorship_case)
       await apiClient({
-        endpoint: `/v1/social-impact/sponsorship-cases/${sponsorship_case.id}/costs`,
+        endpoint: `/v1/social-impact/sponsorship-cases/${sponsorship_case_id}/costs`,
         method: "POST",
         headers: {
           Authorization: `Bearer ${tokens?.accessToken}`,
@@ -284,9 +283,9 @@ export default function AddCostLogModal(
                   </Label>
                   <Input
                   placeholder="e.g. 100"
-                  value={form.amount}
+                  value={form.amount_kes}
                   onChange={(e) =>
-                    setForm((prev) => ({ ...prev, amount: Number(e.target.value) }))
+                    setForm((prev) => ({ ...prev, amount_kes: Number(e.target.value) }))
                   }
                   className="placeholder:text-gray-400"
                   />
