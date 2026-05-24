@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface CostLogModalProps {
-  sponsorship_case_id: string;
+  sponsorship_case_id: string | null;
   onSubmit: () => void;
 }
 

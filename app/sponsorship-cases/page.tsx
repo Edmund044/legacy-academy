@@ -20,6 +20,12 @@ const costLog = [
   { date: "Oct 05, 2023", category: "Transport", desc: "Tournament Travel Stipend", amount: "KES 4,000" },
 ]
 
+interface CostLog {
+  category: string;
+  description: string;
+  amount_kes: number;
+  cost_date: string; 
+}
 const players2 = [
   {
     id: "player-001",
@@ -241,7 +247,9 @@ const players2 = [
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerProfile[]>([])
+  const [costs, setCosts] = useState<CostLog[]>([])
   const [selected, setSelected] = useState<PlayerProfile>(players2[0])
+  const [sponsorship_case_id, setSponsorship_case_id] = useState<string>(players2[0].sponsorship_case_id)
   const [sponsoredPlayers, setSponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 1))
   const [unSponsoredPlayers, setUnSponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 3))
   const [partiallySponsoredPlayers, setPartiallySponsoredPlayers] = useState<PlayerProfile[]>(players.filter(p => p.sponsored === 2))
@@ -269,6 +277,27 @@ export default function PlayersPage() {
       setLoading(false);
     }
   };
+  
+  const fetchCosts = async  (case_id: string,student : PlayerProfile) => {
+    try {
+      const response = await apiClient<ApiResponse<CostLog[]>>({
+        endpoint: `/v1/social-impact/sponsorship-cases/${case_id}/costs`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setCosts((response.data as CostLog[]) ?? []);
+      console.log(student);
+      setSelected((student)?? []);
+    } catch (error) {
+      alert("Failed to fetch cost logs. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   React.useEffect(() => {fetchPlayers()},[tokens]);
 
@@ -303,7 +332,7 @@ export default function PlayersPage() {
                   <div className="space-y-2">
                     <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
                     {players.filter(p => p.sponsored === 1).map(p => (
-                    <div key={p.id} onClick={() => setSelected(p)}
+                    <div key={p.id} onClick={() => fetchCosts(p.sponsorship_case_id ?? "",p)}
                       className={`cursor-pointer p-3 rounded-xl border transition-all ${selected?.id === p.id ? "border-brand bg-brand/5" : "border-border bg-white hover:border-brand/30"}`}>
                       <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10"><AvatarFallback>{(p.first_name[0])}</AvatarFallback></Avatar>
@@ -466,12 +495,12 @@ export default function PlayersPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {costLog.map((c, i) => (
+                  {costs.map((c, i) => (
                     <tr key={i} className="border-b border-border/40 hover:bg-muted/20">
-                      <td className="py-3 px-3 text-xs text-muted-foreground">{c.date}</td>
+                      <td className="py-3 px-3 text-xs text-muted-foreground">{c.cost_date}</td>
                       <td className="py-3 px-3"><Badge variant={c.category === "Equipment" ? "info" : "secondary"} className="text-[10px]">{c.category}</Badge></td>
-                      <td className="py-3 px-3 text-sm">{c.desc}</td>
-                      <td className="py-3 px-3 text-sm font-bold">{c.amount}</td>
+                      <td className="py-3 px-3 text-sm">{c.description}</td>
+                      <td className="py-3 px-3 text-sm font-bold">{c.amount_kes}</td>
                     </tr>
                   ))}
                 </tbody>
