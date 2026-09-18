@@ -28,96 +28,16 @@ interface CostLog {
 }
 const players2 = [
   {
-    id: "player-001",
-    first_name: "Brian",
-    last_name: "Otieno",
-    dob: "2010-06-15",
-    position: "forward",
-    status: "active",
-
-    group_id: "grp-001",
-    campus_id: "campus-01",
-
-    group_name: {
-      id: "grp-001",
-      age_group: "U12",
-      coach_id: "coach-001",
-      name: "Junior Lions",
-      division: "East League",
-      campus_id: "campus-01",
-      created_at: "2025-01-10T08:30:00Z",
-    },
-
-    guardian: "James Otieno",
-    sponsored: 1,
-    training_center: "Nairobi West",
-
-    stats: {
-      goals: 12,
-      assists: 5,
-      pass_accuracy: 78,
-    },
-
-    physical: {
-      height: 150,
-      weight: 45,
-      bmi: 20,
-    },
-
-    created_at: "2025-03-01T09:00:00Z",
-  },
-
-  {
-    id: "player-002",
-    first_name: "Kevin",
-    last_name: "Mwangi",
-    dob: "2008-03-22",
-    position: "midfielder",
-    status: "active",
-
-    group_id: "grp-002",
-    campus_id: "campus-02",
-
-    group_name: {
-      id: "grp-002",
-      age_group: "U16",
-      coach_id: "coach-002",
-      name: "Rising Stars",
-      division: "West League",
-      campus_id: "campus-02",
-      created_at: "2025-02-15T10:00:00Z",
-    },
-
-    guardian: "Mary Mwangi",
-    sponsored: 0,
-    training_center: "Karen",
-
-    stats: {
-      goals: 4,
-      assists: 11,
-      pass_accuracy: 85,
-    },
-
-    physical: {
-      height: 168,
-      weight: 60,
-      bmi: 21.3,
-    },
-
-    created_at: "2025-03-05T11:20:00Z",
-  },
-
-  {
     id: "player-003",
     first_name: "Samuel",
     last_name: "Kiptoo",
     dob: "2009-11-02",
     position: "goalkeeper",
     status: "inactive",
-
+  
     group_id: "grp-001",
     campus_id: "campus-01",
-
+  
     group_name: {
       id: "grp-001",
       age_group: "U12",
@@ -127,65 +47,30 @@ const players2 = [
       campus_id: "campus-01",
       created_at: "2025-01-10T08:30:00Z",
     },
-
+  
     guardian: null,
+  
+    // ✅ Add these
+    sponsorship_case: null,
+    sponsorship_case_id: 'e67b57bb-520e-4588-8946-64b5382e69b8',
+  
     sponsored: 1,
     training_center: null,
-
+  
     stats: {
       goals: 0,
       assists: 0,
       pass_accuracy: null,
     },
-
+  
     physical: {
       height: 155,
       weight: 50,
       bmi: null,
     },
-
+  
     created_at: "2025-03-10T14:45:00Z",
-  },
-
-  {
-    id: "player-004",
-    first_name: "Daniel",
-    last_name: "Ochieng",
-    dob: "2011-08-19",
-    position: "defender",
-    status: "active",
-
-    group_id: "grp-001",
-    campus_id: "campus-01",
-
-    group_name: {
-      id: "grp-001",
-      age_group: "U12",
-      coach_id: "coach-001",
-      name: "Junior Lions",
-      division: "East League",
-      campus_id: "campus-01",
-      created_at: "2025-01-10T08:30:00Z",
-    },
-
-    guardian: "Peter Ochieng",
-    sponsored: 0,
-    training_center: "Langata",
-
-    stats: {
-      goals: 1,
-      assists: 2,
-      pass_accuracy: 72,
-    },
-
-    physical: {
-      height: null,
-      weight: null,
-      bmi: null,
-    },
-
-    created_at: "2025-03-12T16:00:00Z",
-  },
+  }
 ]
 
 // const players2 = [
