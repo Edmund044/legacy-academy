@@ -60,8 +60,10 @@ const naviGroups: NavGroup[] = [
     label: "Parent Portal",
     roles: [RoleNames.PARENT],
     items: [
-      { href: "/bookings", icon: BookOpen, label: "Bookings" },
-      { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      // { href: "/bookings", icon: BookOpen, label: "Bookings" },
+      { href: "/annual-subscriptions", icon: UserCircle, label: "Subscriptions" },
+      // { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      { href : "/children", icon: UserCircle, label: "My Children" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
@@ -114,12 +116,17 @@ const naviGroups: NavGroup[] = [
     items: [
       { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
       { href: "/price-configurations", icon: CalendarDays, label: "Price Configurations" },
+      { href: "/annual-subscriptions-report", icon: ScanLine, label: "Annual Subscriptions" },
+      { href: "/attendance-billing", icon: Package, label: "Attendance Billing" },
+      { href: "/revenue-splits", icon: Package, label: "Revenue Splits" },
       { href: "/coaches", icon: Users, label: "Coaches" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/players", icon: UserCircle, label: "Players" },
-      { href: "/social-impact", icon: Heart, label: "Social Impact" },
-      { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/sponsorship-cases", icon: UserCircle, label: "Sponsorship Cases" },
+      { href: "/partnerships", icon: Dumbbell, label: "Partnerships" },
+      // { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      // { href: "/contracts", icon: FileText, label: "Contracts" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/handover", icon: Dumbbell, label: "Handover" },
       { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
@@ -163,7 +170,7 @@ export function Sidebar({
         </div>
 
         {!collapsed && (
-          <p className="font-bold text-sm">Legacy Academy</p>
+          <p className="font-bold text-sm">MCHEZAJI APP</p>
         )}
 
         <button

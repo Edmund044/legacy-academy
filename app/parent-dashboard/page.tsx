@@ -13,6 +13,8 @@ import { Session } from "@/types/sessions";
 import { CoachProfile } from "@/types/coaches";
 import { Loader2 } from "lucide-react";
 import { ApiResponse } from "@/types/api-response";
+import PayModal from "@/components/custom/modals/payModal";
+import { Guardian } from "@/types/guardians"
 
 const sessions = [
   { initials: "EK", name: "Ethan Kamau", tag: "SPONSORED", tagVariant: "success", time: "09:00 AM – 10:00 AM (Today)", eligibility: "45% Support Plan", status: "live" },
@@ -34,8 +36,11 @@ export default function PlayerDashboardPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [coaches, setCoaches] = useState<CoachProfile[]>([])
   const [loading, setLoading] = useState(true);
+  const [guardians, setGuardians] = useState<Guardian>()
   const [loadingButton, setLoadingButton] = useState(false);
   const [enrolledRecordId, setEnrolledRecordId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
 
   const handlEnroll = async (sessionId:string) => {
     try {
@@ -65,6 +70,25 @@ export default function PlayerDashboardPage() {
     handlEnroll(recordId);
   };
 
+  const searchPlayer = async () => {
+    try {
+      const response = await apiClient<ApiResponse<Guardian[]>>({
+        endpoint: `v1/players?search=${user?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+  
+      setResults((response.data as Guardian[]) ?? []);
+    } catch (error) {
+      alert("Failed to search player. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      // setLoading(false);
+    }
+  
+  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -98,21 +122,43 @@ export default function PlayerDashboardPage() {
     }
   };
 
+  const fetchGuardians = async () => {
+    try {
+      console.log("Fetching guardians for user ID:", user?.id);
+      const response = await apiClient<ApiResponse<Guardian>>({
+        endpoint: `v1/guardians/${user?.id}`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setGuardians((response.data as Guardian) ?? []);
+    } catch (error) {
+      alert("Failed to fetch guardian information. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   React.useEffect(() => {
     fetchSessions();
+    searchPlayer();
   }, [tokens]);
   return (
     <>
           {loading ? (
                   <div className="flex items-center justify-center mt-50">
                   {/* The animate-spin class makes the icon rotate infinitely */}
-                  <Loader2 className="animate-spin h-20 w-20 text-red-600" />
+                  <Loader2 className="animate-spin h-20 w-20 text-blue-600" />
                 </div>
 
           ):
           (
             <>
-                  <PageHeader title="Parent Dashboard" description="Your sessions, bills, and activity at a glance." />
+                  <PageHeader title="Enroll Session" description="Pay for elite or group training" />
 
 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
   <Card className="sm:col-span-1 bg-brand text-white border-0">
@@ -130,21 +176,45 @@ export default function PlayerDashboardPage() {
 
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
   <div className="lg:col-span-12">
-                    {/* Tabs */}
-                    <Tabs value={tab} onValueChange={setTab} className="mt-4">
-              <TabsList>
-                <TabsTrigger value="individual">Individual</TabsTrigger>
-                <TabsTrigger value="group">Group</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="individual">
-              
-              <Card>
+  <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-sm">Sessions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {sessions.filter(s => s.type === 'individual').map((s, i) => (
+      <div className="grid grid-cols-3 gap-3">
+      {sessions.map((c, i) => (
+                      <div key={i}
+                        className={`cursor-pointer p-3 rounded-xl border transition-all border-border hover:border-brand/30"`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Avatar className="h-10 w-10"><AvatarFallback className="text-xs">{c.name.split(" ").slice(-1)[0][0]}</AvatarFallback></Avatar>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold truncate">{c.name}</p>
+                            <p className="text-[10px] text-brand font-medium"><span>{c.start_time} - {c.end_time}</span></p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {c.session_date}
+                        </div>
+                        <p className="text-xs font-medium mt-1">{c.enrollment_cap}</p>
+                        <PayModal 
+            paymentRequest={{
+              amount: 1,
+              itemName: c.name,
+              itemDescription: c.type,
+              paymentFor: "elite training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => handlEnroll(c.id)}
+
+            
+            ></PayModal>
+                      </div>
+                    ))}
+                    </div>
+        {/* {sessions.filter(s => s.type === 'individual').map((s, i) => (
+
           <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border`}>
             <Avatar className="h-10 w-10"><AvatarFallback>{s.name.charAt(0)}</AvatarFallback></Avatar>
             <div className="flex-1 min-w-0">
@@ -157,7 +227,19 @@ export default function PlayerDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
 
+            <PayModal 
+            paymentRequest={{
+              amount: 1,
+              itemName: s.name,
+              itemDescription: s.type,
+              paymentFor: "elite training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => handlEnroll(s.id)}
 
+            
+            ></PayModal>
               <Button
             key={s.id}
             size="sm"
@@ -168,9 +250,19 @@ export default function PlayerDashboardPage() {
           </Button>
 
           </div>
-        ))}
+        ))} */}
       </CardContent>
     </Card>
+                    {/* Tabs */}
+                    <Tabs value={tab} onValueChange={setTab} className="mt-4">
+              <TabsList>
+                <TabsTrigger value="individual">Individual</TabsTrigger>
+                <TabsTrigger value="group">Group</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="individual">
+              
+
   
               </TabsContent>
 
@@ -193,7 +285,20 @@ export default function PlayerDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Players:  <Badge>{s.enrollment_cap}</Badge></p>
             </div>
             
-            <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Enroll</Button>
+            {/* <Button size="sm"><span className="w-1.5 h-1.5 rounded-full bg-white live-dot mr-1.5" />Enroll</Button> */}
+            <PayModal 
+            paymentRequest={{
+              amount: 2500,
+              itemName: s.name,
+              itemDescription: s.type,
+              paymentFor: "group training",
+              buttonText: "Enroll Now"
+            }}
+            onClose={() => console.log("Modal closed")}
+            onSuccess={() => toggleEnroll(s.id)}
+
+            
+            ></PayModal>
           </div>
         ))}
       </CardContent>

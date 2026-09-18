@@ -179,7 +179,7 @@ export default function EditSessionModal(
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-            <UserRoundPlus className="w-5 h-5 text-red-600" />
+            <UserRoundPlus className="w-5 h-5 text-blue-600" />
             Edit New Session
           </DialogTitle>
         </DialogHeader>
@@ -373,7 +373,7 @@ export default function EditSessionModal(
                     onCheckedChange={(checked) =>
                       handleEquipmentToggle(equipment.name, !!checked)
                     }
-                    className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <label
                     htmlFor={equipment.name}
@@ -399,7 +399,7 @@ export default function EditSessionModal(
                     onCheckedChange={(checked) =>
                       handleDrillsToggle(drill.id, !!checked)
                     }
-                    className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <label
                     htmlFor={drill.id}
@@ -422,7 +422,7 @@ export default function EditSessionModal(
             </Button>
             <Button
               onClick={handleSubmit}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6"
             >
               Add Session
             </Button>

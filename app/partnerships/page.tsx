@@ -1,11 +1,16 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 import { PageHeader, StatCard } from "@/components/modules/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2, DollarSign, TrendingUp, Filter, Plus, MoreVertical } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts"
+import AddNewSchoolModal from "@/components/custom/modals/addNewSchool"
+import { ApiResponse } from "@/types/api-response"
+import { apiClient } from "@/lib/api-client"
+import { Schools } from  "@/types/schools"
+import { useAuth } from "@/context/auth-context"
 
 const schools = [
   { initials: "OH", name: "Oakwood High", location: "Oakland, CA", status: "Active", revenue: "$42,500", renewal: "Oct 12, 2024" },
@@ -15,9 +20,10 @@ const schools = [
 ]
 
 const statusConfig: Record<string, any> = {
-  "Active": "success",
-  "Renewal Pending": "warning",
-  "Terminated": "secondary",
+  "active": "success",
+  "renewal_pending": "warning",
+  "terminated": "secondary",
+  "prospect": "primary",
 }
 
 const pieData = [
@@ -35,21 +41,56 @@ const pipelineData = [
 ]
 
 export default function PartnershipsPage() {
+  const [schools, setSchools] = useState<Schools[]>([])
+  const [pendingRenewal, setPendingRenewal] = useState<Schools[]>(schools.filter(s => s.status === "renewal_pending"));
+  const [activeSchools, setActiveSchools] = useState<Schools[]>(schools.filter(s => s.status === "active"));
+  const [terminatedSchools, setTerminatedSchools] = useState<Schools[]>(schools.filter(s => s.status === "terminated"));
+  const [prospectSchools, setProspectSchools] = useState<Schools[]>(schools.filter(s => s.status === "prospect"));
+
+  const [loading, setLoading] = useState(true);
+  const { tokens } = useAuth();
+  
+  const fetchSchools = async () => {
+    try {
+      const response = await apiClient<ApiResponse<Schools[]>>({
+        endpoint: `/v1/partnerships/school-partners`,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWJmOTcxMS0zNTI5LTRhYzMtOWIxMC02MzJlNjJhMWE0MTkiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzM5NDg3MjcsInR5cGUiOiJhY2Nlc3MifQ.Ez0ivwUJe2eeCZGsj0LkLfoTKyzLoH3_o4LVZwn_v90",
+        },
+      });
+
+      setSchools((response.data as Schools[]) ?? []);
+    } catch (error) {
+      alert("Failed to fetch schools. Please try again later.");
+      // toast.error("Failed to fetch your submitted requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {fetchSchools()},[tokens]);
   return (
     <>
       <PageHeader title="Partnership Overview" description="Manage school partnership contracts and revenue.">
-        <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button>
+        {/* <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button> */}
+        <AddNewSchoolModal onSubmit={() => {}}/>
       </PageHeader>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Contract Value" value="$1.24M" change="+12.5%" changeType="up" icon={<DollarSign className="w-4 h-4" />} />
-        <StatCard title="Active Partnerships" value="48 Schools" change="+4 this quarter" changeType="up" icon={<Building2 className="w-4 h-4" />} />
-        <StatCard title="Avg. Contract Term" value="2.4 Years" change="Stable" changeType="neutral" />
-        <StatCard title="Revenue Per School" value="$25.8k" change="+8%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* <StatCard title="Total Contract Value" value="$1.24M" change="+12.5%" changeType="up" icon={<DollarSign className="w-4 h-4" />} /> */}
+        <StatCard title="Total Partnerships" value={schools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Active Partnerships" value={activeSchools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Renewed Partnerships" value={activeSchools.length}  changeType="up" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Terminated Partnerships" value={terminatedSchools.length} changeType="down" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Prospective Partnerships" value={prospectSchools.length} changeType="neutral" icon={<Building2 className="w-4 h-4" />} />
+        <StatCard title="Pending Renewals" value={pendingRenewal.length} icon={<Building2 className="w-4 h-4" />} />
+        {/* <StatCard title="Avg. Contract Term" value="2.4 Years" change="Stable" changeType="neutral" />
+        <StatCard title="Revenue Per School" value="$25.8k" change="+8%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} /> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <Card>
+        {/* <Card>
           <CardHeader className="pb-3"><CardTitle className="text-sm">Revenue Split</CardTitle></CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
@@ -73,9 +114,9 @@ export default function PartnershipsPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card className="lg:col-span-2">
+        {/* <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm">Contract Pipeline</CardTitle>
             <div className="flex gap-1">
@@ -87,7 +128,7 @@ export default function PartnershipsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={140}>
               <LineChart data={pipelineData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#3B00DB" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v: number) => [`$${(v/1000).toFixed(0)}k`]} />
@@ -96,15 +137,16 @@ export default function PartnershipsPage() {
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="text-sm">Partnered Schools</CardTitle>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm"><Filter className="w-3.5 h-3.5 mr-1.5" />Filter</Button>
-            <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button>
+            {/* <Button variant="outline" size="sm"><Filter className="w-3.5 h-3.5 mr-1.5" />Filter</Button>
+            <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1.5" />Add New School</Button> */}
+            <AddNewSchoolModal onSubmit={() => fetchSchools()}/>
           </div>
         </CardHeader>
         <CardContent>
@@ -112,7 +154,13 @@ export default function PartnershipsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  {["SCHOOL NAME", "CONTRACT STATUS", "REVENUE (YTD)", "COACH ALLOCATION", "RENEWAL DATE", ""].map(h => (
+                  {["SCHOOL NAME",
+                   "CONTRACT STATUS",
+                   "REVENUE (YTD)", 
+                   "COACH ALLOCATION", 
+                   "RENEWAL DATE", 
+                  //  "LOCATION",
+                   ""].map(h => (
                     <th key={h} className="text-left py-2 px-3 text-[10px] font-semibold text-muted-foreground">{h}</th>
                   ))}
                 </tr>
@@ -122,7 +170,7 @@ export default function PartnershipsPage() {
                   <tr key={i} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand flex items-center justify-center text-xs font-bold flex-shrink-0">{s.initials}</div>
+                        <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand flex items-center justify-center text-xs font-bold flex-shrink-0">{s.name}</div>
                         <div>
                           <p className="text-sm font-semibold">{s.name}</p>
                           <p className="text-[11px] text-muted-foreground">{s.location}</p>
@@ -130,7 +178,7 @@ export default function PartnershipsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-3"><Badge variant={statusConfig[s.status]} className="text-[10px]">{s.status}</Badge></td>
-                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue}</td>
+                    <td className="py-3 px-3 text-sm font-semibold">$42,000</td>
                     <td className="py-3 px-3">
                       <div className="flex gap-1">
                         {s.status !== "Terminated" ? (
@@ -138,7 +186,7 @@ export default function PartnershipsPage() {
                         ) : <span className="text-xs text-muted-foreground">None</span>}
                       </div>
                     </td>
-                    <td className="py-3 px-3 text-xs text-muted-foreground">{s.renewal}</td>
+                    <td className="py-3 px-3 text-xs text-muted-foreground"></td>
                     <td className="py-3 px-3"><button className="p-1 rounded hover:bg-muted text-muted-foreground"><MoreVertical className="w-3.5 h-3.5" /></button></td>
                   </tr>
                 ))}

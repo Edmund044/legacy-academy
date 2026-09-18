@@ -13,89 +13,14 @@ import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
 import { PlayerProfile } from "@/types/players";
 import { ApiResponse } from "@/types/api-response";
-
+import {
+  LayoutDashboard, Users, UserCircle, CalendarDays, Trophy, Package,
+  ArrowLeftRight, ShoppingBag, Heart, Gift, BookOpen, CreditCard,
+  Dumbbell, ScanLine, FileText, Building2, Bell, Settings, ChevronLeft,
+  Search
+} from "lucide-react"
 
 const players2 = [
-  {
-    id: "player-001",
-    first_name: "Brian",
-    last_name: "Otieno",
-    dob: "2010-06-15",
-    position: "forward",
-    status: "active",
-
-    group_id: "grp-001",
-    campus_id: "campus-01",
-
-    group_name: {
-      id: "grp-001",
-      age_group: "U12",
-      coach_id: "coach-001",
-      name: "Junior Lions",
-      division: "East League",
-      campus_id: "campus-01",
-      created_at: "2025-01-10T08:30:00Z",
-    },
-
-    guardian: "James Otieno",
-    sponsored: 1,
-    training_center: "Nairobi West",
-
-    stats: {
-      goals: 12,
-      assists: 5,
-      pass_accuracy: 78,
-    },
-
-    physical: {
-      height: 150,
-      weight: 45,
-      bmi: 20,
-    },
-
-    created_at: "2025-03-01T09:00:00Z",
-  },
-
-  {
-    id: "player-002",
-    first_name: "Kevin",
-    last_name: "Mwangi",
-    dob: "2008-03-22",
-    position: "midfielder",
-    status: "active",
-
-    group_id: "grp-002",
-    campus_id: "campus-02",
-
-    group_name: {
-      id: "grp-002",
-      age_group: "U16",
-      coach_id: "coach-002",
-      name: "Rising Stars",
-      division: "West League",
-      campus_id: "campus-02",
-      created_at: "2025-02-15T10:00:00Z",
-    },
-
-    guardian: "Mary Mwangi",
-    sponsored: 0,
-    training_center: "Karen",
-
-    stats: {
-      goals: 4,
-      assists: 11,
-      pass_accuracy: 85,
-    },
-
-    physical: {
-      height: 168,
-      weight: 60,
-      bmi: 21.3,
-    },
-
-    created_at: "2025-03-05T11:20:00Z",
-  },
-
   {
     id: "player-003",
     first_name: "Samuel",
@@ -103,10 +28,10 @@ const players2 = [
     dob: "2009-11-02",
     position: "goalkeeper",
     status: "inactive",
-
+  
     group_id: "grp-001",
     campus_id: "campus-01",
-
+  
     group_name: {
       id: "grp-001",
       age_group: "U12",
@@ -116,65 +41,30 @@ const players2 = [
       campus_id: "campus-01",
       created_at: "2025-01-10T08:30:00Z",
     },
-
+  
     guardian: null,
+  
+    // ✅ Add these
+    sponsorship_case: null,
+    sponsorship_case_id: 'e67b57bb-520e-4588-8946-64b5382e69b8',
+  
     sponsored: 1,
     training_center: null,
-
+  
     stats: {
       goals: 0,
       assists: 0,
       pass_accuracy: null,
     },
-
+  
     physical: {
       height: 155,
       weight: 50,
       bmi: null,
     },
-
+  
     created_at: "2025-03-10T14:45:00Z",
-  },
-
-  {
-    id: "player-004",
-    first_name: "Daniel",
-    last_name: "Ochieng",
-    dob: "2011-08-19",
-    position: "defender",
-    status: "active",
-
-    group_id: "grp-001",
-    campus_id: "campus-01",
-
-    group_name: {
-      id: "grp-001",
-      age_group: "U12",
-      coach_id: "coach-001",
-      name: "Junior Lions",
-      division: "East League",
-      campus_id: "campus-01",
-      created_at: "2025-01-10T08:30:00Z",
-    },
-
-    guardian: "Peter Ochieng",
-    sponsored: 0,
-    training_center: "Langata",
-
-    stats: {
-      goals: 1,
-      assists: 2,
-      pass_accuracy: 72,
-    },
-
-    physical: {
-      height: null,
-      weight: null,
-      bmi: null,
-    },
-
-    created_at: "2025-03-12T16:00:00Z",
-  },
+  }
 ]
 
 // const players2 = [
@@ -270,7 +160,7 @@ export default function PlayersPage() {
       {loading ? (
                   <div className="flex items-center justify-center mt-50">
                   {/* The animate-spin class makes the icon rotate infinitely */}
-                  <Loader2 className="animate-spin h-20 w-20 text-red-600" />
+                  <Loader2 className="animate-spin h-20 w-20 text-blue-600" />
                 </div>
 
           ):
@@ -279,9 +169,9 @@ export default function PlayersPage() {
                   <PageHeader title="Players" description="Player profiles, development & analytics">
         <AddPlayerModal onSubmit={fetchPlayers} />
       </PageHeader>
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className=" gap-6">
             {/* Player List */}
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
               {players.map(p => (
                 <div key={p.id} onClick={() => setSelected(p)}
@@ -296,12 +186,12 @@ export default function PlayersPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
     
             {/* Detail */}
-            <div className="xl:col-span-3 space-y-4">
+            <div className="xl:col-span-3 w-max min-w-full space-y-4">
               {/* Header */}
-              <Card>
+              <Card className="min-w-full">
                 <CardContent className="pt-5">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Avatar className="h-16 w-16 border-2 border-white shadow">
@@ -327,12 +217,24 @@ export default function PlayersPage() {
                   </div>
     
                   {/* Tabs */}
-                  <Tabs value={tab} onValueChange={setTab} className="mt-4">
-                    <TabsList>
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="tactical">Tactical Analysis</TabsTrigger>
-                      <TabsTrigger value="scouting">Scouting Notes</TabsTrigger>
-                      <TabsTrigger value="video">Video Highlights</TabsTrigger>
+                  <Tabs
+                    defaultValue="profile"
+                    orientation="vertical"
+                    className="flex w-full"
+                  >
+                 <TabsList className="flex h-auto w-fit flex-col m-4 items-stretch justify-start">
+                      <TabsTrigger className="justify-start" value="overview"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Executive Summary</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="tactical"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Bio Data</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="scouting"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Club & Stats</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="evidence"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Evidence & Confidence Snapshot</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="track"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Track Record</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="visual"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Visual Perfomance Profile</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="domain"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Four Domain Assessment</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="load"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Competitive Load</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="fit"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Tactical Fit</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="destination"><Dumbbell className="w- m-2 h-4"></Dumbbell>Destination Scenarios</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="video"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Video Highlights</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="recommendation"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Final Recommendation</TabsTrigger>
                     </TabsList>
     
                     <TabsContent value="overview">

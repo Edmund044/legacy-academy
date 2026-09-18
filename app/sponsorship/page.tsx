@@ -89,8 +89,8 @@ export default function SponsorshipPage() {
                 <div key={i} className="flex items-center justify-between py-1.5">
                   <span className="text-xs">{t.term}</span>
                   <div className="flex items-center gap-1">
-                    {t.status === "Paid" ? <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> : <XCircle className="w-3.5 h-3.5 text-red-500" />}
-                    <span className={`text-xs font-semibold ${t.status === "Paid" ? "text-green-600" : "text-red-500"}`}>{t.status}</span>
+                    {t.status === "Paid" ? <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> : <XCircle className="w-3.5 h-3.5 text-blue-500" />}
+                    <span className={`text-xs font-semibold ${t.status === "Paid" ? "text-green-600" : "text-blue-500"}`}>{t.status}</span>
                   </div>
                 </div>
               ))}

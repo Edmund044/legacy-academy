@@ -51,7 +51,7 @@ const POSITION_COLORS: Record<string, string> = {
   Goalkeeper: "bg-amber-50 text-amber-600 border-amber-200",
   Defender: "bg-blue-50 text-blue-600 border-blue-200",
   Midfielder: "bg-green-50 text-green-600 border-green-200",
-  Forward: "bg-red-50 text-red-600 border-red-200",
+  Forward: "bg-blue-50 text-blue-600 border-blue-200",
 };
 
 export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
@@ -237,7 +237,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
         <div className="mt-4 grid grid-cols-3 gap-3">
           {[
             { label: "Checked in", value: counts.checkedIn, color: "text-green-600", bg: "bg-green-50" },
-            { label: "Absent", value: counts.absent, color: "text-red-500", bg: "bg-red-50" },
+            { label: "Absent", value: counts.absent, color: "text-blue-500", bg: "bg-blue-50" },
             { label: "Pending", value: counts.pending, color: "text-gray-500", bg: "bg-gray-50" },
           ].map((s) => (
             <div key={s.label} className={`${s.bg} rounded-xl px-4 py-3`}>
@@ -301,7 +301,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
                 isCheckedIn
                   ? "bg-green-50/60 border-green-200"
                   : isAbsent
-                  ? "bg-red-50/40 border-red-200"
+                  ? "bg-blue-50/40 border-blue-200"
                   : "bg-white border-gray-200"
               }`}
             >
@@ -311,7 +311,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
                   isCheckedIn
                     ? "bg-green-100 text-green-700"
                     : isAbsent
-                    ? "bg-red-100 text-red-500"
+                    ? "bg-blue-100 text-blue-500"
                     : "bg-gray-100 text-gray-500"
                 }`}
               >
@@ -354,7 +354,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
                     <button
                       onClick={() => markAbsent(player.player_id)}
                       disabled={isLoading}
-                      className="text-xs px-2.5 py-1 border border-red-200 rounded-lg text-red-400 hover:bg-red-50 transition disabled:opacity-40"
+                      className="text-xs px-2.5 py-1 border border-blue-200 rounded-lg text-blue-400 hover:bg-blue-50 transition disabled:opacity-40"
                     >
                       Absent
                     </button>
@@ -384,7 +384,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
           All players have been marked —{" "}
           <span className="text-green-600 font-medium">{counts.checkedIn} checked in</span>
           {counts.absent > 0 && (
-            <>, <span className="text-red-500 font-medium">{counts.absent} absent</span></>
+            <>, <span className="text-blue-500 font-medium">{counts.absent} absent</span></>
           )}
         </div>
       )}
@@ -533,7 +533,7 @@ export default function StudentCheckIn({session_id}: attendaceTrackerProps) {
 //             </Button>
 //             <Button
 //             //   onClick={handleSubmit}
-//               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
+//               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6"
 //             >
 //               Submit
 //             </Button>

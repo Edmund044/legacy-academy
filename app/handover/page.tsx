@@ -99,7 +99,7 @@ export default function HandoverPage() {
     {loading ? (
       <div className="flex items-center justify-center mt-50">
       {/* The animate-spin class makes the icon rotate infinitely */}
-      <Loader2 className="animate-spin h-20 w-20 text-red-600" />
+      <Loader2 className="animate-spin h-20 w-20 text-blue-600" />
     </div>
 
 ):
@@ -194,7 +194,7 @@ export default function HandoverPage() {
               <CardHeader className="pb-3"><CardTitle className="text-sm">Coach Accountability</CardTitle></CardHeader>
               <CardContent className="space-y-2">
                 {liabilities.map((l, i) => (
-                  <div key={i} className={`p-3 rounded-xl border ${l.clear ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}>
+                  <div key={i} className={`p-3 rounded-xl border ${l.clear ? "border-green-200 bg-green-50" : "border-blue-200 bg-blue-50"}`}>
                     <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold">{l.name}</p>
                       {l.clear ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <span className="text-sm font-bold text-brand">{l.amount}</span>}
@@ -219,7 +219,7 @@ export default function HandoverPage() {
         <CardHeader className="pb-3"><CardTitle className="text-sm">Coach Accountability</CardTitle></CardHeader>
         <CardContent className="space-y-2">
           {liabilities.map((l, i) => (
-            <div key={i} className={`p-3 rounded-xl border ${l.clear ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}>
+            <div key={i} className={`p-3 rounded-xl border ${l.clear ? "border-green-200 bg-green-50" : "border-blue-200 bg-blue-50"}`}>
               <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold">{l.name}</p>
                 {l.clear ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <span className="text-sm font-bold text-brand">{l.amount}</span>}

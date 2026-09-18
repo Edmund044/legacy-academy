@@ -41,13 +41,13 @@ export function RolePermissionCard({
     <div
       className={cn(
         "flex flex-col gap-4 p-5 rounded-xl border bg-white",
-        highlighted ? "border-red-300 shadow-sm" : "border-slate-200"
+        highlighted ? "border-blue-300 shadow-sm" : "border-slate-200"
       )}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-bold text-slate-900">{role}</h3>
-        <Icon className={cn("w-5 h-5", highlighted ? "text-red-500" : "text-slate-400")} />
+        <Icon className={cn("w-5 h-5", highlighted ? "text-blue-500" : "text-slate-400")} />
       </div>
 
       {/* Permissions */}
@@ -58,7 +58,7 @@ export function RolePermissionCard({
             <Switch
               checked={perm.enabled}
               onCheckedChange={() => toggle(perm.key)}
-              className="data-[state=checked]:bg-red-500"
+              className="data-[state=checked]:bg-blue-500"
             />
           </div>
         ))}

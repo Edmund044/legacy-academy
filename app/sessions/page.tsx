@@ -9,12 +9,12 @@ import { TrendingUp, Users, Activity, Download, Filter, Search, MoreVertical,  E
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { Session } from "@/types/sessions";
-import { ApiResponse } from "@/types/api-response";
+import { ApiResponse, PaginationMeta } from "@/types/api-response";
 
 
 const statusConfig: Record<string, { label: string; variant: any }> = {
   active: { label: "ACTIVE", variant: "success" },
-  upcoming: { label: "UPCOMING", variant: "warning" },
+  planned: { label: "PLANNED", variant: "warning" },
   completed: { label: "COMPLETED", variant: "secondary" },
   cancelled: { label: "CANCELLED", variant: "destructive" },
 }
@@ -23,6 +23,7 @@ export default function SessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [activeTab, setActiveTab] = useState("all")
   const [search, setSearch] = useState("")
+  const [meta,setMeta] = useState<PaginationMeta>()
 
   const filtered = sessions.filter(s => {
     const matchesTab = activeTab === "all" || s.status === activeTab
@@ -44,8 +45,9 @@ export default function SessionsPage() {
       });
 
       setSessions((response.data as Session[]) ?? []);
+      setMeta(response.meta);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch sessions. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       // setLoading(false);
@@ -60,9 +62,13 @@ export default function SessionsPage() {
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <StatCard title="Total Revenue" value="KES 42,850" change="+12.5%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
-        <StatCard title="Total Enrolled" value="1,240" change="+5.2%" changeType="up" icon={<Users className="w-4 h-4" />} />
-        <StatCard title="Active Sessions" value="48" badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Group Sessions" value={String(meta?.total_group_sessions)} change="+12.5%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Individual Sessions"  value={String(meta?.total_individual_sessions)} change="+5.2%" changeType="up" icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Planned Sessions" value={String(meta?.total_planned_sessions)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Activity className="w-4 h-4" />} />
+        <StatCard title="Active Sessions" value={String(meta?.total_active_sessions)} change="+12.5%" changeType="up" icon={<TrendingUp className="w-4 h-4" />} />
+        <StatCard title="Completed Sessions"  value={String(meta?.total_completed_sessions)} change="+5.2%" changeType="up" icon={<Users className="w-4 h-4" />} />
+        <StatCard title="Cancelled Sessions" value={String(meta?.total_cancelled_sessions)} badge={<Badge variant="brand" className="text-[10px]">LIVE</Badge>} icon={<Activity className="w-4 h-4" />} />
+
       </div>
 
       <Card>
@@ -96,7 +102,7 @@ export default function SessionsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
-                  {["SESSION NAME", "DATE & TIME", "LEAD COACH", "ENROLLMENT", "REVENUE", "STATUS", ""].map(h => (
+                  {["SESSION NAME", "DATE & TIME", "LEAD COACH", "ENROLLMENT","STATUS", ""].map(h => (
                     <th key={h} className="text-left py-2 px-3 text-[10px] font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
@@ -106,7 +112,7 @@ export default function SessionsPage() {
                   <tr key={s.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold bg-brand/10 text-brand px-1.5 py-0.5 rounded w-8 text-center flex-shrink-0">LM</span>
+                        <span className="text-[10px] font-bold bg-brand/10 text-brand px-1.5 py-0.5 rounded w-8 text-center flex-shrink-0">{s.name.split(" ").map(n=>n[0]).join("")}</span>
                         <div>
                           <p className="text-sm font-semibold">{s.name}</p>
                           <p className="text-[11px] text-muted-foreground">{s.type}</p>
@@ -125,11 +131,10 @@ export default function SessionsPage() {
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <Progress value={(s.enrollment_cap / s.total) * 100} className="w-16 h-1.5" />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.enrollment_cap}/{s.total}</span>
+                        <Progress value={(s.enrollment_cap / s.enrollment_cap) * 100} className="w-16 h-1.5" />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{s.enrollment_cap}/{s.enrollment_cap}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-3 text-sm font-semibold">{s.revenue_kes}</td>
                     <td className="py-3 px-3">
                       <Badge variant={statusConfig[s.status]?.variant} className="text-[10px]">
                         {statusConfig[s.status]?.label}

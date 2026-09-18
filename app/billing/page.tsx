@@ -31,7 +31,7 @@ export default function BillingPage() {
   const { tokens,user } = useAuth();
   const config = {
     reference: uuidv4(),
-    email: user?.email || "Cliffobure@gmail.com",
+    email: user?.email || "legacyuser@gmail.com",
     // amount: Math.round(total * 100),
     amount: 100,
     publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
@@ -81,7 +81,7 @@ export default function BillingPage() {
             <PaystackButton
                 {...config}
                 text="Renew Membership"
-                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
+                className="w-full bg-blue-700 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
                 onSuccess={() => console.log("Payment was a success")}
                 onClose={() => console.log("Payment was cancelled")}
               />

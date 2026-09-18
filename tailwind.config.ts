@@ -47,11 +47,11 @@ module.exports = {
   				foreground: 'hsl(var(--card-foreground))'
   			},
   			brand: {
-  				'50': '#FFF0F0',
-  				'100': '#FFD6D6',
-  				DEFAULT: '#CC0000',
-  				light: '#FF1A1A',
-  				dark: '#990000'
+				50: '#F3F0FF',
+				100: '#E5DEFF',
+				DEFAULT: '#3B00DB',
+				light: '#5C2BFF',
+				dark: '#2A0099',
   			},
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',

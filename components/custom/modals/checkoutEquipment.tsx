@@ -276,7 +276,7 @@ export default function CheckoutHandover({ sessionId,coachId, equipments }: Chec
                     </div>
                     <button
                       onClick={() => removeItem(item.equipment_id)}
-                      className="ml-3 shrink-0 w-7 h-7 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition"
+                      className="ml-3 shrink-0 w-7 h-7 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-500 hover:border-blue-200 transition"
                     >
                       ×
                     </button>
@@ -341,7 +341,7 @@ export default function CheckoutHandover({ sessionId,coachId, equipments }: Chec
               <button
                 onClick={handleSubmit}
                 disabled={selected.length === 0}
-                className="px-5 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="px-5 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 Issue equipment
               </button>

@@ -75,7 +75,7 @@ export default function CoachesPage() {
       {loading ? (
                   <div className="flex items-center justify-center mt-50">
                   {/* The animate-spin class makes the icon rotate infinitely */}
-                  <Loader2 className="animate-spin h-20 w-20 text-red-600" />
+                  <Loader2 className="animate-spin h-20 w-20 text-blue-600" />
                 </div>
 
           ):
