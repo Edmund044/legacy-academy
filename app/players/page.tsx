@@ -13,7 +13,12 @@ import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
 import { PlayerProfile } from "@/types/players";
 import { ApiResponse } from "@/types/api-response";
-
+import {
+  LayoutDashboard, Users, UserCircle, CalendarDays, Trophy, Package,
+  ArrowLeftRight, ShoppingBag, Heart, Gift, BookOpen, CreditCard,
+  Dumbbell, ScanLine, FileText, Building2, Bell, Settings, ChevronLeft,
+  Search
+} from "lucide-react"
 
 const players2 = [
   {
@@ -270,7 +275,7 @@ export default function PlayersPage() {
       {loading ? (
                   <div className="flex items-center justify-center mt-50">
                   {/* The animate-spin class makes the icon rotate infinitely */}
-                  <Loader2 className="animate-spin h-20 w-20 text-red-600" />
+                  <Loader2 className="animate-spin h-20 w-20 text-blue-600" />
                 </div>
 
           ):
@@ -279,9 +284,9 @@ export default function PlayersPage() {
                   <PageHeader title="Players" description="Player profiles, development & analytics">
         <AddPlayerModal onSubmit={fetchPlayers} />
       </PageHeader>
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className=" gap-6">
             {/* Player List */}
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <input className="w-full h-9 pl-3 pr-4 rounded-lg border border-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand/20" placeholder="Search players..." />
               {players.map(p => (
                 <div key={p.id} onClick={() => setSelected(p)}
@@ -296,12 +301,12 @@ export default function PlayersPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
     
             {/* Detail */}
-            <div className="xl:col-span-3 space-y-4">
+            <div className="xl:col-span-3 w-max min-w-full space-y-4">
               {/* Header */}
-              <Card>
+              <Card className="min-w-full">
                 <CardContent className="pt-5">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Avatar className="h-16 w-16 border-2 border-white shadow">
@@ -327,12 +332,24 @@ export default function PlayersPage() {
                   </div>
     
                   {/* Tabs */}
-                  <Tabs value={tab} onValueChange={setTab} className="mt-4">
-                    <TabsList>
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="tactical">Tactical Analysis</TabsTrigger>
-                      <TabsTrigger value="scouting">Scouting Notes</TabsTrigger>
-                      <TabsTrigger value="video">Video Highlights</TabsTrigger>
+                  <Tabs
+                    defaultValue="profile"
+                    orientation="vertical"
+                    className="flex w-full"
+                  >
+                 <TabsList className="flex h-auto w-fit flex-col m-4 items-stretch justify-start">
+                      <TabsTrigger className="justify-start" value="overview"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Executive Summary</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="tactical"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Bio Data</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="scouting"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Club & Stats</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="evidence"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Evidence & Confidence Snapshot</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="track"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Track Record</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="visual"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Visual Perfomance Profile</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="domain"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Four Domain Assessment</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="load"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Competitive Load</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="fit"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Tactical Fit</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="destination"><Dumbbell className="w- m-2 h-4"></Dumbbell>Destination Scenarios</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="video"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Video Highlights</TabsTrigger>
+                      <TabsTrigger className="justify-start" value="recommendation"><Dumbbell className="w-4 m-2 h-4"></Dumbbell>Final Recommendation</TabsTrigger>
                     </TabsList>
     
                     <TabsContent value="overview">

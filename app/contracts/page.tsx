@@ -73,7 +73,7 @@ export default function ContractsPage() {
                   <div key={i} className="p-3 bg-muted/40 rounded-lg">
                     <p className="text-[10px] text-muted-foreground uppercase font-semibold">{s.label}</p>
                     <p className="text-lg font-bold mt-1">{s.value}</p>
-                    <p className={`text-[11px] mt-0.5 ${i === 0 ? "text-green-600" : i === 1 ? "text-red-500" : "text-muted-foreground"}`}>{s.sub}</p>
+                    <p className={`text-[11px] mt-0.5 ${i === 0 ? "text-green-600" : i === 1 ? "text-blue-500" : "text-muted-foreground"}`}>{s.sub}</p>
                   </div>
                 ))}
               </div>

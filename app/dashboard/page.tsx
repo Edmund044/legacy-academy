@@ -75,7 +75,7 @@ export default function DashboardPage() {
                     <stop offset="95%" stopColor="#CC0000" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#3B00DB" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v: number, n: string) => [n === "revenue" ? `KES ${v.toLocaleString()}` : v, n === "revenue" ? "Revenue" : "Enrolled"]} />

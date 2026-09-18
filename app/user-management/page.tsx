@@ -87,7 +87,7 @@ export default function UserManagementPage() {
             Control access for staff, coaches, and parents across the academy.
           </p>
         </div>
-        <Button className="bg-red-500 hover:bg-red-600 text-white h-11 px-5 rounded-xl font-semibold gap-2 shadow-sm">
+        <Button className="bg-blue-500 hover:bg-blue-600 text-white h-11 px-5 rounded-xl font-semibold gap-2 shadow-sm">
           <UserPlus className="w-4 h-4" />
           Add New User
         </Button>

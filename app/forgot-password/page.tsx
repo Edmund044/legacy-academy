@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
         <CardContent className="p-8">
           {/* Icon + Header */}
           <div className="flex flex-col items-center mb-6">
-            <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
+            <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
               <Mail className="text-white w-7 h-7" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
                   id="email"
                   type="email"
                   placeholder="name@company.com"
-                  className="h-11 rounded-xl border-gray-200 focus-visible:ring-red-500 focus-visible:border-red-500"
+                  className="h-11 rounded-xl border-gray-200 focus-visible:ring-blue-500 focus-visible:border-blue-500"
                   required
                 />
               </div>
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-11 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
+                className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
               </Button>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
           <div className="mt-6 flex justify-center">
             <Link
               href="/login"
-              className="flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Login

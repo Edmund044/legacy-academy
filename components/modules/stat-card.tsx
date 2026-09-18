@@ -54,7 +54,7 @@ export function StatCard({ title, value, change, changeType = "up", icon, badge,
       {change && (
         <div className={cn(
           "flex items-center gap-1 text-xs font-medium",
-          changeType === "up" ? "text-green-600" : changeType === "down" ? "text-red-500" : "text-muted-foreground"
+          changeType === "up" ? "text-green-600" : changeType === "down" ? "text-blue-500" : "text-muted-foreground"
         )}>
           {changeType === "up" ? <TrendingUp className="w-3 h-3" /> : changeType === "down" ? <TrendingDown className="w-3 h-3" /> : null}
           {change}
@@ -64,15 +64,15 @@ export function StatCard({ title, value, change, changeType = "up", icon, badge,
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#CC0000" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#CC0000" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#3B00DB" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#3B00DB" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v: number, n: string) => [n === "revenue" ? `KES ${v.toLocaleString()}` : v, n === "revenue" ? "Revenue" : "Enrolled"]} />
-                <Area type="monotone" dataKey="revenue" stroke="#CC0000" strokeWidth={2} fill="url(#revGrad)" />
+                <Area type="monotone" dataKey="revenue" stroke="#3B00DB" strokeWidth={2} fill="url(#revGrad)" />
               </AreaChart>
             </ResponsiveContainer>
     </div>

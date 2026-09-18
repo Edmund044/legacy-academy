@@ -54,7 +54,7 @@ export default function ResetPasswordPage() {
         <CardContent className="p-8">
           {/* Icon + Header */}
           <div className="flex flex-col items-center mb-6">
-            <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
+            <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
               <Database className="text-white w-7 h-7" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Set new password</h1>
@@ -76,7 +76,7 @@ export default function ResetPasswordPage() {
                   placeholder="••••••••"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-red-500 focus-visible:border-red-500"
+                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-blue-500 focus-visible:border-blue-500"
                   required
                 />
                 <button
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-red-500 focus-visible:border-red-500"
+                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-blue-500 focus-visible:border-blue-500"
                   required
                 />
                 <button
@@ -130,14 +130,14 @@ export default function ResetPasswordPage() {
 
             {/* Error */}
             {error && (
-              <p className="text-xs text-red-500 font-medium">{error}</p>
+              <p className="text-xs text-blue-500 font-medium">{error}</p>
             )}
 
             {/* Submit */}
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
+              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
             >
               {isLoading ? "Resetting..." : "Reset Password"}
             </Button>
@@ -147,7 +147,7 @@ export default function ResetPasswordPage() {
           <div className="mt-6 flex justify-center">
             <Link
               href="/login"
-              className="flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Login

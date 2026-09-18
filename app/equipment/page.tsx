@@ -87,7 +87,7 @@ export default function EquipmentPage() {
           {loading ? (
                   <div className="flex items-center justify-center">
                   {/* The animate-spin class makes the icon rotate infinitely */}
-                  <Loader2 className="animate-spin h-8 w-8 text-red-600" />
+                  <Loader2 className="animate-spin h-8 w-8 text-blue-600" />
                 </div>
 
           ):

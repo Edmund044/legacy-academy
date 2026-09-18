@@ -170,7 +170,7 @@ export function Sidebar({
         </div>
 
         {!collapsed && (
-          <p className="font-bold text-sm">Legacy Academy</p>
+          <p className="font-bold text-sm">MCHEZAJI APP</p>
         )}
 
         <button

@@ -81,7 +81,7 @@ export default function BillingPage() {
             <PaystackButton
                 {...config}
                 text="Renew Membership"
-                className="w-full bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
+                className="w-full bg-blue-700 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
                 onSuccess={() => console.log("Payment was a success")}
                 onClose={() => console.log("Payment was cancelled")}
               />

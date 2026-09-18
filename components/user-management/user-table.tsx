@@ -95,7 +95,7 @@ export function UserTable({ users, onEdit }: UserTableProps) {
             {/* Actions */}
             <button
               onClick={() => onEdit?.(user)}
-              className="text-sm font-semibold text-red-500 hover:text-red-700 transition-colors text-left"
+              className="text-sm font-semibold text-blue-500 hover:text-blue-700 transition-colors text-left"
             >
               Edit
             </button>

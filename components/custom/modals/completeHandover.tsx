@@ -162,7 +162,7 @@ export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
             </span>
           )}
           {statusCounts.lost > 0 && (
-            <span className="px-2.5 py-1 rounded-full bg-red-50 text-red-600 font-medium">
+            <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium">
               {statusCounts.lost} lost
             </span>
           )}
@@ -175,7 +175,7 @@ export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
           const isLost = item.is_lost;
           const isDamaged = item.is_damaged;
           const cardBorder = isLost
-            ? "border-red-200 bg-red-50/40"
+            ? "border-blue-200 bg-blue-50/40"
             : isDamaged
             ? "border-amber-200 bg-amber-50/40"
             : "border-gray-200 bg-white";
@@ -246,8 +246,8 @@ export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
                     }
                     className={`w-full py-1.5 text-sm rounded-lg border transition font-medium ${
                       isLost
-                        ? "bg-red-500 border-red-500 text-white"
-                        : "bg-white border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-600"
+                        ? "bg-blue-500 border-blue-500 text-white"
+                        : "bg-white border-gray-200 text-gray-500 hover:border-blue-300 hover:text-blue-600"
                     }`}
                   >
                     {isLost ? "Yes — lost" : "No"}
@@ -257,7 +257,7 @@ export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
 
               {/* Lost notice */}
               {isLost && (
-                <p className="text-xs text-red-500 mt-2.5">
+                <p className="text-xs text-blue-500 mt-2.5">
                   Item marked as lost — condition will not be recorded
                 </p>
               )}
@@ -299,7 +299,7 @@ export default function EquipmentHandover({session_id}: CompleteHandoverProps) {
           <button
             onClick={handleSubmit}
             disabled={items.length === 0 || loading}
-            className="px-5 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="px-5 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
             {loading ? "Submitting…" : "Confirm return"}
           </button>

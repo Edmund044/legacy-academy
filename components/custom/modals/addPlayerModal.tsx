@@ -172,7 +172,7 @@ const searchGuardians = async (value: string) => {
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-            <UserRoundPlus className="w-5 h-5 text-red-600" />
+            <UserRoundPlus className="w-5 h-5 text-blue-600" />
             Add New Player
           </DialogTitle>
         </DialogHeader>
@@ -440,7 +440,7 @@ const searchGuardians = async (value: string) => {
                       onChange={() =>
                       setForm((prev) => ({ ...prev, sponsored: option.id }))
                       }
-                      className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
+                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <label
                       htmlFor={option.id}
@@ -508,7 +508,7 @@ const searchGuardians = async (value: string) => {
 
             <Button
               onClick={handleSubmit}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6"
             >
               Add Player
             </Button>

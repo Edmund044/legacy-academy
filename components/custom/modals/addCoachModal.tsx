@@ -117,7 +117,7 @@ export default function AddCoachModal(
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-            <UserRoundPlus className="w-5 h-5 text-red-600" />
+            <UserRoundPlus className="w-5 h-5 text-blue-600" />
             Add New Coach
           </DialogTitle>
         </DialogHeader>
@@ -212,7 +212,7 @@ export default function AddCoachModal(
                     onCheckedChange={(checked) =>
                       handleTeamToggle(team.id, !!checked)
                     }
-                    className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <label
                     htmlFor={team.id}
@@ -263,7 +263,7 @@ export default function AddCoachModal(
           <div className="flex justify-end gap-3 pt-2">
             <Button
               onClick={handleSubmit}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6"
             >
               Add Coach
             </Button>

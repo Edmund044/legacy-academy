@@ -120,7 +120,7 @@ export default function PayModal(
 
                 
 
-                  <Button className="w-full text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300">Pay with Debt →</Button>
+                  <Button className="w-full text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Pay with Debt →</Button>
                   {/* <button className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all`}>
                         <div className={`w-8 h-5 rounded flex items-center justify-center`}><Smartphone className="w-4 h-4 text-green-600" /></div>
                         <span className="text-sm font-medium flex-1 text-left">Pay with Debt</span>
@@ -137,7 +137,7 @@ export default function PayModal(
     <PaystackButton
                 {...config}
                 text={paymentRequest.buttonText}
-                className=" w-48 bg-red-700 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
+                className=" w-48 bg-blue-700 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
                 onSuccess={onSuccess}
                 onClose={onClose}
               />

@@ -12,7 +12,7 @@ import PayModal from "@/components/custom/modals/payModal";
 const products = [
   { name: "Elite Training Jersey", desc: "Premium athletic fabric", price: "$45.00", stock: 84, tag: "BEST SELLER", color: "bg-green-600" },
   { name: "Academy Travel Polo", desc: "Official club travel gear", price: "$35.00", stock: 120, tag: null, color: "bg-slate-700" },
-  { name: "Academy Pro Football", desc: "FIFA Quality certified", price: "$25.00", stock: 12, tag: "LOW STOCK", color: "bg-red-500" },
+  { name: "Academy Pro Football", desc: "FIFA Quality certified", price: "$25.00", stock: 12, tag: "LOW STOCK", color: "bg-blue-500" },
   { name: "Performance Water Bottle", desc: "BPA-free plastic, 750ml", price: "$12.00", stock: 215, tag: null, color: "bg-teal-600" },
 ]
 

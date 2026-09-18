@@ -43,7 +43,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#f8f9fb] flex flex-col items-center justify-center px-4">
       {/* Logo + Header */}
       <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
+        <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md mb-4">
           <Zap className="text-white w-8 h-8 fill-white" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
@@ -63,7 +63,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="name@company.com"
-                className="h-11 rounded-xl border-gray-200 focus-visible:ring-red-500 focus-visible:border-red-500"
+                className="h-11 rounded-xl border-gray-200 focus-visible:ring-blue-500 focus-visible:border-blue-500"
                 required
                 value={form.email}
                 onChange={(e) =>
@@ -80,7 +80,7 @@ export default function LoginPage() {
                 </Label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
+                  className="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors"
                 >
                   Forgot Password?
                 </Link>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-red-500 focus-visible:border-red-500"
+                  className="h-11 rounded-xl border-gray-200 pr-10 focus-visible:ring-blue-500 focus-visible:border-blue-500"
                   required
                   value={form.password}
                   onChange={(e) =>
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 id="remember"
                 checked={rememberMe}
                 onCheckedChange={(v) => setRememberMe(!!v)}
-                className="border-gray-300 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
+                className="border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
               />
               <Label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer font-normal">
                 Remember me for 30 days
@@ -124,7 +124,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
+              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm tracking-wide"
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
@@ -134,7 +134,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="font-semibold text-red-500 hover:text-red-600 transition-colors"
+                className="font-semibold text-blue-500 hover:text-blue-600 transition-colors"
               >
                 Create an account
               </Link>
