@@ -94,6 +94,7 @@ export default function BillingPage() {
   
   const fetchGuardians = async () => {
     try {
+      console.log("user",user)
       const response = await apiClient<ApiResponse<Guardian>>({
         endpoint: `v1/guardians/${user?.id}`,
         method: "GET",
