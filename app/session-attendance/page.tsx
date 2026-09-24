@@ -167,7 +167,7 @@ export default function CoachDashboardPage() {
             </Tabs>
             </div>
 
-  <div className="space-y-4">
+  {/* <div className="space-y-4">
     <Card>
       <CardHeader className="pb-3"><CardTitle className="text-sm">Revenue Split</CardTitle></CardHeader>
       <CardContent>
@@ -210,7 +210,7 @@ export default function CoachDashboardPage() {
         ))}
       </CardContent>
     </Card>
-  </div>
+  </div> */}
 </div></>
           )}
 

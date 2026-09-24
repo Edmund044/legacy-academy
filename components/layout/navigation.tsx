@@ -62,7 +62,7 @@ const naviGroups: NavGroup[] = [
     items: [
       // { href: "/bookings", icon: BookOpen, label: "Bookings" },
       { href: "/annual-subscriptions", icon: UserCircle, label: "Subscriptions" },
-      // { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
+      { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
       { href : "/children", icon: UserCircle, label: "My Children" },
       { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
@@ -77,7 +77,6 @@ const naviGroups: NavGroup[] = [
     items: [
       { href: "/coach-dashboard", icon: Dumbbell, label: "Plan Session" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
-      { href: "/handover", icon: Dumbbell, label: "Handover" },
       { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
     ]
   },
@@ -85,7 +84,6 @@ const naviGroups: NavGroup[] = [
     label: "Kits & Equipment Portal",
     roles: [RoleNames.COACH],
     items: [
-      { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/equipment", icon: Dumbbell, label: "Equipment" },
       { href: "/handover", icon: Dumbbell, label: "Handover" },
     ]

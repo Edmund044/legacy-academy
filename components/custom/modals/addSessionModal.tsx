@@ -188,7 +188,8 @@ export default function AddSessionModal(
           "Content-Type": "application/json",
         },
         body: {
-          ...form
+          ...form,
+          session_date: form.session_date.toISOString().split("T")[0]
         },
       });
       setOpen(false);
