@@ -82,7 +82,7 @@ const naviGroups: NavGroup[] = [
   },
   {
     label: "Kits & Equipment Portal",
-    roles: [RoleNames.COACH],
+    roles: [RoleNames.COACH,RoleNames.KIT_AND_EQUIPMENT_MANAGER],
     items: [
       { href: "/equipment", icon: Dumbbell, label: "Equipment" },
       { href: "/handover", icon: Dumbbell, label: "Handover" },
