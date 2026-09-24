@@ -46,7 +46,7 @@ export default function PayModal(
     const [open, setOpen] = useState(false);
     const config = {
       reference: uuidv4(),
-      email: user?.email || "mchezajiuser@gmail.com",
+      email: user?.email || `mchezajiuser+${Math.floor(Math.random() * 1_000_000)}@gmail.com`,
       amount: paymentRequest.amount * 100, 
       publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
       currency: "KES",
