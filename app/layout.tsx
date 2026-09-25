@@ -3,8 +3,8 @@ import "./globals.css"
 import { AuthProvider } from "@/context/auth-context"
 
 export const metadata: Metadata = {
-  title: "Legacy Football Academy Management",
-  description: "Comprehensive football academy management platform",
+  title: "Mchezaji App Management",
+  description: "Comprehensive talent management platform",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

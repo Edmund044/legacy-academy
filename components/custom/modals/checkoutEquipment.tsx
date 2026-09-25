@@ -49,6 +49,7 @@ const MOCK_CATALOG: Equipment[] = [
   { id: "0718293a-789a-4012-e456-001122336677", name: "Whistle", category: "Referee Equipment", stock: 10 },
   { id: "18293a4b-89ab-4123-f567-112233447788", name: "Corner Flag Set", category: "Field Equipment", stock: 4 },
   { id: "293a4b5c-9abc-4234-0678-223344558899", name: "First Aid Kit", category: "Medical", stock: 5 },
+  { id: "f8247ad3-2c08-4c0d-816e-b969319ca85f", name: "Smart Vest", category: "Apparel", stock: 50 },
 ];
 
 export default function CheckoutHandover({ sessionId,coachId, equipments }: CheckoutEquipmentModalProps) {
@@ -87,7 +88,7 @@ export default function CheckoutHandover({ sessionId,coachId, equipments }: Chec
     if (selected.some((s) => s.equipment_id === eq.id)) return;
     setSelected((prev) => [
       ...prev,
-      { equipment_id: eq.id, qty: 1, condition_out: "Good", _name: eq.name, _stock: eq.stock },
+      { equipment_id: eq.id, qty: 1, condition_out: "good", _name: eq.name, _stock: eq.stock },
     ]);
     setQuery("");
     setDropdownOpen(false);

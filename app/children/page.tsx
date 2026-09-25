@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/modules/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent, Avatar, AvatarFallback } from "@/components/ui/primitives"
-import { MapPin, Phone } from "lucide-react"
+import { MapPin, Phone, Search } from "lucide-react"
 import PayModal from "@/components/custom/modals/payModal";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
@@ -128,6 +128,7 @@ export default function PlayersPage() {
   const [loadingButton, setLoadingButton] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([])
   const [playerId, setPlayerId] = useState<string>("")
+  const [search, setSearch] = useState("")
   
 
   const fetchPlayers = async () => {
@@ -209,6 +210,7 @@ export default function PlayersPage() {
             <>
                   <PageHeader title="Players" description="Player profiles, development & analytics">
       </PageHeader>
+
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
             {/* Player List */}
             <div className="space-y-2">
@@ -406,11 +408,12 @@ export default function PlayersPage() {
                             <div className="flex items-center justify-between p-3 bg-muted/40 rounded-lg">
                               <div className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8">
-                                  <AvatarFallback className="text-xs">{selected?.guardian ? selected.guardian.charAt(0) : '?'}</AvatarFallback>
+                                  <AvatarFallback className="text-xs">{selected?.guardian ? selected.guardian.first_name.charAt(0) : '?'}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <p className="text-xs font-semibold">{selected?.guardian}</p>
-                                  {/* <p className="text-[11px] text-muted-foreground">{selected.guardian.relation}</p> */}
+                                  <p className="text-xs font-semibold">{selected?.guardian?.first_name} {selected?.guardian?.last_name}</p>
+                                  <p className="text-[11px] text-muted-foreground">{selected?.guardian?.relationship_type}</p>
+                                  <p className="text-[11px] text-muted-foreground">{selected?.guardian?.whatsapp_phone}</p>
                                 </div>
                               </div>
                               <button className="p-2 rounded-lg bg-brand/10 text-brand hover:bg-brand hover:text-white transition-colors">

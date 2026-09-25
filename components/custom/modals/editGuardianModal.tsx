@@ -18,10 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRoundPlus, Upload } from "lucide-react";
+import { UserRoundPlus,Edit, Upload } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
+import { gu } from "date-fns/locale";
 
 interface AddCoachModalProps {
   guardian: any;
@@ -33,7 +34,6 @@ interface GuardianFormData {
   last_name: string;
   email: string;
   whatsapp_phone: string;
-  player_id: string;
   relationship_type: string;
   is_primary: boolean;
 }
@@ -215,7 +215,7 @@ const IS_PRIMARY_OPTIONS = [
 
 
 
-export default function AddGuardianModal(
+export default function EditGuardianModal(
     {
       guardian,
   onSubmit,
@@ -224,13 +224,19 @@ export default function AddGuardianModal(
   const { tokens } = useAuth();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<GuardianFormData>({
-    first_name: "",
-    last_name: "",
-    email: "",
-    whatsapp_phone: "",
-    player_id: "",
-    relationship_type: "",
-    is_primary: false,
+    first_name: guardian.first_name || "",
+    last_name: guardian.last_name || "",
+    email: guardian.email || "",
+    whatsapp_phone: guardian.whatsapp_phone || "",
+    // player_id: guardian.player_id || "",
+    relationship_type: guardian.relationship_type || "",
+    is_primary: guardian.is_primary || false,
+    // last_name: "",
+    // email: "",
+    // whatsapp_phone: "",
+    // player_id: "",
+    // relationship_type: "",
+    // is_primary: false,
   });
 
 
@@ -238,8 +244,8 @@ export default function AddGuardianModal(
   const handleSubmit = async () => {
     try {
       await apiClient({
-        endpoint: "/v1/guardians",
-        method: "POST",
+        endpoint: `/v1/guardians/${guardian.id}`,
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${tokens?.accessToken}`,
           "Content-Type": "application/json",
@@ -265,14 +271,14 @@ export default function AddGuardianModal(
     open={open} onOpenChange={setOpen}
     >
               <DialogTrigger asChild>
-        <Button size="sm"> + Add Guardian</Button>
+        <Button size="sm"><Edit className="w-3.5 h-3.5 mr-1.5" /> Edit </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] p-0 gap-0 overflow-hidden rounded-2xl">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
             <UserRoundPlus className="w-5 h-5 text-blue-600" />
-            Add New Guardian
+            Edit Guardian
           </DialogTitle>
         </DialogHeader>
 
@@ -340,7 +346,7 @@ export default function AddGuardianModal(
 
           {/* Player + Relationship  */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Player
               </Label>
@@ -361,7 +367,7 @@ export default function AddGuardianModal(
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-gray-700">
                 Relationship 
@@ -377,7 +383,7 @@ export default function AddGuardianModal(
                 </SelectTrigger>
                 <SelectContent>
                   {RELATIONSHIP_TYPE.map((relationship) => (
-                    <SelectItem key={relationship.id} value={relationship.id}>
+                    <SelectItem key={relationship.id} value={relationship.label}>
                       {relationship.label}
                     </SelectItem>
                   ))}
@@ -423,7 +429,7 @@ export default function AddGuardianModal(
               onClick={handleSubmit}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6"
             >
-              Add Guardian
+              Edit Guardian
             </Button>
           </div>
         </div>

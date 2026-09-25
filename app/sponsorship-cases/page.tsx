@@ -327,11 +327,11 @@ export default function PlayersPage() {
                             <h3 className="text-sm font-semibold mb-2">Guardian Info</h3>
                             <div className="flex items-center justify-between p-3 bg-muted/40 rounded-lg">
                               <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
+                                {/* <Avatar className="h-8 w-8">
                                   <AvatarFallback className="text-xs">{selected?.guardian ? selected.guardian.charAt(0) : '?'}</AvatarFallback>
-                                </Avatar>
+                                </Avatar> */}
                                 <div>
-                                  <p className="text-xs font-semibold">{selected?.guardian}</p>
+                                  {/* <p className="text-xs font-semibold">{selected?.guardian}</p> */}
                                   {/* <p className="text-[11px] text-muted-foreground">{selected.guardian.relation}</p> */}
                                 </div>
                               </div>

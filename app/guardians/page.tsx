@@ -36,7 +36,7 @@ export default function GuardiansPage() {
 
       setGuardians((response.data as Guardian[]) ?? []);
     } catch (error) {
-      alert("Failed to fetch equipment inventory. Please try again later.");
+      alert("Failed to fetch guardians. Please try again later.");
       // toast.error("Failed to fetch your submitted requests.");
     } finally {
       // setLoading(false);

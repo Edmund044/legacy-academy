@@ -157,7 +157,7 @@ export default function CoachDashboardPage() {
             </div>
 
   <div className="space-y-4">
-    <Card>
+    {/* <Card>
       <CardHeader className="pb-3"><CardTitle className="text-sm">Revenue Split</CardTitle></CardHeader>
       <CardContent>
         <p className="text-xs text-muted-foreground">STANDARD SESSION RATE</p>
@@ -180,9 +180,9 @@ export default function CoachDashboardPage() {
           <p className="text-[11px] text-muted-foreground mt-0.5">Sponsored players (45%) have their session fees reconciled through the Academy Foundation Fund at full coach rate.</p>
         </div>
       </CardContent>
-    </Card>
+    </Card> */}
 
-    <Card>
+    {/* <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-sm">Recent Activity</CardTitle>
         <Button variant="ghost" size="sm" className="text-brand text-xs">View All</Button>
@@ -198,7 +198,7 @@ export default function CoachDashboardPage() {
           </div>
         ))}
       </CardContent>
-    </Card>
+    </Card> */}
   </div>
 </div></>
           )}

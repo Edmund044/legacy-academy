@@ -116,7 +116,8 @@ export default function EditPlayerModal(
           "Content-Type": "application/json",
         },
         body: {
-          ...form
+          ...form,
+          dob: form.dob.toISOString().split('T')[0]
         },
       });
       // setOpen(false);

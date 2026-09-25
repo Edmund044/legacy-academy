@@ -47,7 +47,7 @@ export default function BillingPage() {
   const [meta,setMeta] = useState<PaginationMeta>()
   const config = {
     reference: uuidv4(),
-    email: user?.email || "legacyuser@gmail.com",
+    email: user?.email || "mchezajiuser@gmail.com",
     amount: 1 * 100, 
     publicKey: "pk_live_27803e8ab6af25269cdf63a08e344f7c9c06a99c",
     currency: "KES",
@@ -94,6 +94,7 @@ export default function BillingPage() {
   
   const fetchGuardians = async () => {
     try {
+      console.log("user",user)
       const response = await apiClient<ApiResponse<Guardian>>({
         endpoint: `v1/guardians/${user?.id}`,
         method: "GET",

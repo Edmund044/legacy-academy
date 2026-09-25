@@ -1,1 +1,1 @@
-# legacy-academy
+# mchezaji-academy
