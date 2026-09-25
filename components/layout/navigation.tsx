@@ -100,6 +100,15 @@ const naviGroups: NavGroup[] = [
     ]
   },
   {
+    label: "Player Portal",
+    roles: [RoleNames.PLAYER],
+    items: [
+      { href: "/players", icon: UserCircle, label: "Players" },
+      { href: "/sessions", icon: Dumbbell, label: "Session History" },
+      //{ href: "/contracts", icon: FileText, label: "Contracts" },
+    ]
+  },
+  {
     label: "CSR Portal",
     roles: [RoleNames.CSR_LEAD],
     items: [
@@ -123,8 +132,8 @@ const naviGroups: NavGroup[] = [
       { href: "/players", icon: UserCircle, label: "Players" },
       { href: "/sponsorship-cases", icon: UserCircle, label: "Sponsorship Cases" },
       { href: "/partnerships", icon: Dumbbell, label: "Partnerships" },
-      // { href: "/social-impact", icon: Heart, label: "Social Impact" },
-      // { href: "/contracts", icon: FileText, label: "Contracts" },
+      { href: "/social-impact", icon: Heart, label: "Social Impact" },
+      { href: "/contracts", icon: FileText, label: "Contracts" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/handover", icon: Dumbbell, label: "Handover" },
       { href: "/session-attendance", icon: ScanLine, label: "Attendance" },
