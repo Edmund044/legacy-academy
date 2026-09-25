@@ -147,6 +147,7 @@ const searchGuardians = async (value: string) => {
         },
         body: {
           ...form,
+          dob: form.dob.toISOString().split('T')[0]
         },
       });
       setOpen(false);
