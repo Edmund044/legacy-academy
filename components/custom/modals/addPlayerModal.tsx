@@ -137,6 +137,7 @@ const searchGuardians = async (value: string) => {
 
 
   const handleSubmit = async () => {
+    const { guardian: _, ...formWithoutGuardian } = form;
     try {
       await apiClient({
         endpoint: "/v1/players",
@@ -146,7 +147,7 @@ const searchGuardians = async (value: string) => {
           "Content-Type": "application/json",
         },
         body: {
-          ...form,
+          ...formWithoutGuardian,
           dob: form.dob.toISOString().split('T')[0]
         },
       });
