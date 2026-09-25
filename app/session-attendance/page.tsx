@@ -80,7 +80,7 @@ export default function CoachDashboardPage() {
           ):
           (
             <>
-                  <PageHeader title="Session Attenndance" description="Your sessions, earnings, and activity at a glance." />
+                  <PageHeader title="Session Attendance" description="Your sessions, earnings, and activity at a glance." />
 
 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
   <Card className="sm:col-span-1 bg-brand text-white border-0">
@@ -126,7 +126,8 @@ export default function CoachDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Enrollments:  <Badge className="bg-green-600">{s.enrollments.length }</Badge></p>
             </div>
             {
-              s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+              // s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+              <AttendanceTrackerModal session_id={s.id}/>
             }
           </div>
         ))}
@@ -155,7 +156,8 @@ export default function CoachDashboardPage() {
               <p className="text-[11px] text-muted-foreground">Enrollments:  <Badge className="bg-green-600">{s.enrollments.length > 0 }</Badge></p>
             </div>
             {
-              s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+             // s.enrollments.length > 0 && <AttendanceTrackerModal session_id={s.id}/>
+             <AttendanceTrackerModal session_id={s.id}/>
             }
           </div>
         ))}
