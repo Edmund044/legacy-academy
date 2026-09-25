@@ -449,18 +449,18 @@ export default function PlayersPage() {
                     {[
                       {
                         label: "Goals",
-                        value: selected?.stats.goals,
-                        note: selected?.stats.goals
+                        value: selected?.stats?.goals,
+                        note: selected?.stats?.goals
                       },
                       {
                         label: "Assists",
-                        value: selected?.stats.assists,
-                        note: selected?.stats.assists
+                        value: selected?.stats?.assists,
+                        note: selected?.stats?.assists
                       },
                       {
                         label: "Pass Accuracy",
-                        value: `${selected?.stats.pass_accuracy}%`,
-                        note: selected?.stats.pass_accuracy
+                        value: `${selected?.stats?.pass_accuracy}%`,
+                        note: selected?.stats?.pass_accuracy
                       },
                     ].map(s => (
 
