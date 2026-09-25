@@ -57,14 +57,14 @@ const naviGroups: NavGroup[] = [
 
   // ✅ ROLE-BASED GROUPS
   {
-    label: "Parent Portal",
+    label: "Guardian Portal",
     roles: [RoleNames.PARENT],
     items: [
       // { href: "/bookings", icon: BookOpen, label: "Bookings" },
       { href: "/annual-subscriptions", icon: UserCircle, label: "Subscriptions" },
       { href: "/parent-dashboard", icon: Dumbbell, label: "Enroll Session" },
       { href : "/children", icon: UserCircle, label: "My Children" },
-      //{ href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
+      { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/merchandise", icon: Dumbbell, label: "Merchandise" },
       { href: "/sessions", icon: Dumbbell, label: "Session History" },
       { href: "/billing", icon: Dumbbell, label: "Billing" },
@@ -118,7 +118,7 @@ const naviGroups: NavGroup[] = [
       { href: "/attendance-billing", icon: Package, label: "Attendance Billing" },
       { href: "/revenue-splits", icon: Package, label: "Revenue Splits" },
       { href: "/coaches", icon: Users, label: "Coaches" },
-      //{ href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
+      { href: "/tournaments", icon: Dumbbell, label: "Tournaments" },
       { href: "/sponsorship", icon: Dumbbell, label: "Sponsorship" },
       { href: "/players", icon: UserCircle, label: "Players" },
       { href: "/sponsorship-cases", icon: UserCircle, label: "Sponsorship Cases" },
