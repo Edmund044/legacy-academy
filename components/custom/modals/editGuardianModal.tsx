@@ -34,7 +34,6 @@ interface GuardianFormData {
   last_name: string;
   email: string;
   whatsapp_phone: string;
-  player_id: string;
   relationship_type: string;
   is_primary: boolean;
 }
