@@ -170,9 +170,9 @@ export default function PartnershipsPage() {
                   <tr key={i} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand flex items-center justify-center text-xs font-bold flex-shrink-0">{s.name}</div>
+                        <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand flex items-center justify-center text-xs font-bold flex-shrink-0">{s.name.charAt(0)}</div>
                         <div>
-                          <p className="text-sm font-semibold">{s.name.charAt(0)}</p>
+                          <p className="text-sm font-semibold">{s.name}</p>
                           <p className="text-[11px] text-muted-foreground">{s.location}</p>
                         </div>
                       </div>
